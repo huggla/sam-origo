@@ -22,6 +22,10 @@ FROM ${CONTENTIMAGE5:-scratch} as content5
 FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$SaM_VERSION-$TAG}} as init
 # Generic template (don't edit) </END>
 
+RUN mkdir /environment /tmp/onbuild \
+ && (find / -type l ! -path '/tmp/*' ! -path '/var/cache/*' -exec echo -n "/{}>" \; -exec /finalfs/bin/busybox readlink "{}" \; && /finalfs/bin/busybox find * ! -type d ! -type c ! -type l ! -path 'tmp/*' ! -path 'var/cache/*' -exec /finalfs/bin/busybox md5sum "{}" \; | /finalfs/bin/busybox awk '{first=$1; $1=""; print $0">"first}' | /finalfs/bin/busybox sed 's|^ |/|') | /finalfs/bin/busybox sort -u - > /tmp/onbuild/exclude.filelist \
+ && /finalfs/bin/busybox tar -c -z -f /finalfs/environment/onbuild.tar.gz -C /tmp onbuild \
+
 # =========================================================================
 # Build
 # =========================================================================
