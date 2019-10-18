@@ -22,11 +22,11 @@ FROM ${CONTENTIMAGE5:-scratch} as content5
 FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$SaM_VERSION-$TAG}} as init
 # Generic template (don't edit) </END>
 
-RUN mkdir /environment /tmp/onbuild \
- && exec > /build.log 2>&1 \
+RUN exec > /build.log 2>&1 \
  && set -ex +fam \
+ && mkdir /environment /tmp/onbuild \
  && (find . -type l ! -path './tmp/*' ! -path './var/cache/*' ! -path './proc/*' ! -path './sys/*' ! -path './dev/*' -exec sh -c 'echo -n "$(echo "{}" | cut -c 2-)>"' \; -exec readlink "{}" \; && find . -type f ! -path './tmp/*' ! -path './var/cache/*' ! -path './proc/*' ! -path './sys/*' ! -path './dev/*' -exec md5sum "{}" \; | awk '{first=$1; $1=""; print $0">"first}' | sed 's|^ [.]||') | sort -u - > /tmp/onbuild/exclude.filelist.new \
- && tar -c -z -f /finalfs/environment/onbuild.tar.gz -C /tmp onbuild
+ && tar -c -z -f /environment/onbuild.tar.gz -C /tmp onbuild
 
 # =========================================================================
 # Build
