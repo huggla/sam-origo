@@ -10,7 +10,7 @@ ARG CLONEGITS="https://github.com/SigtunaGIS/origo"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install "\
-"&& cp -a /origo /finalfs/"
+"&& cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
