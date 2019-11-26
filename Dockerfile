@@ -11,7 +11,7 @@ ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install npm@latest -g "\
 "&& npm install "\
-"&& npm --depth 9999 update "\
+"&& npm --depth 8 update "\
 "&& cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
 
