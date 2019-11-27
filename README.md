@@ -1,2 +1,2 @@
 # origo-alpine
-Test
+Origo on Alpine. For testing purposes.
