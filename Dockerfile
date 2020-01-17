@@ -6,7 +6,7 @@ ARG SaM_VERSION="1.1-edge"
 ARG TAG="20191112"
 ARG IMAGETYPE="application"
 ARG BASEIMAGE="node:alpine"
-ARG CLONEGITS="https://github.com/SigtunaGIS/origo"
+ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install npm@latest -g "\
