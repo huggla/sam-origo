@@ -7,6 +7,7 @@ ARG TAG="20191112"
 ARG IMAGETYPE="application"
 ARG BASEIMAGE="node:alpine"
 ARG CLONEGITS="https://github.com/origo-map/origo.git"
+ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install npm@latest -g "\
