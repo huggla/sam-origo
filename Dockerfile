@@ -13,7 +13,7 @@ ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& ls -la "\
-"&& npm install npm@latest -g || cat /root/.npm/_logs/* "\
+"&& npm install npm@latest -g || ls -la /finalfs/usr/local/lib/node_modules "\
 "&& npm install "\
 "&& npm --depth 8 update "\
 "&& cp -a ../origo /finalfs/"
