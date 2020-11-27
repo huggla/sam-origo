@@ -12,10 +12,12 @@ ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
+"&& ls -la "\
 "&& npm install npm@latest -g "\
-"&& npm install "\
-"&& npm --depth 8 update "\
-"&& cp -a ../origo /finalfs/"
+"; cat /root/.npm/_logs/* "\
+"; npm install "\
+"; npm --depth 8 update "\
+"; cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
