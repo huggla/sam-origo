@@ -13,6 +13,7 @@ ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& ls -la "\
+"&& mkdir -p /finalfs/usr/local/lib/node_modules/.npm-cuGAs82i "\
 "&& npm install npm@latest -g || ls -la /finalfs/usr/local/lib/node_modules "\
 "&& npm install "\
 "&& npm --depth 8 update "\
