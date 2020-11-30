@@ -12,8 +12,8 @@ ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
-"&& ls -la "\
-"&& mkdir -p /finalfs/usr/local/lib/node_modules/.npm-cuGAs82i "\
+"&& ls -la /finalfs/usr/local/lib/node_modules/npm "\
+"&& chmod -R 777 /finalfs/usr/local/lib/node_modules "\
 "&& npm install npm@latest -g || ls -la /finalfs/usr/local/lib/node_modules "\
 "&& npm install "\
 "&& npm --depth 8 update "\
