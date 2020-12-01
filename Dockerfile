@@ -7,15 +7,14 @@
 # ARGs (can be passed to Build/Final) <BEGIN>
 ARG SaM_VERSION="2.0.4"
 ARG IMAGETYPE="application"
-ARG CONTENTIMAGE1="node:alpine"
-ARG CONTENTSOURCE1="/"
-ARG CONTENTDESTINATION1="/"
+ARG INITIMAGE="node:alpine"
 ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install "\
 "&& npm --depth 8 update "\
+"&& rm -rf /finalfs/* "\
 "&& cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
 
