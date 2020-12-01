@@ -1,0 +1,12 @@
+# Set in stage2:
+# ---------------------------------------------------------
+# set -ef +am
+# isFirstRun
+# VAR_*
+# All functions in /start/functions
+
+if [ "$isFirstRun" == "true" ]
+then
+   replaceFileWithLink "/origod/index.html" "$VAR_CONFIG_DIR/index.html"
+   replaceFileWithLink "/origod/index.json" "$VAR_CONFIG_DIR/index.json"
+fi
