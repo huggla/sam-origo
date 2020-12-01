@@ -7,7 +7,7 @@
 # ARGs (can be passed to Build/Final) <BEGIN>
 ARG SaM_VERSION="2.0.4"
 ARG IMAGETYPE="application"
-ARG BASEIMAGE="node:alpine"
+ARG INITIMAGE="node:alpine"
 ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
