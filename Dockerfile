@@ -44,7 +44,8 @@ COPY --from=build /finalfs /
 # =========================================================================
 # Final
 # =========================================================================
-ENV VAR_FINAL_COMMAND="cd origo && npm start"
+ENV VAR_FINAL_COMMAND="cd origo && npm start" \
+    VAR_CONFIG_DIR="/etc/origo"
 
 # Generic template (don't edit) <BEGIN>
 USER starter
