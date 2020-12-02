@@ -16,6 +16,7 @@ ARG BUILDCMDS=\
 "&& npm install "\
 "&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
+"&& npm run build "\
 "&& ls -la /finalfs "\
 "&& cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
