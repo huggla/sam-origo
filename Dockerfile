@@ -17,7 +17,7 @@ ARG BUILDCMDS=\
 "&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& ls -la /finalfs "\
-"&& cp -a ../origo /finalfs/www"
+"&& cp -a ../origo /finalfs/"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
@@ -49,7 +49,8 @@ COPY --from=build /finalfs /
 # =========================================================================
 ENV VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="normal" \
-    VAR_setup1_module_load="[ 'mod_deflate' ]"
+    VAR_setup1_module_load="[ 'mod_deflate' ]" \
+    VAR_WWW_DIR="/origo"
 
 # Generic template (don't edit) <BEGIN>
 USER starter
