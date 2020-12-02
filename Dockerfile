@@ -15,6 +15,7 @@ ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install "\
 "&& npm --depth 8 update "\
+"&& npm run prebuild-sass "\
 "&& rm -rf /finalfs/* "\
 "&& cp -a ../origo /finalfs/www"
 # ARGs (can be passed to Build/Final) </END>
@@ -46,7 +47,9 @@ COPY --from=build /finalfs /
 # =========================================================================
 # Final
 # =========================================================================
-ENV VAR_ORIGO_CONFIG_DIR="/etc/origo"
+ENV VAR_ORIGO_CONFIG_DIR="/etc/origo" \
+    VAR_OPERATION_MODE="normal" \
+    VAR_setup1_module_load="[ 'mod_deflate' ]"
 
 # Generic template (don't edit) <BEGIN>
 USER starter
