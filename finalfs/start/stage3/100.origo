@@ -7,6 +7,6 @@
 
 if [ "$isFirstRun" == "true" ]
 then
-   replaceFileWithLink "/origo/index.html" "$VAR_CONFIG_DIR/index.html"
-   replaceFileWithLink "/origo/index.json" "$VAR_CONFIG_DIR/index.json"
+   replaceFileWithLink "/origo/index.html" "$VAR_ORIGO_CONFIG_DIR/index.html"
+   replaceFileWithLink "/origo/index.json" "$VAR_ORIGO_CONFIG_DIR/index.json"
 fi
