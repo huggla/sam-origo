@@ -18,7 +18,7 @@ ARG BUILDCMDS=\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
 "&& ls -la /finalfs "\
-"&& cp -a ../origo /finalfs/"
+"&& cp -a ../origo/build /finalfs/origo"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
