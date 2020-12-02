@@ -17,8 +17,8 @@ ARG BUILDCMDS=\
 "&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
-"&& ls -la /finalfs "\
-"&& cp -a ../origo/build /finalfs/origo"
+"&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
+"&& cp -a build /finalfs/origo"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
