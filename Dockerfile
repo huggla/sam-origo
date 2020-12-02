@@ -18,6 +18,8 @@ ARG BUILDCMDS=\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
+"&& find /finalfs ! -path \"/start*\" -delete "\
+"&& ls -la /finalfs "\
 "&& cp -a build /finalfs/origo"
 # ARGs (can be passed to Build/Final) </END>
 
