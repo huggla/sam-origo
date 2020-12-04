@@ -10,3 +10,6 @@ then
    replaceFileWithLink "/origo/index.html" "$VAR_ORIGO_CONFIG_DIR/index.html"
    replaceFileWithLink "/origo/index.json" "$VAR_ORIGO_CONFIG_DIR/index.json"
 fi
+cd "$VAR_ORIGO_CONFIG_DIR"
+find * -type d -exec mkdir -p "/origo/{}"
+find * -type f -exec ln -sf "{}" "/origo/{}"
