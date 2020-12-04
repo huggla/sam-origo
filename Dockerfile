@@ -7,9 +7,10 @@
 # ARGs (can be passed to Build/Final) <BEGIN>
 ARG SaM_VERSION="2.0.4"
 ARG IMAGETYPE="application"
+ARG LIGHTTPD2_VERSION="20201125"
 ARG CONTENTIMAGE1="node:alpine"
 ARG CONTENTDESTINATION1="/"
-ARG BASEIMAGE="huggla/sam-lighttpd2:20201125"
+ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
