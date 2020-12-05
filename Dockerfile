@@ -20,8 +20,8 @@ ARG BUILDCMDS=\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
-"&& rm -rf build/origo-documentation build/examples "\
 "&& cp -a build /finalfs/origo"
+ARG REMOVEDIRS="/origo/origo-documentation /origo/examples"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
