@@ -9,6 +9,7 @@ if [ "$isFirstRun" == "true" ]
 then
    replaceFileWithLink "/origo/index.html" "$VAR_ORIGO_CONFIG_DIR/index.html"
    replaceFileWithLink "/origo/index.json" "$VAR_ORIGO_CONFIG_DIR/index.json"
+   chmod -R g+rwX "$VAR_ORIGO_CONFIG_DIR"
 fi
 cd "$VAR_ORIGO_CONFIG_DIR"
 find * -type d -exec mkdir -p "/origo/{}" \;
