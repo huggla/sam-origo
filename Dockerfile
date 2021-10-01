@@ -11,7 +11,7 @@ ARG LIGHTTPD2_VERSION="20201125"
 ARG CONTENTIMAGE1="node:alpine"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
-ARG CLONEGITS="https://github.com/origo-map/origo.git"
+ARG CLONEGITS="https://github.com/origo-map/origo.git -b wfs-qgis"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
