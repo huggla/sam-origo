@@ -16,7 +16,7 @@ ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 ARG DOWNLOADS="https://github.com/origo-map/origo/releases/download/v$ORIGO_VERSION/origo-$ORIGO_VERSION.tar.gz"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
-"   cd origo-$ORIGO_VERSION "\
+"   ls && cd origo-$ORIGO_VERSION "\
 "&& npm install "\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
