@@ -1,5 +1,5 @@
-# Secure and Minimal image of Postgres
-# https://hub.docker.com/repository/docker/huggla/sam-postgres
+# Secure and Minimal image of Origo
+# https://hub.docker.com/repository/docker/huggla/sam-origo
 
 # =========================================================================
 # Init
@@ -11,7 +11,7 @@ ARG LIGHTTPD2_VERSION="20201125"
 ARG CONTENTIMAGE1="node:alpine"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
-ARG CLONEGITS="https://github.com/filleg/origo-map.git"
+ARG CLONEGITS="https://github.com/origo-map/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
