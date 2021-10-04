@@ -16,7 +16,7 @@ ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
 "&& npm install "\
-"&& npm --depth 8 update "\
+#"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
