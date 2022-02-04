@@ -5,7 +5,7 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="2.0.4"
+ARG SaM_VERSION="2.0.5"
 ARG IMAGETYPE="application"
 ARG ORIGO_VERSION="2.4.0"
 ARG LIGHTTPD2_VERSION="20201125"
