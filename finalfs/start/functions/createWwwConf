@@ -1,0 +1,6 @@
+createWwwConf(){
+   local file="/etc/php7/php-fpm.d/www.conf"
+   local wwwconf_dblUScore="."
+   echo '[www]' > "$file"
+   configFromVarGroup wwwconf >> "$file"
+}
