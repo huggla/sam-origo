@@ -5,11 +5,11 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="2.0.4"
+ARG SaM_VERSION="2.0.5-3.14"
 ARG IMAGETYPE="application"
 ARG ORIGO_VERSION="2.4.0"
 ARG LIGHTTPD2_VERSION="20201125"
-ARG CONTENTIMAGE1="node:alpine3.13"
+ARG CONTENTIMAGE1="node:alpine3.14"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
