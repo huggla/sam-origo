@@ -94,7 +94,8 @@ COPY --from=build /finalfs /
 # =========================================================================
 # Final
 # =========================================================================
-ENV VAR_ORIGO_CONFIG_DIR="/etc/origo" \
+ENV VAR_LINUX_USER="php" \
+    VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="normal" \
     VAR_setup1_module_load="[ 'mod_deflate','mod_fastcgi' ]" \
     VAR_WWW_DIR="/origo" \
