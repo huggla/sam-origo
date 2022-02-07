@@ -1,0 +1,5 @@
+createLdapConf(){
+   local file="/etc/openldap/ldap.conf"
+   local ldapconf_begin=" "
+   configFromVarGroup ldapconf >> "$file"
+}
