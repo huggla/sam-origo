@@ -5,12 +5,12 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="2.0.5-3.13"
+ARG SaM_VERSION="2.0.5-3.14"
 ARG IMAGETYPE="application"
 ARG ORIGO_VERSION="2.4.0"
 ARG LIGHTTPD2_VERSION="20201125"
 ARG PHP_VERSION="7.4.19"
-ARG CONTENTIMAGE1="node:16.9.1-alpine3.13"
+ARG CONTENTIMAGE1="node:16.13.2-alpine3.14"
 ARG CONTENTDESTINATION1="/"
 ARG CONTENTIMAGE2="huggla/sam-php:$PHP_VERSION"
 ARG CONTENTDESTINATION2="/finalfs/"
