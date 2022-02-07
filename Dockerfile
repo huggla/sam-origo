@@ -94,8 +94,7 @@ COPY --from=build /finalfs /
 # =========================================================================
 # Final
 # =========================================================================
-ENV VAR_LINUX_USER="php" \
-    VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
+ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
     VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="normal" \
     VAR_setup1_module_load="[ 'mod_deflate','mod_fastcgi' ]" \
