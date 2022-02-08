@@ -1,1 +1,1 @@
-CREATE DATABASE template_postgis;
+CREATE DATABASE origo;
