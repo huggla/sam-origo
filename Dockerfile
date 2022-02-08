@@ -25,6 +25,7 @@ ARG BUILDCMDS=\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
 "&& cp -a build /finalfs/origo"
 ARG RUNDEPS="\
+postgresql postgresql-contrib libressl3.0-libssl unixodbc \
 #        php7 \
 #        php7-bcmath \
         php7-dom \
