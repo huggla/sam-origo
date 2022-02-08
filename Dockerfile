@@ -68,9 +68,15 @@ postgresql postgresql-contrib libressl3.0-libssl unixodbc \
         php7-ldap"
 #        composer"
 ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
-ARG REMOVEDIRS="/origo/origo-documentation /origo/examples"
+ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf"
-ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7"
+ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/bin/postgres"
+ARG FINALCMDS=\
+"   cd /usr/local "\
+"&& ln -s ../lib ../share ./ "\
+"&& cd bin "\
+"&& find ../../bin ! -type l ! -name postgres ! -name ../../bin -maxdepth 1 -exec ln -s {} ./ + "\
+"&& chmod g+X /usr/bin/*"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
@@ -95,6 +101,8 @@ COPY --from=build /finalfs /
 # =========================================================================
 # Final
 # =========================================================================
+ARG POSTGRES_CONFIG_DIR="/etc/postgres"
+
 ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
     VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="dual" \
@@ -126,7 +134,23 @@ ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR
 "               deflate;\n"\
 "            }\\n"\
 "         }\n"\
-"      }"
+"      }" \
+    VAR_LINUX_USER="postgres" \
+    VAR_INIT_CAPS="cap_chown" \
+    VAR_POSTGRES_CONFIG_FILE="$POSTGRES_CONFIG_DIR/postgresql.conf" \
+    VAR_LOCALE="en_US.UTF-8" \
+    VAR_ENCODING="UTF8" \
+    VAR_TEXT_SEARCH_CONFIG="english" \
+    VAR_HBA="local all all trust, host all all 127.0.0.1/32 trust, host all all ::1/128 trust, host all all all md5" \
+    VAR_param_data_directory="'/pgdata'" \
+    VAR_param_hba_file="'$POSTGRES_CONFIG_DIR/pg_hba.conf'" \
+    VAR_param_ident_file="'$POSTGRES_CONFIG_DIR/pg_ident.conf'" \
+    VAR_param_unix_socket_directories="'/var/run/postgresql'" \
+    VAR_param_listen_addresses="'*'" \
+    VAR_param_timezone="'UTC'"
+#    VAR_FINAL_COMMAND="postgres --config_file=\"\$VAR_POSTGRES_CONFIG_FILE\""
+
+STOPSIGNAL SIGINT
 
 # Generic template (don't edit) <BEGIN>
 USER starter
