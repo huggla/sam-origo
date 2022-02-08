@@ -96,7 +96,7 @@ COPY --from=build /finalfs /
 # =========================================================================
 ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
     VAR_ORIGO_CONFIG_DIR="/etc/origo" \
-    VAR_OPERATION_MODE="normal" \
+    VAR_OPERATION_MODE="dual" \
     VAR_setup1_module_load="[ 'mod_deflate','mod_fastcgi' ]" \
     VAR_WWW_DIR="/origo" \
     VAR_SOCKET_FILE="/run/php7-fpm/socket" \
@@ -105,7 +105,26 @@ ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR
     VAR_wwwconf_pm="dynamic" \
     VAR_wwwconf_pm__max_children="5" \
     VAR_wwwconf_pm__min_spare_servers="1" \
-    VAR_wwwconf_pm__max_spare_servers="3"
+    VAR_wwwconf_pm__max_spare_servers="3" \
+    VAR_mode_dual=\
+"      docroot '\$VAR_WWW_DIR';\n"\
+"      index [ 'index.php', 'index.html', 'index.htm', 'default.htm', 'index.lighttpd.html', '/index.php' ];\n"\
+"      if phys.path =$ '.php' {\n"\
+"         buffer_request_body false;\n"\
+"         strict.post_content_length false;\n"\
+"         if req.header['X-Forwarded-Proto'] =^ 'http' and req.header['X-Forwarded-Port'] =~ '[0-9]+' {\n"\
+"            env.set 'REQUEST_URI' => '%{req.header[X-Forwarded-Proto]}://%{req.host}:%{req.header[X-Forwarded-Port]}%{req.raw_path}';\n"\
+"         }\n"\
+"         fastcgi 'unix:\$VAR_SOCKET_FILE';\n"\
+"         if request.is_handled { header.remove 'Content-Length'; }\n"\
+"      } else {\n"\
+"         static;\n"\
+"         if request.is_handled {\n"\
+"            if response.header['Content-Type'] =~ '^(.*/javascript|text/.*)(;|$)' {\n"\
+"               deflate;\n"\
+"            }\\n"\
+"         }\n"\
+"      }"
 
 # Generic template (don't edit) <BEGIN>
 USER starter
