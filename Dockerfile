@@ -73,7 +73,8 @@ ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf"
 ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/bin/postgres"
 ARG FINALCMDS=\
 "   cd /usr/local "\
-"&& ln -s ../lib ./ "\
+"&& rm -rf share "\
+"&& ln -s ../lib ../share ./ "\
 "&& cd bin "\
 "&& find ../../bin ! -type l ! -name postgres ! -name ../../bin -maxdepth 1 -exec ln -s {} ./ + "\
 "&& chmod g+X /usr/bin/*"
