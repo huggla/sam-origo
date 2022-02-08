@@ -107,6 +107,7 @@ ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR
     VAR_wwwconf_pm__min_spare_servers="1" \
     VAR_wwwconf_pm__max_spare_servers="3" \
     VAR_mode_dual=\
+"      include '\$VAR_CONFIG_DIR/mimetypes.conf';\n"\
 "      docroot '\$VAR_WWW_DIR';\n"\
 "      index [ 'index.php', 'index.html', 'index.htm', 'default.htm', 'index.lighttpd.html', '/index.php' ];\n"\
 "      if phys.path =$ '.php' {\n"\
