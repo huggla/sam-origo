@@ -1,0 +1,25 @@
+# Set in stage2:
+# ---------------------------------------------------------
+# set -ef +am
+# isFirstRun
+# VAR_*
+# All functions in /start/functions
+
+/usr/local/bin/postgres --version
+echo
+if [ "$isFirstRun" == "true" ]
+then
+   dataDir="$(removeSingleQuotes "$VAR_param_data_directory")"
+   if [ -e "$dataDir" ]
+   then
+      /bin/chown root "$dataDir"
+      /bin/chmod 0750 "$dataDir"
+      /bin/chown $VAR_LINUX_USER "$dataDir"
+   fi
+   initPgConfig
+   if [ ! -s "$dataDir/PG_VERSION" ]
+   then
+      initPgData
+   fi
+   tryDelete /initdb
+fi
