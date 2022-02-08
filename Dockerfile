@@ -138,6 +138,7 @@ ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR
 "      }" \
     VAR_LINUX_USER="postgres" \
     VAR_INIT_CAPS="cap_chown" \
+    VAR_POSTGRES_CONFIG_DIR="$POSTGRES_CONFIG_DIR" \
     VAR_POSTGRES_CONFIG_FILE="$POSTGRES_CONFIG_DIR/postgresql.conf" \
     VAR_LOCALE="en_US.UTF-8" \
     VAR_ENCODING="UTF8" \
