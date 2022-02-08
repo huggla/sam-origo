@@ -4,9 +4,9 @@
 	include_once("functions/pgArrayToPhp.php");
 	include_once("functions/array_column_search.php");
 	include_once("functions/all_from_table.php");
+	include_once("functions/dbh.php");
 
-	include("functions/dbh.php");
-
+	$dbh=dbh();
 	if (!empty($_POST['mapId']))
 	{ 
 		$mapId=$_POST['mapId'];
