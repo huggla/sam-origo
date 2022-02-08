@@ -6,7 +6,7 @@ CREATE TABLE map_configs.controls
     options json,
     abstract character varying COLLATE pg_catalog."default",
     CONSTRAINT controls_pkey PRIMARY KEY (control_id)
-)
+);
 
 CREATE TABLE map_configs.footers
 (
@@ -16,7 +16,7 @@ CREATE TABLE map_configs.footers
     text character varying COLLATE pg_catalog."default",
     abstract character varying COLLATE pg_catalog."default",
     CONSTRAINT footers_pkey PRIMARY KEY (footer_id)
-)
+);
 
 CREATE TABLE map_configs.groups
 (
@@ -27,7 +27,7 @@ CREATE TABLE map_configs.groups
     groups character varying[] COLLATE pg_catalog."default",
     layers character varying[] COLLATE pg_catalog."default",
     CONSTRAINT groups_pkey PRIMARY KEY (group_id)
-)
+);
 
 CREATE TABLE map_configs.layers
 (
@@ -49,7 +49,7 @@ CREATE TABLE map_configs.layers
     gutter integer,
     tiled boolean DEFAULT true,
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
-)
+);
 
 CREATE TABLE map_configs.maps
 (
@@ -76,14 +76,14 @@ CREATE TABLE map_configs.maps
         REFERENCES map_configs.footers (footer_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
+);
 
 CREATE TABLE map_configs.proj4defs
 (
     code character varying COLLATE pg_catalog."default" NOT NULL,
     projection character varying COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT proj4defs_pkey PRIMARY KEY (code)
-)
+);
 
 CREATE TABLE map_configs.services
 (
@@ -91,7 +91,7 @@ CREATE TABLE map_configs.services
     base_url character varying COLLATE pg_catalog."default",
     abstract character varying COLLATE pg_catalog."default",
     CONSTRAINT services_pkey PRIMARY KEY (service_id)
-)
+);
 
 CREATE TABLE map_configs.sources
 (
@@ -107,4 +107,4 @@ CREATE TABLE map_configs.sources
         REFERENCES map_configs.services (service_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
+);
