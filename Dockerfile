@@ -23,7 +23,7 @@ ARG BUILDCMDS=\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
-"&& cp -a build /finalfs/origo"
+"&& cp -a build /finalfs/tmp/origo"
 ARG RUNDEPS="\
 postgresql postgresql-contrib libressl3.0-libssl unixodbc \
 #        php7 \
@@ -72,7 +72,8 @@ ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf"
 ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/bin/postgres"
 ARG FINALCMDS=\
-"   cd /usr/local "\
+"   cp -a /tmp/origo/* /origo/ "\
+"&& cd /usr/local "\
 "&& rm -rf share "\
 "&& ln -s ../lib ../share ./ "\
 "&& cd bin "\
