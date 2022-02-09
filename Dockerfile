@@ -104,7 +104,7 @@ COPY --from=build /finalfs /
 # =========================================================================
 ARG POSTGRES_CONFIG_DIR="/etc/postgres"
 
-ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
+ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && postgres --config_file=\"\$VAR_POSTGRES_CONFIG_FILE\" & lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
     VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="dual" \
     VAR_setup1_module_load="[ 'mod_deflate','mod_fastcgi' ]" \
