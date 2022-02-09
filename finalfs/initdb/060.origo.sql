@@ -29,6 +29,8 @@ CREATE TABLE map_configs.footers
     CONSTRAINT footers_pkey PRIMARY KEY (footer_id)
 );
 
+INSERT INTO map_configs.footers(footer_id,img,url,text) VALUES ('footer#1','img/png/logo.png','https://github.com/origo-map/origo','Origo');
+
 CREATE TABLE map_configs.groups
 (
     group_id character varying COLLATE pg_catalog."default" NOT NULL,
