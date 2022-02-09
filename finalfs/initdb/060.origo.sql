@@ -29,7 +29,7 @@ CREATE TABLE map_configs.footers
     CONSTRAINT footers_pkey PRIMARY KEY (footer_id)
 );
 
-INSERT INTO map_configs.footers(footer_id,img,url,text) VALUES ('footer#1','img/png/logo.png','https://github.com/origo-map/origo','Origo');
+INSERT INTO map_configs.footers(footer_id,img,url,text) VALUES ('origo#1','img/png/logo.png','https://github.com/origo-map/origo','Origo');
 
 CREATE TABLE map_configs.groups
 (
@@ -97,6 +97,8 @@ CREATE TABLE map_configs.proj4defs
     projection character varying COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT proj4defs_pkey PRIMARY KEY (code)
 );
+
+INSERT INTO map_configs.proj4defs(code,projection) VALUES ('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 
 CREATE TABLE map_configs.services
 (
