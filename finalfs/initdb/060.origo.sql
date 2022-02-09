@@ -13,7 +13,7 @@ INSERT INTO map_configs.controls(control_id,options) VALUES ('mapmenu#1','{ "isA
 INSERT INTO map_configs.controls(control_id) VALUES ('sharemap#1');
 INSERT INTO map_configs.controls(control_id) VALUES ('geoposition#1');
 INSERT INTO map_configs.controls(control_id) VALUES ('print#1');
-INSERT INTO map_configs.controls(control_id,options) VALUES ('about#1','{ "buttonText": "Om Origo", "title": "Om Origo", "content": "<p>Origo är ett ramverk för webbkartor. Ramverket bygger på JavaScript-biblioteket OpenLayers. Du kan använda Origo för att skapa egna webbaserade kartapplikationer.</p><br><p>Projektet drivs och underhålls av ett antal svenska kommuner. Besök gärna <a href='https://github.com/origo-map/origo' target='_blank'>Origo på GitHub</a> för mer information.</p>" }');
+INSERT INTO map_configs.controls(control_id,options) VALUES ('about#1','{ "buttonText": "Om Origo", "title": "Om Origo", "content": "<p>Origo är ett ramverk för webbkartor. Ramverket bygger på JavaScript-biblioteket OpenLayers. Du kan använda Origo för att skapa egna webbaserade kartapplikationer.</p><br><p>Projektet drivs och underhålls av ett antal svenska kommuner. Besök gärna <a href=\"https://github.com/origo-map/origo\" target=\"_blank\">Origo på GitHub</a> för mer information.</p>" }');
 INSERT INTO map_configs.controls(control_id,options) VALUES ('link#1','{ "title": "Origo", "url": "https://github.com/origo-map/origo" }');
 INSERT INTO map_configs.controls(control_id,options) VALUES ('legend#1','{ "labelOpacitySlider": "Opacity", "useGroupIndication" : true }');
 INSERT INTO map_configs.controls(control_id,options) VALUES ('position#1','{ "title": "Web Mercator", "projections": { "EPSG:4326": "WGS84", "EPSG:3006": "Sweref99 TM" }');
