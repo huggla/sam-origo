@@ -42,6 +42,8 @@ CREATE TABLE map_configs.groups
     CONSTRAINT groups_pkey PRIMARY KEY (group_id)
 );
 
+INSERT INTO map_configs.groups(group_id,title,expanded) VALUES ('background#1','Bakgrundskartor',true);
+
 CREATE TABLE map_configs.layers
 (
     layer_id character varying COLLATE pg_catalog."default" NOT NULL,
@@ -67,18 +69,18 @@ CREATE TABLE map_configs.layers
 CREATE TABLE map_configs.maps
 (
     map_id character varying COLLATE pg_catalog."default" NOT NULL,
-    controls character varying[] COLLATE pg_catalog."default" NOT NULL DEFAULT '{home#1,mapmenu#0,sharemap,geoposition,print,about#1,kristianstad,legend#1,position#1,measure}'::character varying[],
-    mapgrid boolean NOT NULL DEFAULT false,
-    projectioncode character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'EPSG:3008'::character varying,
-    projectionextent box NOT NULL DEFAULT '(573714.68,7702218.01),(-72234.21,6098290.04)'::box,
-    extent box NOT NULL DEFAULT '(300000,6280000),(-80000,6130000)'::box,
-    center point NOT NULL DEFAULT '(191000,6211212)'::point,
-    zoom integer NOT NULL DEFAULT 0,
+    controls character varying[] COLLATE pg_catalog."default" NOT NULL DEFAULT '{home#1,mapmenu#1,sharemap#1,geoposition#1,print#1,about#1,link#1,legend#1,position#1,measure#1}'::character varying[],
+    mapgrid boolean NOT NULL DEFAULT true,
+    projectioncode character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'EPSG:3857'::character varying,
+    projectionextent box NOT NULL DEFAULT '(-20048966.10,20048966.10),(-20026376.39,20026376.39)'::box,
+    extent box NOT NULL DEFAULT '(-20048966.10,20048966.10),(-20026376.39,20026376.39)'::box,
+    center point NOT NULL DEFAULT '(1770000,8770000)'::point,
+    zoom integer NOT NULL DEFAULT 7,
     enablerotation boolean NOT NULL DEFAULT false,
     constrainresolution boolean NOT NULL DEFAULT true,
-    resolutions numeric[] NOT NULL DEFAULT '{84,42,27.9999999999999982,21,13.9999999999999991,6.9999999999999995,4.199999999999999734,2.8,2.0999999999999998667732375,1.4,0.7,0.42,0.279999999999999982,0.21,0.139999999999999991,0.111999999999999993,0.0699999999999999956,0.0419999999999999974,0.0279999999999999982,0.0209999999999999987,0.0139999999999999991,0.00699999999999999956}'::numeric[],
-    proj4defs character varying[] COLLATE pg_catalog."default" DEFAULT '{EPSG:3006,EPSG:3008,EPSG:4326}'::character varying[],
-    featureinfooptions json DEFAULT '{     "infowindow": "overlay"   }'::json,
+    resolutions numeric[] NOT NULL DEFAULT '{156543.03,78271.52,39135.76,19567.88,9783.94,4891.97,2445.98,1222.99,611.50,305.75,152.87,76.437,38.219,19.109,9.5546,4.7773,2.3887,1.1943,0.5972}'::numeric[],
+    proj4defs character varying[] COLLATE pg_catalog."default" DEFAULT '{EPSG:3006}'::character varying[],
+    featureinfooptions json DEFAULT '{ "infowindow": "overlay" }'::json,
     groups character varying[] COLLATE pg_catalog."default",
     layers character varying[] COLLATE pg_catalog."default",
     styles character varying[] COLLATE pg_catalog."default",
@@ -90,6 +92,8 @@ CREATE TABLE map_configs.maps
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
+
+INSERT INTO map_configs.maps(map_id) VALUES ('origo#1');
 
 CREATE TABLE map_configs.proj4defs
 (
