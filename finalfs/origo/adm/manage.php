@@ -1,12 +1,17 @@
 <?php
 	header("Cache-Control: must-revalidate, max-age=0, s-maxage=0, no-cache, no-store");
 
-	include_once("functions/pgArrayToPhp.php");
-	include_once("functions/array_column_search.php");
-	include_once("functions/all_from_table.php");
-	include_once("functions/dbh.php");
+	/* SETTINGS */
+	/************/
+	$dbhConnectionString='host=localhost port=5432 dbname=origo user=postgres password=postgres';
+	/************/
 
-	$dbh=dbh();
+	$functionFiles = array_diff(scandir('./functions'), array('.', '..'));
+	foreach ($functionFiles as $functionFile)
+	{
+		include_once("./functions/$functionFile");
+	}
+	$dbh=dbh($dbhConnectionString);
 	if (!empty($_POST['mapId']))
 	{ 
 		$mapId=$_POST['mapId'];
@@ -50,91 +55,6 @@
 	$footerButton=$_POST['footerButton'];
 
 var_dump($_POST);
-
-	function selectOptions($tablename, $setSelected=false)
-	{
-		GLOBAL $maps, $controls, $groups, $layers, $sources, $services, $footers, $mapId, $controlId, $groupId, $layerId, $sourceId, $serviceId, $footerId;
-		eval("\$table=\$$tablename;");
-		$type=rtrim($tablename, 's');
-		$column=$type."_id";
-		if ($setSelected)
-		{
-			eval("\$id=\$$type".'Id;');
-			printSelectOptions(array_column($table, $column), $id);
-		}
-		else
-		{
-			printSelectOptions(array_column($table, $column));
-		}
-	}
-
-	function printSelectOptions($optionValues, $selectedValue=false)
-	{
-		foreach ($optionValues as $value)
-		{
-			$selectOption="<option value='$value'";
-			if ($selectedValue !== false)
-			{
-				if ($value == $selectedValue)
-				{
-					$selectOption="$selectOption selected";
-				}
-			}
-			$selectOption="$selectOption>$value</option>";
-			echo $selectOption;
-		}
-	}
-
-	function headForm($type)
-	{
-		GLOBAL $hiddenInputs;
-		if ($type == 'group')
-		{
-			$name='groupIds';
-		}
-		else
-		{
-			$name=$type.'Id';
-		}
-		echo '<form class="headForm" method="post">';
-		echo   "<select onchange=\"this.form.submit()\" class=\"headSelect\" name=\"$name\">";
-		selectOptions($type.'s', true);
-		echo   '</select>';
-		echo   '<button type="submit" class="headButton" name="'.$type.'Button" value="get">';
-		echo     'Hämta';
-		echo   '</button>';
-		echo '</form>';
-		echo '<form class="headForm" method="post">';
-		echo   '<input class="headInput" type="text" name="new'.$type.'Id">';
-		echo   $hiddenInputs;
-		echo   '<button type="submit" class="headButton" name="'.$type.'Button" value="create">';
-		echo     'Skapa';
-		echo   '</button>';
-		echo '</form>';
-	}
-
-	function multiselectButton($type)
-	{
-		echo '<form action="/origo/php/adm/multiselect.php" method="get" target="topFrame">';
-		echo   "<button onclick=\"toggleTopFrame('$type');\" type=\"submit\" name=\"type\" value=\"$type\">";
-		echo     'Flervalsverktyg';
-		echo   '</button>';
-		echo '</form>';
-	}
-
-	function infoButton($type)
-	{
-		GLOBAL $mapId, $groupId, $controlId, $layerId, $sourceId, $serviceId, $footerId;
-		$evalStr="\$id=\$".$type."Id;";
-		eval($evalStr);
-		echo   '<form></form>';
-		echo   '<form action="/origo/php/adm/info.php" method="get" target="topFrame">';
-		echo     '<input type="hidden" name="type" value="'.$type.'">';
-		echo     "<button class=\"updateButton\" onclick=\"toggleTopFrame('info');\" type=\"submit\" name=\"id\" value=\"$id\">";
-		echo       'Info';
-		echo     '</button>';
-		echo   '</form>';
-	}
 
 	$hiddenInputs="";
 	if (isset($footerId))
@@ -519,7 +439,15 @@ var_dump($_POST);
 			{
 				$tiledStr="";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."' $editableStr $tiledStr $attributesStr WHERE layer_id = '$layerId'";
+			if (!empty($_POST['updateFeatureinfolayer']))
+			{
+				$featureinfolayerStr=", featureinfolayer = '".$_POST['updateFeatureinfolayer']."'";
+			}
+			else
+			{
+				$featureinfolayerStr="";
+			}
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."' $editableStr $tiledStr $attributesStr $featureinfolayerStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -805,7 +733,7 @@ var_dump($_POST);
                         infoButton($childType);
 			if (isset($mapId) && $level == 1)
 			{
-				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"/origo/php/adm/writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
+				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
@@ -1163,6 +1091,11 @@ var_dump($_POST);
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Attributes">Attribut:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
+		if ($layer['type'] == 'WMS')
+		{
+			echo      '<label for="'.$layerId.'Featureinfolayer">Info-lager:</label>';
+			echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
+		}
 		echo      '<input type="hidden" name="layerId" value="'.$layerId.'">';
 		if (isset($mapId))
 		{
