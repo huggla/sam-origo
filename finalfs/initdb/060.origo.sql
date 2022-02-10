@@ -66,6 +66,8 @@ CREATE TABLE map_configs.layers
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
 );
 
+INSERT INTO map_configs.layers(layer_id,title,type,attributes,visible,style_config) VALUES ('origo-cities#1','Origokommuner','GEOJSON','[ { "name": "name" } ]',true,[ [ { "label": "Origokommuner", "circle": { "radius": 10, "stroke": { "color": "rgba(0,0,0,1)", "width": 2.5 }, "fill": { "color": "rgba(255,255,255,0.9)" } } }, { "circle": { "radius": 2.5, "stroke": { "color": "rgba(0,0,0,0)", "width": 1 }, "fill": { "color": "rgba(37,129,196,1)" } } } ] ], "cirkel": [ [ { "circle": { "radius": 6, "stroke": { "color": "rgba(0,0,0,1)", "width": 2 }, "fill": { "color": "rgba(0,0,0,0.5)" } } } ] ]');
+
 CREATE TABLE map_configs.maps
 (
     map_id character varying COLLATE pg_catalog."default" NOT NULL,
@@ -112,6 +114,8 @@ CREATE TABLE map_configs.services
     CONSTRAINT services_pkey PRIMARY KEY (service_id)
 );
 
+INSERT INTO map_configs.services(service_id,base_url) VALUES ('origo-cities#1','data/origo-cities-3857.geojson');
+
 CREATE TABLE map_configs.sources
 (
     source_id character varying COLLATE pg_catalog."default" NOT NULL,
@@ -127,3 +131,5 @@ CREATE TABLE map_configs.sources
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
+
+INSERT INTO map_configs.sources(source_id,service) VALUES ('origo-cities#1','origo-cities#1');
