@@ -1,15 +1,14 @@
 <?php
 	include_once("./constants/CONNECTION_STRING.php");
-	include_once("./functions/common/dbh.php");
-	include_once("./functions/common/pgArrayToPhp.php");
+	include_once("./functions/dbh.php");
+	include_once("./functions/pgArrayToPhp.php");
+	include_once("./functions/array_column_search.php");
 	$functionFiles = array_diff(scandir('./functions/writeConfig'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
 		include_once("./functions/writeConfig/$functionFile");
 	}
-	include_once "functions/update.php";
-	include_once "functions/nicejson.php";
-	$mapId = getMapId();
+	$mapId = $_GET['map'];
 	$mapIdArray = explode('#', $mapId, 2);
 	$mapName = trim($mapIdArray[0]);
 	if (!empty($mapIdArray[1]))
@@ -20,9 +19,9 @@
 	{
 		$mapNumber = '';
 	}
-	$configfile = "$rootdir/$mapName/index$mapNumber.json";
+	$configfile = "/origo/$mapName/index$mapNumber.json";
 	ignore_user_abort(true);
-	$dbh=new_dbh();
+	$dbh=dbh(CONNECTION_STRING);
 	$conftables = array(
 		"maps",
 		"controls",
@@ -35,7 +34,7 @@
 	);
 	foreach ($conftables as $table)
 	{
-		eval("\$$table=get_conftable(\$dbh, $table);"); // Skapar variabel med samma namn som tabellen ($maps, $controls, osv).
+		eval("\$$table=get_conftable(\$dbh, '$table');"); // Skapar variabel med samma namn som tabellen ($maps, $controls, osv).
 	}
 	$map = array_column_search($mapId, 'map_id', $maps);
 	$json = '{ ';
