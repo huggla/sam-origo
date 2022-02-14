@@ -1,6 +1,5 @@
 <?php
 	include_once("./constants/CONNECTION_STRING.php");
-	include_once("./constants/CONFIG_FILE.php");
 	include_once("./functions/dbh.php");
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/array_column_search.php");
