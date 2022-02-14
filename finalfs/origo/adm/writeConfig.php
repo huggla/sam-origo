@@ -1,4 +1,5 @@
 <?php
+	include_once("./constants/CONNECTION_STRING.php");
 	include_once("./functions/common/dbh.php");
 	include_once("./functions/common/pgArrayToPhp.php");
 	$functionFiles = array_diff(scandir('./functions/writeConfig'), array('.', '..'));
