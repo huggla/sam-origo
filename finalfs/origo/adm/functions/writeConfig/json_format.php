@@ -1,5 +1,6 @@
 <?php
 
+// Nicejson
 // original code: http://www.daveperrett.com/articles/2008/03/11/format-json-with-php/
 // adapted to allow native functionality in php version >= 5.4.0
 
