@@ -1,19 +1,16 @@
 <?php
 	header("Cache-Control: must-revalidate, max-age=0, s-maxage=0, no-cache, no-store");
 
-	/* SETTINGS */
-	/************/
-	$dbhConnectionString='host=localhost port=5432 dbname=origo user=postgres password=postgres';
-	/************/
-
-	include_once("./functions/common/dbh.php");
-	include_once("./functions/common/pgArrayToPhp.php");
+	include_once("./constants/CONNECTION_STRING.php");
+	include_once("./functions/dbh.php");
+	include_once("./functions/pgArrayToPhp.php");
+	include_once("./functions/array_column_search.php");
 	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
 		include_once("./functions/manage/$functionFile");
 	}
-	$dbh=dbh($dbhConnectionString);
+	$dbh=dbh(CONNECTION_STRING);
 	if (!empty($_POST['mapId']))
 	{ 
 		$mapId=$_POST['mapId'];
