@@ -6,10 +6,15 @@
 	$dbhConnectionString='host=localhost port=5432 dbname=origo user=postgres password=postgres';
 	/************/
 
-	$functionFiles = array_diff(scandir('./functions'), array('.', '..'));
+	$commonFunctionFiles = array_diff(scandir('./functions/common'), array('.', '..'));
+	foreach ($commonFunctionFiles as $functionFile)
+	{
+		include_once("./functions/common/$functionFile");
+	}
+	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
-		include_once("./functions/$functionFile");
+		include_once("./functions/manage/$functionFile");
 	}
 	$dbh=dbh($dbhConnectionString);
 	if (!empty($_POST['mapId']))
