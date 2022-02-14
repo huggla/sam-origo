@@ -525,42 +525,7 @@ var_dump($_POST);
 		}
 	</script>
 	<style>
-		body		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;width:fit-content }
-		button		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;padding:0.12vw; font-size:0.9vw; border-width:1px; border-style:solid; line-height:1.2; margin-left:0.1vw; white-space:nowrap }
-		.buttonDiv	{ display:flex; float:right }
-		.headButton	{ width:3.3vw }
-		.updateButton	{ margin-top:0.5vw; margin-right:0.5vw }
-		.deleteButton1	{ margin-top:0.5vw; color:red }
-		.deleteButton2	{ margin-top:2.65vw; color:red }
-		.deleteButton3	{ margin-top: 4.8vw; color:red }
-		.deleteButton4	{ margin-top: 7.1vw; color:red }
-		hr		{ margin-right:0.2vw; margin-left:0.3vw }
-		table		{ border-spacing:0; clear:left; font-size:0.9vw }
-		th		{ text-align:left; vertical-align:top }
-		.thLeft		{ padding-right:0.3vw; border-right:dashed 1px lightgray }
-		.thMiddle	{ padding-left:0.3vw; padding-right:0.3vw; border-right:dashed 1px lightgray }
-		.thRight	{ padding-left:0.3vw }
-		h3		{ margin-block-start:0.6em; margin-block-end:0.5em; font-size:0.9vw }
-		.h3NoFocus	{ color:lightgray;margin-block-start:0 }
-		.h3Focus	{ margin-block-start:0 }
-		select		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size:0.9vw; padding:0.1vw; position:relative }
-		.headSelect	{ width:9.5vw }
-		.bodySelect	{ top:-0.3vw }
-		.miniSelect	{ top:-0.3vw; font-family:monospace; }
-		label		{ vertical-align: text-bottom }
-		input		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size: 0.9vw; line-height:1.5; border-width:1px; padding:0 0.3vw; border-style:solid }
-		.headInput	{ width: 8.5vw; margin-bottom:0.1vw }
-		form		{ margin:0; margin-block-end:0 }
-		.headForm	{ display:flex; width:12.8vw; padding:0.1vw }
-		.bodyForm	{ width:100vw }
-		.addForm	{ display:flex; padding:0.1vw; float:left; margin-right:0.5vw; margin-bottom:0.4vw }
-		textarea	{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;vertical-align:text-bottom; padding:0.1vw 0.3vw; font-size:0.9vw; line-height:1.5 }
-		.textareaXLarge	{ width:66vw }
-		.textareaLarge	{ width:33vw }
-		.textareaMedium	{ width:13vw }
-		.textareaSmall	{ width:6vw }
-		.textareaXSmall	{ width:2vw; resize:none }
-		iframe		{ width:100%; height:20vh; border:1px lightgray; border-style:none none dashed; padding-bottom:0.3vw; margin-bottom:0.3vw }
+		<?php include("styles/manage"); ?>
 	</style>
 </head>
 <body>
