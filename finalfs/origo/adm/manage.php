@@ -6,11 +6,7 @@
 	$dbhConnectionString='host=localhost port=5432 dbname=origo user=postgres password=postgres';
 	/************/
 
-	$commonFunctionFiles = array_diff(scandir('./functions/common'), array('.', '..'));
-	foreach ($commonFunctionFiles as $functionFile)
-	{
-		include_once("./functions/common/$functionFile");
-	}
+	include_once("./functions/common/pgArrayToPhp.php");
 	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
