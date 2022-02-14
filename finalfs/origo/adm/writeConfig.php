@@ -1,4 +1,5 @@
 <?php
+	include_once("./functions/common/dbh.php");
 	include_once("./functions/common/pgArrayToPhp.php");
 	$functionFiles = array_diff(scandir('./functions/writeConfig'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
@@ -6,7 +7,6 @@
 		include_once("./functions/writeConfig/$functionFile");
 	}
 	include_once "functions/update.php";
-	include_once "functions/db.php";
 	include_once "functions/nicejson.php";
 	$mapId = getMapId();
 	$mapIdArray = explode('#', $mapId, 2);
