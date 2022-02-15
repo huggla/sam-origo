@@ -71,6 +71,7 @@ ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf"
 ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/bin/postgres"
+ARG LINUXUSEROWNED="/origo"
 ARG FINALCMDS=\
 "   cp -a /tmp/origo/* /origo/ "\
 "&& cd /usr/local "\
