@@ -75,7 +75,7 @@ CREATE TABLE map_configs.maps
     mapgrid boolean NOT NULL DEFAULT true,
     projectioncode character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'EPSG:3857'::character varying,
     projectionextent box NOT NULL DEFAULT '(-20026376.39,-20048966.10),(20026376.39,20048966.10)'::box,
-    extent box NOT NULL DEFAULT '(-20048966.10,20048966.10),(-20026376.39,20026376.39)'::box,
+    extent box NOT NULL DEFAULT '(-20026376.39,-20048966.10),(20026376.39,20048966.10)'::box,
     center point NOT NULL DEFAULT '(1770000,8770000)'::point,
     zoom integer NOT NULL DEFAULT 7,
     enablerotation boolean NOT NULL DEFAULT false,
