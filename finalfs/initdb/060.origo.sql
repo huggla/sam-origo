@@ -74,7 +74,7 @@ CREATE TABLE map_configs.maps
     controls character varying[] COLLATE pg_catalog."default" NOT NULL DEFAULT '{home#1,mapmenu#1,sharemap#1,geoposition#1,print#1,about#1,link#1,legend#1,position#1,measure#1}'::character varying[],
     mapgrid boolean NOT NULL DEFAULT true,
     projectioncode character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'EPSG:3857'::character varying,
-    projectionextent box NOT NULL DEFAULT '(-20048966.10,20048966.10),(-20026376.39,20026376.39)'::box,
+    projectionextent box NOT NULL DEFAULT '(-20026376.39,-20048966.10),(20026376.39,20048966.10)'::box,
     extent box NOT NULL DEFAULT '(-20048966.10,20048966.10),(-20026376.39,20026376.39)'::box,
     center point NOT NULL DEFAULT '(1770000,8770000)'::point,
     zoom integer NOT NULL DEFAULT 7,
