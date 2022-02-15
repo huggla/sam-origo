@@ -6,7 +6,7 @@
 		if (!empty($mapGroups))
 		{
 			$mapGroups = pgArrayToPhp($mapGroups);
-			$json = $json. '"groups": [ ';
+			$json = $json. ', "groups": [ ';
 			$firstGroup = true;
 			foreach ($mapGroups as $group)
 			{
