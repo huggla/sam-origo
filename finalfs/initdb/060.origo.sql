@@ -78,7 +78,7 @@ CREATE TABLE map_configs.maps
     extent box NOT NULL DEFAULT '(-20026376.39,-20048966.10),(20026376.39,20048966.10)'::box,
     center point NOT NULL DEFAULT '(1770000,8770000)'::point,
     zoom integer NOT NULL DEFAULT 7,
-    enablerotation boolean NOT NULL DEFAULT false,
+    enablerotation boolean NOT NULL DEFAULT true,
     constrainresolution boolean NOT NULL DEFAULT true,
     resolutions numeric[] NOT NULL DEFAULT '{156543.03,78271.52,39135.76,19567.88,9783.94,4891.97,2445.98,1222.99,611.50,305.75,152.87,76.437,38.219,19.109,9.5546,4.7773,2.3887,1.1943,0.5972}'::numeric[],
     proj4defs character varying[] COLLATE pg_catalog."default" DEFAULT '{EPSG:3006}'::character varying[],
