@@ -28,7 +28,6 @@
 				}
 				if (!empty($group['groups']))
 				{
-					$json = $json.', ';
 					addGroupsToJson($group['groups']);
 				}
 				$json = $json.' }';
