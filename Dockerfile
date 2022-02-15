@@ -17,7 +17,7 @@ ARG CLONEGITS="https://github.com/filleg/origo.git"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo "\
-" npm install "\
+"&& npm install "\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
