@@ -57,7 +57,7 @@ postgresql postgresql-contrib libressl3.0-libssl unixodbc \
 #        php7-xmlwriter \
 #        php7-zip \
         php7-pgsql \
-        php7-pecl-imagick \
+        php7-pecl-imagick"
 #        libpng \
 #        libpng-static \
 #        libpng-utils \
