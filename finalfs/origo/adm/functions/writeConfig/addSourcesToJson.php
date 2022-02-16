@@ -12,17 +12,17 @@
 		$firstSource = true;
 		foreach ($mapSources as $sourceId)
 		{
-			if ($firstSource)
-			{
-				$firstSource = false;
-			}
-			else
-			{
-				$json = $json.', ';
-			}
 			$source = array_column_search(trim(explode('@', $sourceId, 2)[0]), 'source_id', $sources);
 			if (!empty($source))
 			{
+				if ($firstSource)
+				{
+					$firstSource = false;
+				}
+				else
+				{
+					$json = $json.', ';
+				}
 				$url = array_column_search($source['service'], 'service_id', $services, 'base_url');
 				$sourceProject = trim(explode('#', $source['source_id'], 2)[0]);
 				if (strpos($sourceId, '@wfs') !== false)
