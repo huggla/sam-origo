@@ -78,7 +78,7 @@
 	$json = $json.'"enableRotation": '.pgBoolToText($map['enablerotation']).', ';
 	$json = $json.'"constrainResolution": '.pgBoolToText($map['constrainresolution']).', ';
 	$json = $json.'"resolutions": [ '.pgArrayToText($map['resolutions']).' ]';
-	$mapLayers = array();
+	$mapLayers = array('root' => pgArrayToPhp($map['layers']));
 	addGroupsToJson($map['groups']);
 	$json = $json.', ';
 	addLayersToJson();
