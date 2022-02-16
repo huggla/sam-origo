@@ -53,8 +53,6 @@
 	$serviceButton=$_POST['serviceButton'];
 	$footerButton=$_POST['footerButton'];
 
-var_dump($_POST);
-
 	$hiddenInputs="";
 	if (isset($footerId))
 	{
