@@ -79,7 +79,8 @@ ARG FINALCMDS=\
 "&& ln -s ../lib ../share ./ "\
 "&& cd bin "\
 "&& find ../../bin ! -type l ! -name postgres ! -name ../../bin -maxdepth 1 -exec ln -s {} ./ + "\
-"&& chmod g+X /usr/bin/*"
+"&& chmod g+X /usr/bin/* "\
+"&& sed -i 's/index.json/origo-cities1.json/' /origo/index.html"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
