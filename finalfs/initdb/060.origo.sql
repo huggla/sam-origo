@@ -95,7 +95,7 @@ CREATE TABLE map_configs.maps
         ON DELETE NO ACTION
 );
 
-INSERT INTO map_configs.maps(map_id,footer,layers) VALUES ('origo#1','origo#1','{origo-cities#1}');
+INSERT INTO map_configs.maps(map_id,footer,layers) VALUES ('origo-cities#1','origo#1','{origo-cities#1}');
 
 CREATE TABLE map_configs.proj4defs
 (
