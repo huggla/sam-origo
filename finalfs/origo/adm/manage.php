@@ -1007,13 +1007,13 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$layerId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Id" name="updateId">'.$layerId.'</textarea>&nbsp;';
-
 		echo      '<label for="'.$layerId.'Title">Titel:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Title" name="updateTitle">'.$layer['title'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Source">Källa:</label>';
-		echo         '<select class="bodySelect" id="'.$layerId.'Source" name="updateSource">';
+		echo      '<input type="text" list="sourcelist" class="bodySelect" id="'.$layerId.'Source" name="updateSource" value="'.$layer['source'].'" onfocus="this.value='."''".'" />';
+		echo      '<datalist id="sourcelist">';
 		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $layer['source']);
-		echo         '</select>&nbsp;';
+		echo      '</datalist>&nbsp;';
 		echo      '<label for="'.$layerId.'Type">Typ:</label>';
 		echo         '<select class="miniSelect" id="'.$layerId.'Type" name="updateType">';
 		printSelectOptions(array("WMS", "WFS"), $layer['type']);
