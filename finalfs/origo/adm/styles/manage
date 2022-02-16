@@ -18,7 +18,7 @@
 		.h3Focus	{ margin-block-start:0 }
 		select		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size:0.9vw; padding:0.1vw; position:relative }
 		.headSelect	{ width:9.5vw }
-		.bodySelect	{ top:-0.3vw }
+		.bodySelect	{ position:relative; top:-0.3vw }
 		.miniSelect	{ top:-0.3vw; font-family:monospace; }
 		label		{ vertical-align: text-bottom }
 		input		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size: 0.9vw; line-height:1.5; border-width:1px; padding:0 0.3vw; border-style:solid }
