@@ -48,7 +48,7 @@ postgresql postgresql-contrib libressl3.0-libssl unixodbc \
 #        php7-pdo_sqlite \
 #        php7-phar \
 #        php7-posix \
-        php7-simplexml \
+#        php7-simplexml \
         php7-session \
 #        php7-soap \
 #        php7-tokenizer \
@@ -64,8 +64,8 @@ postgresql postgresql-contrib libressl3.0-libssl unixodbc \
 #        libjpeg-turbo \
 #        imagemagick \
 #        curl \
-        php7-pecl-apcu \
-        php7-ldap"
+#        php7-pecl-apcu \
+#        php7-ldap"
 #        composer"
 ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
