@@ -55,7 +55,7 @@
 				// Set default values </end>
 
 				$layerName = trim(explode('#', $layer['layer_id'], 2)[0]);
-				$json = $json.'{ "name": "'.$layerName.'", "source": "'.$layer['source'].'", "title": "'.$layer['title'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
+				$json = $json.'{ "name": "'.$layerName.'", "title": "'.$layer['title'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
 				if (!empty($layer['style_layer']))
 				{
 					$styleLayerName = trim(explode('#', $layer['style_layer'], 2)[0]);
@@ -82,32 +82,36 @@
 				{
 					$json = $json.', "opacity": '.$layer['opacity'];
 				}
-				if ($layer['type'] == 'WMS')
+				if ($layer['type'] != 'OSM')
 				{
-					if (!empty($layer['gutter']))
+					$json = $json.', "source": "'.$layer['source'].'"';
+					if ($layer['type'] == 'WMS')
 					{
-						$json = $json.', "gutter": '.$layer['gutter'];
+						if (!empty($layer['gutter']))
+						{
+							$json = $json.', "gutter": '.$layer['gutter'];
+						}
+						if ($layer['tiled'] == 'f')
+						{
+							$json = $json.', "renderMode": "image"';
+						}
+						if (!empty($layer['featureinfolayer']))
+						{
+							$json = $json.', "featureinfoLayer": "'.$layer['featureinfolayer'].'"';
+						}
 					}
-					if ($layer['tiled'] == 'f')
+					elseif ($layer['type'] == 'WFS')
 					{
-						$json = $json.', "renderMode": "image"';
-					}
-					if (!empty($layer['featureinfolayer']))
-					{
-						$json = $json.', "featureinfoLayer": "'.$layer['featureinfolayer'].'"';
+						$json = $json.', "projection": "EPSG:4326"';
+						if ($layer['editable'] == 't')
+						{
+							$json = $json.', "editable": true';
+						}
 					}
 				}
 				if (!empty($layer['abstract']))
 				{
 					$json = $json.', "abstract": "'.$layer['abstract'].'"';
-				}
-				if ($layer['type'] == 'WFS')
-				{
-					$json = $json.', "projection": "EPSG:4326"';
-					if ($layer['editable'] == 't')
-					{
-						$json = $json.', "editable": true';
-					}
 				}
 				if (!empty($layer['attributes']))
 				{
