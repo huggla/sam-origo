@@ -29,7 +29,7 @@
 				}
 				if (!empty($style['icon']))
 				{
-					if (empty($style['icon_extended']) && $style['type'] == 'WMS')
+					if (empty($style['icon_extended']) && $style['type'] != 'WFS')
 					{
 						$json = $json.'"image": { "src": "'.$style['icon'].'" }';
 					}
