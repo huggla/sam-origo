@@ -444,7 +444,7 @@
 			{
 				$featureinfolayerStr="";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."' $editableStr $tiledStr $attributesStr $featureinfolayerStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."' $editableStr $tiledStr $attributesStr $featureinfolayerStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -1040,6 +1040,8 @@
 		echo         '<select class="miniSelect" id="'.$layerId.'Visible" name="updateVisible">';
 		printSelectOptions(array("", "f", "t"), $layer['visible']);
 		echo         '</select>&nbsp;';
+		echo      '<label for="'.$layerId.'Opacity">Opacitet:</label>';
+		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Opacity" name="updateOpacity">'.$layer['opacity'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Icon">Ikon:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Icon" name="updateIcon">'.$layer['icon'].'</textarea>&nbsp;';
