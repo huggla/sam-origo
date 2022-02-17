@@ -523,7 +523,7 @@
 		}
 	</script>
 	<style>
-		<?php include("./styles/manage"); ?>
+		<?php include("./styles/manage.css"); ?>
 	</style>
 </head>
 <body>
