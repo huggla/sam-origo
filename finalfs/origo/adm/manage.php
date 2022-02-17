@@ -5,6 +5,7 @@
 	include_once("./functions/dbh.php");
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/array_column_search.php");
+	include_once("./functions/all_from_table.php");
 	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
