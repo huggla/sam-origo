@@ -42,7 +42,7 @@ CREATE TABLE map_configs.groups
     CONSTRAINT groups_pkey PRIMARY KEY (group_id)
 );
 
-INSERT INTO map_configs.groups(group_id,title,expanded) VALUES ('background#1','Bakgrundskartor',true);
+INSERT INTO map_configs.groups(group_id,title,expanded,layers) VALUES ('background#1','Bakgrundskartor',true,'{osm#1}');
 
 CREATE TABLE map_configs.layers
 (
@@ -69,6 +69,7 @@ CREATE TABLE map_configs.layers
 
 INSERT INTO map_configs.layers(layer_id,title,type,attributes,visible,style_config,source) VALUES ('origo-cities#1','Origokommuner','GEOJSON','[ { "name": "name" } ]',true,'[ [ { "label": "Origokommuner", "circle": { "radius": 10, "stroke": { "color": "rgba(0,0,0,1)", "width": 2.5 }, "fill": { "color": "rgba(255,255,255,0.9)" } } }, { "circle": { "radius": 2.5, "stroke": { "color": "rgba(0,0,0,0)", "width": 1 }, "fill": { "color": "rgba(37,129,196,1)" } } } ] ]','data/origo-cities-3857.geojson');
 INSERT INTO map_configs.layers(layer_id,title,type,visible,style_config,source,queryable,opacity) VALUES ('origo-mask#1','Origo-mask','GEOJSON',true,'[ [ { "stroke": { "color": "rgba(0,0,0,1.0)" }, "fill": { "color": "rgba(0,0,0,1.0)" } } ] ]','data/origo-mask-3857.geojson',false,0.25);
+INSERT INTO map_configs.layers(layer_id,title,type,visible,icon,queryable) VALUES ('osm#1','OpenStreetMap','OSM',true,'img/png/osm.png',false);
 
 CREATE TABLE map_configs.maps
 (
