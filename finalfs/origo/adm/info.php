@@ -2,7 +2,7 @@
 <html style="width:100%;height:100%">
 <head>
 	<style>
-		<?php include("./styles/info"); ?>
+		<?php include("./styles/info.css"); ?>
 	</style>
 </head>
 <body>
