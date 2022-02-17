@@ -522,7 +522,7 @@
 		}
 	</script>
 	<style>
-		<?php include("styles/manage"); ?>
+		<?php include("./styles/manage"); ?>
 	</style>
 </head>
 <body>
