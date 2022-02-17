@@ -43,6 +43,7 @@ CREATE TABLE map_configs.groups
 );
 
 INSERT INTO map_configs.groups(group_id,title,expanded,layers) VALUES ('background#1','Bakgrundskartor',true,'{osm#1}');
+INSERT INTO map_configs.groups(group_id,layers) VALUES ('none','{origo-mask#1}');
 
 CREATE TABLE map_configs.layers
 (
@@ -98,7 +99,7 @@ CREATE TABLE map_configs.maps
         ON DELETE NO ACTION
 );
 
-INSERT INTO map_configs.maps(map_id,footer,layers,groups) VALUES ('origo-cities#1','origo#1','{origo-cities#1,origo-mask#1}','{background#1}');
+INSERT INTO map_configs.maps(map_id,footer,layers,groups) VALUES ('origo-cities#1','origo#1','{origo-cities#1}','{none,background#1}');
 
 CREATE TABLE map_configs.proj4defs
 (
