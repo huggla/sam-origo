@@ -78,6 +78,10 @@
 				{
 					$json = $json.', "legend": true';
 				}
+				if ($layer['opacity'] < 1)
+				{
+					$json = $json.', "opacity": '.$layer['opacity'];
+				}
 				if ($layer['type'] == 'WMS')
 				{
 					if (!empty($layer['gutter']))
