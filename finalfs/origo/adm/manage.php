@@ -163,7 +163,7 @@
 		}
 		elseif ($mapButton == 'update')
 		{
-			$sql="UPDATE map_configs.maps SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', controls = '{".$_POST['updateControls']."}', featureinfooptions = '".$_POST['updateFeatureinfooptions']."', center = '".$_POST['updateCenter']."', zoom = '".$_POST['updateZoom']."', footer = '".$_POST['updateFooter']."', abstract = '".$_POST['updateAbstract']."', map_id = '".$_POST['updateId']."' WHERE map_id = '$mapId'";
+			$sql="UPDATE map_configs.maps SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', controls = '{".$_POST['updateControls']."}', featureinfooptions = '".$_POST['updateFeatureinfooptions']."', center = '".$_POST['updateCenter']."', zoom = '".$_POST['updateZoom']."', footer = '".$_POST['updateFooter']."', info = '".$_POST['updateInfo']."', map_id = '".$_POST['updateId']."' WHERE map_id = '$mapId'";
 		}
 		if (!empty($sql))
 		{
@@ -191,7 +191,7 @@
 		}
 		elseif ($controlButton == 'update')
 		{
-			$sql="UPDATE map_configs.controls SET options = '".$_POST['updateOptions']."', abstract = '".$_POST['updateAbstract']."', control_id = '".$_POST['updateId']."' WHERE control_id = '$controlId'";
+			$sql="UPDATE map_configs.controls SET options = '".$_POST['updateOptions']."', info = '".$_POST['updateInfo']."', control_id = '".$_POST['updateId']."' WHERE control_id = '$controlId'";
 		}
 		elseif ($controlButton == 'add')
 		{
@@ -240,7 +240,7 @@
 		}
 		elseif ($footerButton == 'update')
 		{
-			$sql="UPDATE map_configs.footers SET img = '".$_POST['updateImg']."', url = '".$_POST['updateUrl']."', text = '".$_POST['updateText']."', abstract = '".$_POST['updateAbstract']."', footer_id = '".$_POST['updateId']."' WHERE footer_id = '$footerId'";
+			$sql="UPDATE map_configs.footers SET img = '".$_POST['updateImg']."', url = '".$_POST['updateUrl']."', text = '".$_POST['updateText']."', info = '".$_POST['updateInfo']."', footer_id = '".$_POST['updateId']."' WHERE footer_id = '$footerId'";
 		}
 		$result=pg_query($dbh, $sql);
 		if (!$result)
@@ -297,7 +297,7 @@
 			{
 				$dpi="null";
 			}
-			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, dpi = $dpi, abstract = '".$_POST['updateAbstract']."', source_id = '".$_POST['updateId']."' WHERE source_id = '$sourceId'";
+			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, dpi = $dpi, info = '".$_POST['updateInfo']."', source_id = '".$_POST['updateId']."' WHERE source_id = '$sourceId'";
 		}
 		$result=pg_query($dbh, $sql);
 		if (!$result)
@@ -322,7 +322,7 @@
 		}
 		elseif ($serviceButton == 'update')
 		{
-			$sql="UPDATE map_configs.services SET base_url = '".$_POST['updateBaseurl']."', abstract = '".$_POST['updateAbstract']."', service_id = '".$_POST['updateId']."' WHERE service_id = '$serviceId'";
+			$sql="UPDATE map_configs.services SET base_url = '".$_POST['updateBaseurl']."', info = '".$_POST['updateInfo']."', service_id = '".$_POST['updateId']."' WHERE service_id = '$serviceId'";
 		}
 		if (!empty($sql))
 		{
@@ -334,7 +334,6 @@
 			$services=all_from_table('map_configs.services');
 		}
 	}
-
 
 	elseif (isset($groupButton) && $groupButton != 'get')
 	{
@@ -351,7 +350,7 @@
 		}
 		elseif ($groupButton == 'update')
 		{
-			$sql="UPDATE map_configs.groups SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', expanded = '".$_POST['updateExpanded']."', group_id = '".$_POST['updateId']."' WHERE group_id = '".end($groupIds)."'";
+			$sql="UPDATE map_configs.groups SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', expanded = '".$_POST['updateExpanded']."', group_id = '".$_POST['updateId']."', info = '".$_POST['updateInfo']."' WHERE group_id = '".end($groupIds)."'";
 		}
 		elseif ($groupButton == 'add' && isset($toMapId))
 		{
@@ -437,15 +436,7 @@
 			{
 				$tiledStr="";
 			}
-			if (!empty($_POST['updateFeatureinfolayer']))
-			{
-				$featureinfolayerStr=", featureinfolayer = '".$_POST['updateFeatureinfolayer']."'";
-			}
-			else
-			{
-				$featureinfolayerStr="";
-			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."' $editableStr $tiledStr $attributesStr $featureinfolayerStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."' $editableStr $tiledStr $attributesStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -640,6 +631,8 @@
 				echo '<select class="miniSelect" id="'.$groupId.'Expanded" name="updateExpanded">';
 				printSelectOptions(array("", "f", "t"), $group['expanded']);
 				echo '</select>&nbsp;';
+				echo '<label for="'.$groupId.'Abstract">Sammanfattning:</label>';
+				echo '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Abstract" name="updateAbstract">'.$group['abstract'].'</textarea>&nbsp;';
 				$childType="group";
 				$deleteButtonClass="deleteButton2";
 			}
@@ -663,9 +656,8 @@
 				$childType="map";
 				$deleteButtonClass="deleteButton3";
 			}
-				echo '<label for="'.$groupId.'Abstract">Sammanfattning:</label>';
-				echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Abstract" name="updateAbstract">'.$group['abstract'].'</textarea>&nbsp;';
-
+			echo '<label for="'.$groupId.'Info">Info:</label>';
+			echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Info" name="updateInfo">'.$group['info'].'</textarea>&nbsp;';
 			if (isset($mapId))
 			{
 				echo '<input type="hidden" name="mapId" value="'.$mapId.'">';
@@ -933,8 +925,8 @@
 		echo      '<label for="'.$controlId.'Options">Inställningar:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$controlId.'Options" name="updateOptions">'.$control['options'].'</textarea>&nbsp;';
 		echo	  '</br>';
-		echo      '<label for="'.$controlId.'Abstract">Sammanfattning:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$controlId.'Abstract" name="updateAbstract">'.$control['abstract'].'</textarea>&nbsp;';
+		echo      '<label for="'.$controlId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$controlId.'Info" name="updateInfo">'.$control['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="controlId" value="'.$controlId.'">';
 		if (isset($mapId))
 		{
@@ -979,8 +971,8 @@
 		echo      '<br>';
 		echo      '<label for="'.$footerId.'Text">Text:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$footerId.'Text" name="updateText">'.$footer['text'].'</textarea>&nbsp;';
-		echo      '<label for="'.$footerId.'Abstract">Sammanfattning:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$footerId.'Abstract" name="updateAbstract">'.$footer['abstract'].'</textarea>&nbsp;';
+		echo      '<label for="'.$footerId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$footerId.'Info" name="updateInfo">'.$footer['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="footerId" value="'.$footerId.'">';
 		if (isset($mapId))
 		{
@@ -1055,12 +1047,14 @@
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Abstract" name="updateAbstract">'.$layer['abstract'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Attributes">Attribut:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
+		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
 		if ($layer['type'] == 'WMS')
 		{
-			echo      '<label for="'.$layerId.'Featureinfolayer">Info-lager:</label>';
+			echo      '<label for="'.$layerId.'Featureinfolayer">FeatureInfo-lager:</label>';
 			echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
 		}
+		echo      '<label for="'.$layerId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="layerId" value="'.$layerId.'">';
 		if (isset($mapId))
 		{
@@ -1136,7 +1130,6 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$sourceId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$sourceId.'Id" name="updateId">'.$sourceId.'</textarea>&nbsp;';
-
 		echo      '<label for="'.$sourceId.'Service">Tjänst:</label>';
 		echo         '<select class="bodySelect" id="'.$sourceId.'Service" name="updateService">';
 		printSelectOptions(array_merge(array(""), array_column($services, 'service_id')), $source['service']);
@@ -1152,8 +1145,8 @@
 		echo      '<label for="'.$sourceId.'Dpi">Dpi:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Dpi" name="updateDpi">'.$source['dpi'].'</textarea>&nbsp;';
 		echo      '</br>';
-		echo      '<label for="'.$sourceId.'Abstract">Sammanfattning:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$sourceId.'Abstract" name="updateAbstract">'.$source['abstract'].'</textarea>&nbsp;';
+		echo      '<label for="'.$sourceId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$sourceId.'Info" name="updateInfo">'.$source['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="sourceId" value="'.$sourceId.'">';
 		if (isset($mapId))
 		{
@@ -1230,8 +1223,8 @@
 		echo      '<label for="'.$serviceId.'Baseurl">Huvudurl:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$serviceId.'Baseurl" name="updateBaseurl">'.$service['base_url'].'</textarea>&nbsp;';
 		echo      '</br>';
-		echo      '<label for="'.$serviceId.'Abstract">Sammanfattning:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$serviceId.'Abstract" name="updateAbstract">'.$service['abstract'].'</textarea>&nbsp;';
+		echo      '<label for="'.$serviceId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$serviceId.'Info" name="updateInfo">'.$service['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="serviceId" value="'.$serviceId.'">';
 		if (isset($sourceId))
 		{
