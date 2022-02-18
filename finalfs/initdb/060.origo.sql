@@ -92,11 +92,7 @@ CREATE TABLE map_configs.maps
     styles character varying[] COLLATE pg_catalog."default",
     footer character varying COLLATE pg_catalog."default",
     abstract character varying COLLATE pg_catalog."default",
-    CONSTRAINT map_pk PRIMARY KEY (map_id),
-    CONSTRAINT footerfk FOREIGN KEY (footer)
-        REFERENCES map_configs.footers (footer_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT map_pk PRIMARY KEY (map_id)
 );
 
 INSERT INTO map_configs.maps(map_id,footer,layers,groups) VALUES ('origo-cities#1','origo#1','{origo-cities#1}','{none#1,background#1}');
