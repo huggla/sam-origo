@@ -25,25 +25,26 @@ CREATE TABLE map_configs.footers
     img character varying COLLATE pg_catalog."default",
     url character varying COLLATE pg_catalog."default",
     text character varying COLLATE pg_catalog."default",
-    abstract character varying COLLATE pg_catalog."default",
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT footers_pkey PRIMARY KEY (footer_id)
 );
 
-INSERT INTO map_configs.footers(footer_id,img,url,text) VALUES ('origo#1','img/png/logo.png','https://github.com/origo-map/origo','Origo');
+INSERT INTO map_configs.footers(footer_id,img,url,text,info) VALUES ('origo#1','img/png/logo.png','https://github.com/origo-map/origo','Origo','En sidfot som vid klick öppnar Origoprojektets Github-sida i en ny flik.');
 
 CREATE TABLE map_configs.groups
 (
     group_id character varying COLLATE pg_catalog."default" NOT NULL,
     title character varying COLLATE pg_catalog."default",
     expanded boolean NOT NULL DEFAULT false,
-    abstract xml,
+    abstract character varying COLLATE pg_catalog."default",
     groups character varying[] COLLATE pg_catalog."default",
     layers character varying[] COLLATE pg_catalog."default",
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT groups_pkey PRIMARY KEY (group_id)
 );
 
-INSERT INTO map_configs.groups(group_id,title,expanded,layers) VALUES ('background#1','Bakgrundskartor',true,'{osm#1}');
-INSERT INTO map_configs.groups(group_id,layers) VALUES ('none#1','{origo-mask#1}');
+INSERT INTO map_configs.groups(group_id,title,expanded,layers,info) VALUES ('background#1','Bakgrundskartor',true,'{osm#1}','Grupp som innehåller alla bakgrundslager.');
+INSERT INTO map_configs.groups(group_id,layers,info) VALUES ('none#1','{origo-mask#1}','Grupp som inte visas i lagerträdet.');
 
 CREATE TABLE map_configs.layers
 (
@@ -65,12 +66,13 @@ CREATE TABLE map_configs.layers
     gutter integer,
     tiled boolean DEFAULT true,
     opacity numeric(3,2) NOT NULL DEFAULT 1,
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
 );
 
-INSERT INTO map_configs.layers(layer_id,title,type,attributes,visible,style_config,source) VALUES ('origo-cities#1','Origokommuner','GEOJSON','[ { "name": "name" } ]',true,'[ [ { "label": "Origokommuner", "circle": { "radius": 10, "stroke": { "color": "rgba(0,0,0,1)", "width": 2.5 }, "fill": { "color": "rgba(255,255,255,0.9)" } } }, { "circle": { "radius": 2.5, "stroke": { "color": "rgba(0,0,0,0)", "width": 1 }, "fill": { "color": "rgba(37,129,196,1)" } } } ] ]','data/origo-cities-3857.geojson');
-INSERT INTO map_configs.layers(layer_id,title,type,visible,style_config,source,queryable,opacity) VALUES ('origo-mask#1','Origo-mask','GEOJSON',true,'[ [ { "stroke": { "color": "rgba(0,0,0,1.0)" }, "fill": { "color": "rgba(0,0,0,1.0)" } } ] ]','data/origo-mask-3857.geojson',false,0.25);
-INSERT INTO map_configs.layers(layer_id,title,type,visible,icon,queryable) VALUES ('osm#1','OpenStreetMap','OSM',true,'img/png/osm.png',false);
+INSERT INTO map_configs.layers(layer_id,title,type,attributes,visible,style_config,source,info) VALUES ('origo-cities#1','Origokommuner','GEOJSON','[ { "name": "name" } ]',true,'[ [ { "label": "Origokommuner", "circle": { "radius": 10, "stroke": { "color": "rgba(0,0,0,1)", "width": 2.5 }, "fill": { "color": "rgba(255,255,255,0.9)" } } }, { "circle": { "radius": 2.5, "stroke": { "color": "rgba(0,0,0,0)", "width": 1 }, "fill": { "color": "rgba(37,129,196,1)" } } } ] ]','data/origo-cities-3857.geojson','Lager som visar kommuner delaktiga i Origoprojektet.');
+INSERT INTO map_configs.layers(layer_id,title,type,visible,style_config,source,queryable,opacity,info) VALUES ('origo-mask#1','Origo-mask','GEOJSON',true,'[ [ { "stroke": { "color": "rgba(0,0,0,1.0)" }, "fill": { "color": "rgba(0,0,0,1.0)" } } ] ]','data/origo-mask-3857.geojson',false,0.25,'Lager som tonar ner de delar av kartan som inte utgör del av en Origokommun.');
+INSERT INTO map_configs.layers(layer_id,title,type,visible,icon,queryable,info) VALUES ('osm#1','OpenStreetMap','OSM',true,'img/png/osm.png',false,'Bakgrundslager från OpenStreetMap.');
 
 CREATE TABLE map_configs.maps
 (
@@ -91,11 +93,11 @@ CREATE TABLE map_configs.maps
     layers character varying[] COLLATE pg_catalog."default",
     styles character varying[] COLLATE pg_catalog."default",
     footer character varying COLLATE pg_catalog."default",
-    abstract character varying COLLATE pg_catalog."default",
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT map_pk PRIMARY KEY (map_id)
 );
 
-INSERT INTO map_configs.maps(map_id,footer,layers,groups) VALUES ('origo-cities#1','origo#1','{origo-cities#1}','{none#1,background#1}');
+INSERT INTO map_configs.maps(map_id,footer,layers,groups,info) VALUES ('origo-cities#1','origo#1','{origo-cities#1}','{none#1,background#1}','En demokarta som visar kommuner delaktiga i Origoprojektet.');
 
 CREATE TABLE map_configs.proj4defs
 (
@@ -110,11 +112,9 @@ CREATE TABLE map_configs.services
 (
     service_id character varying COLLATE pg_catalog."default" NOT NULL,
     base_url character varying COLLATE pg_catalog."default",
-    abstract character varying COLLATE pg_catalog."default",
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT services_pkey PRIMARY KEY (service_id)
 );
-
-INSERT INTO map_configs.services(service_id,base_url) VALUES ('origo-cities#1','data/origo-cities-3857.geojson');
 
 CREATE TABLE map_configs.sources
 (
@@ -124,7 +124,7 @@ CREATE TABLE map_configs.sources
     fi_point_tolerance integer,
     ttl integer,
     dpi integer,
-    abstract character varying COLLATE pg_catalog."default",
+    info character varying COLLATE pg_catalog."default",
     CONSTRAINT sources_pkey PRIMARY KEY (source_id),
     CONSTRAINT servicefk FOREIGN KEY (service)
         REFERENCES map_configs.services (service_id) MATCH SIMPLE
