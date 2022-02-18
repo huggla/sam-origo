@@ -1,0 +1,223 @@
+{
+        "controls": [
+                {
+                        "name": "home",
+                        "options": {
+                                "zoomOnStart": true
+                        }
+                },
+                {
+                        "name": "mapmenu",
+                        "options": {
+                                "isActive": false
+                        }
+                },
+                {
+                        "name": "sharemap"
+                },
+                {
+                        "name": "geoposition"
+                },
+                {
+                        "name": "print"
+                },
+                {
+                        "name": "about",
+                        "options": {
+                                "buttonText": "Om Origo",
+                                "title": "Om Origo",
+                                "content": "<p>Origo är ett ramverk för webbkartor. Ramverket bygger på JavaScript-biblioteket OpenLayers. Du kan använda Origo för att skapa egna webbaserade kartapplikationer.</p><br><p>Projektet drivs och underhålls av ett antal svenska kommuner. Besök gärna <a href=\"https://github.com/origo-map/origo\" target=\"_blank\">Origo på GitHub</a> för mer information.</p>"
+                        }
+                },
+                {
+                        "name": "link",
+                        "options": {
+                                "title": "Origo",
+                                "url": "https://github.com/origo-map/origo"
+                        }
+                },
+                {
+                        "name": "legend",
+                        "options": {
+                                "labelOpacitySlider": "Opacity",
+                                "useGroupIndication": true
+                        }
+                },
+                {
+                        "name": "position",
+                        "options": {
+                                "title": "Web Mercator",
+                                "projections": {
+                                        "EPSG:4326": "WGS84",
+                                        "EPSG:3006": "Sweref99 TM"
+                                }
+                        }
+                },
+                {
+                        "name": "measure"
+                }
+        ],
+        "pageSettings": {
+                "footer": {
+                        "img": "img/png/logo.png",
+                        "url": "https://github.com/origo-map/origo",
+                        "text": "Origo"
+                },
+                "mapGrid": {
+                        "visible": true
+                }
+        },
+        "projectionCode": "EPSG:3857",
+        "projectionExtent": [
+                -20026376.39,
+                -20048966.1,
+                20026376.39,
+                20048966.1
+        ],
+        "featureinfoOptions": {
+                "infowindow": "overlay"
+        },
+        "proj4Defs": [
+                {
+                        "code": "EPSG:3006",
+                        "projection": "+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+                }
+        ],
+        "extent": [
+                -20026376.39,
+                -20048966.1,
+                20026376.39,
+                20048966.1
+        ],
+        "center": [
+                1770000,
+                8770000
+        ],
+        "zoom": 7,
+        "enableRotation": true,
+        "constrainResolution": true,
+        "resolutions": [
+                156543.03,
+                78271.52,
+                39135.76,
+                19567.88,
+                9783.94,
+                4891.97,
+                2445.98,
+                1222.99,
+                611.50,
+                305.75,
+                152.87,
+                76.437,
+                38.219,
+                19.109,
+                9.5546,
+                4.7773,
+                2.3887,
+                1.1943,
+                0.5972
+        ],
+        "groups": [
+                {
+                        "name": "none",
+                        "title": "",
+                        "expanded": false
+                },
+                {
+                        "name": "background",
+                        "title": "Bakgrundskartor",
+                        "expanded": true
+                }
+        ],
+        "layers": [
+                {
+                        "name": "origo-cities",
+                        "title": "Origokommuner",
+                        "group": "root",
+                        "type": "GEOJSON",
+                        "style": "origo-cities#1",
+                        "visible": true,
+                        "source": "data/origo-cities-3857.geojson",
+                        "attributes": [
+                                {
+                                        "name": "name"
+                                }
+                        ]
+                },
+                {
+                        "name": "origo-mask",
+                        "title": "Origo-mask",
+                        "group": "none",
+                        "type": "GEOJSON",
+                        "style": "origo-mask#1",
+                        "queryable": false,
+                        "visible": true,
+                        "opacity": 0.25,
+                        "source": "data/origo-mask-3857.geojson"
+                },
+                {
+                        "name": "osm",
+                        "title": "OpenStreetMap",
+                        "group": "background",
+                        "type": "OSM",
+                        "style": "osm#1-bg",
+                        "queryable": false,
+                        "visible": true
+                }
+        ],
+        "source": {
+
+        },
+        "styles": {
+                "origo-cities#1": [
+                        [
+                                {
+                                        "label": "Origokommuner",
+                                        "circle": {
+                                                "radius": 10,
+                                                "stroke": {
+                                                        "color": "rgba(0,0,0,1)",
+                                                        "width": 2.5
+                                                },
+                                                "fill": {
+                                                        "color": "rgba(255,255,255,0.9)"
+                                                }
+                                        }
+                                },
+                                {
+                                        "circle": {
+                                                "radius": 2.5,
+                                                "stroke": {
+                                                        "color": "rgba(0,0,0,0)",
+                                                        "width": 1
+                                                },
+                                                "fill": {
+                                                        "color": "rgba(37,129,196,1)"
+                                                }
+                                        }
+                                }
+                        ]
+                ],
+                "origo-mask#1": [
+                        [
+                                {
+                                        "stroke": {
+                                                "color": "rgba(0,0,0,1.0)"
+                                        },
+                                        "fill": {
+                                                "color": "rgba(0,0,0,1.0)"
+                                        }
+                                }
+                        ]
+                ],
+                "osm#1-bg": [
+                        [
+                                {
+                                        "image": {
+                                                "src": "img/png/osm.png?ttl=36000"
+                                        }
+                                }
+                        ]
+                ]
+        }
+}
