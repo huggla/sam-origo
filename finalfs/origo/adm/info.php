@@ -36,10 +36,10 @@
 		echo "<div style='float:left'>";
 		echo "<h2>$child</h2> ($childTypeSv)</br>";
 		$allOfChildType=all_from_table('map_configs.'.$childType.'s');
-		$abstract=array_column_search($child, $childType.'_id', $allOfChildType)['abstract'];
-		if (!empty($abstract))
+		$info=array_column_search($child, $childType.'_id', $allOfChildType)['info'];
+		if (!empty($info))
 		{
-			echo "$abstract</br>";
+			echo "$info</br>";
 		}
 		if ($childType != 'map')
 		{
@@ -67,7 +67,6 @@
 		echo '</div>';
 		if (strpos($_SERVER['HTTP_REFERER'], 'manage') === false)
 		{
-			//echo '</br>';
 			echo '<button onclick="history.back()">Tillbaks</button>';
 		}
 	}
