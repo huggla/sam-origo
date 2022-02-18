@@ -22,7 +22,7 @@ ARG BUILDCMDS=\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
-"&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
+"&& rm -rf build/index.html "\
 "&& cp -a build /finalfs/tmp/origo"
 ARG RUNDEPS="\
         postgresql \
