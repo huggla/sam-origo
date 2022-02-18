@@ -436,7 +436,15 @@
 			{
 				$tiledStr="";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."' $editableStr $tiledStr $attributesStr WHERE layer_id = '$layerId'";
+			if (!empty($_POST['updateStyle_config']))
+			{
+				$styleConfigStr=", style_config = '".$_POST['updateStyle_config']."'";
+			}
+			else
+			{
+				$styleConfigStr=", style_config = '[]'";
+			}
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -1047,14 +1055,17 @@
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Abstract" name="updateAbstract">'.$layer['abstract'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Attributes">Attribut:</label>';
-		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
+		echo      '<label for="'.$layerId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
+		echo      '<br>';
+		echo      '<label for="'.$layerId.'Style_config">Stilkonfiguration:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Style_config" name="updateStyle_config">'.$layer['style_config'].'</textarea>&nbsp;';
 		if ($layer['type'] == 'WMS')
 		{
 			echo      '<label for="'.$layerId.'Featureinfolayer">FeatureInfo-lager:</label>';
 			echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
 		}
-		echo      '<label for="'.$layerId.'Info">Info:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="layerId" value="'.$layerId.'">';
 		if (isset($mapId))
 		{
@@ -1079,7 +1090,7 @@
 		{
 			echo '<input type="hidden" name="groupIds" value="'.implode(',', $tmpGroupIds).'">';
 		}
-		echo     "<button class='deleteButton4' type='submit' name='layerButton' value='delete'>Radera</button>";
+		echo     "<button class='deleteButton5' type='submit' name='layerButton' value='delete'>Radera</button>";
 		echo   '</form>';
 		echo '</div>';
 		echo   '<form class="addForm" method="post">';
