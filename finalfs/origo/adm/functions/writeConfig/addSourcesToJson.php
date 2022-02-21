@@ -40,7 +40,7 @@
 				{
 					foreach ($sourceColumns as $column)
 					{
-						if ($column != 'source_id' && $column != 'abstract' && $column != 'base_url' && $column != 'service' && $column != 'project' && !empty($source[$column]))
+						if ($column != 'source_id' && $column != 'info' && $column != 'base_url' && $column != 'service' && $column != 'project' && !empty($source[$column]))
 						{
 							$queryColumns[] = $column;
 						}
