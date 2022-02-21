@@ -120,7 +120,7 @@ CREATE TABLE map_configs.services
 CREATE TABLE map_configs.sources
 (
     source_id character varying COLLATE pg_catalog."default" NOT NULL,
-    service character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'qgisserver'::character varying,
+    service character varying COLLATE pg_catalog."default",
     with_geometry boolean,
     fi_point_tolerance integer,
     ttl integer,
