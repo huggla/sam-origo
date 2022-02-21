@@ -39,7 +39,7 @@
 				{
 					$first=false;
 				}
-				echo '<a href="/origo/php/adm/info.php?type='.$parentType.'&id='.urlencode($parent).'">'.$parent.'</a>';
+				echo '<a href="info.php?type='.$parentType.'&id='.urlencode($parent).'">'.$parent.'</a>';
 			}
 			echo "</br>";
 		}
