@@ -126,9 +126,5 @@ CREATE TABLE map_configs.sources
     ttl integer,
     dpi integer,
     info character varying COLLATE pg_catalog."default",
-    CONSTRAINT sources_pkey PRIMARY KEY (source_id),
-    CONSTRAINT servicefk FOREIGN KEY (service)
-        REFERENCES map_configs.services (service_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT sources_pkey PRIMARY KEY (source_id)
 );
