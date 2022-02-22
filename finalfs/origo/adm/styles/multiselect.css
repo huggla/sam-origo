@@ -1,4 +1,4 @@
 		body		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size:0.9vw;width:100%;height:100%;margin:0 }
-		button		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;padding:0.12vw; font-size:0.9vw; border-width:1px; border-style:solid; line-height:1.2 }
+		button		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;padding:0.12vw; font-size:0.9vw; border-width:1px; border-style:solid; line-height:1.2; background-color:powderblue }
 		h3		{ display:inline-block; margin-block-start:0; margin-block-end:0.5em; font-size:0.9vw }
 		select		{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;font-size:0.9vw; padding:0.1vw; position:relative }
