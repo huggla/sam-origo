@@ -142,11 +142,11 @@
 */
 	$maps=all_from_table('map_configs.maps');
 	$groups=all_from_table('map_configs.groups');
-	$layers=all_from_table('map_configs.layers');
 	$controls=all_from_table('map_configs.controls');
 	$sources=all_from_table('map_configs.sources');
 	$services=all_from_table('map_configs.services');
 	$footers=all_from_table('map_configs.footers');
+	setLayers();
 
 	if (isset($mapButton) && $mapButton != 'get')
 	{
@@ -444,7 +444,7 @@
 			{
 				$styleConfigStr=", style_config = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -494,7 +494,7 @@
 			}
 			else
 			{
-				$layers=all_from_table('map_configs.layers');
+				setLayers();
 			}
 		}
 	}
@@ -520,10 +520,37 @@
 			}
 			topFrame = type;
 		}
+
+		function updateSelect(id, array)
+		{
+			var select = document.getElementById(id);
+			if (select.options != null)
+			{
+				var length = select.options.length;
+				for (i = length-1; i >= 0; i--)
+				{
+					select.options[i] = null;
+				}
+			}
+			array.forEach(function(item)
+			{
+				var newOption = document.createElement("option");
+				newOption.text = item.toString();
+				select.add(newOption);
+			});
+		}
+		<?php 
+			echo "var categories = ".json_encode(array_keys($layerCategories)).";\n";
+			foreach ($layerCategories as $category => $catLayers)
+			{
+				echo "var $category = ".json_encode($catLayers).";\n";
+			}
+		?>
 	</script>
 	<style>
 		<?php include("./styles/manage.css"); ?>
 	</style>
+
 </head>
 <body>
 	<iframe id="topFrame" name="topFrame" style="display:none"></iframe>
@@ -1066,6 +1093,9 @@
 			echo      '<label for="'.$layerId.'Featureinfolayer">FeatureInfo-lager:</label>';
 			echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
 		}
+		echo      '<br>';
+		echo      '<label for="'.$layerId.'Categories">Kategorier:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Categories" name="updateCategories">'.trim($layer['categories'], '{}').'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="layerId" value="'.$layerId.'">';
 		if (isset($mapId))
 		{
@@ -1090,7 +1120,7 @@
 		{
 			echo '<input type="hidden" name="groupIds" value="'.implode(',', $tmpGroupIds).'">';
 		}
-		echo     "<button class='deleteButton5' type='submit' name='layerButton' value='delete'>Radera</button>";
+		echo     "<button class='deleteButton6' type='submit' name='layerButton' value='delete'>Radera</button>";
 		echo   '</form>';
 		echo '</div>';
 		echo   '<form class="addForm" method="post">';
@@ -1282,5 +1312,16 @@
 	}
 
 ?>
+<script>
+	updateSelect("layerCategories", categories);
+	<?php
+		if (isset($_POST['layerCategories']))
+		{
+			echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
+			echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
+			echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
+		}
+	?>
+</script>
 </body>
 </html>
