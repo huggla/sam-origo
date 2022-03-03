@@ -2,7 +2,7 @@
 
 	function headForm($type)
 	{
-		GLOBAL $hiddenInputs;
+		GLOBAL $hiddenInputs, $formCount;
 		if ($type == 'group')
 		{
 			$name='groupIds';
@@ -12,7 +12,12 @@
 			$name=$type.'Id';
 		}
 		echo '<form class="headForm" method="post">';
-		echo   "<select onchange=\"this.form.submit()\" class=\"headSelect\" name=\"$name\">";
+		if ($type == 'layer')
+		{
+			echo "<select class=\"headSelect\" id=\"layerCategories\" name=\"layerCategories\" onchange='updateSelect(\"layerSelect\", window[this.value]);'></select>";
+			$selectId='id="'.$type.'Select"';
+		}
+		echo   "<select $selectId onchange=\"this.form.submit()\" class=\"headSelect\" name=\"$name\">";
 		selectOptions($type.'s', true);
 		echo   '</select>';
 		echo   '<button type="submit" class="headButton" name="'.$type.'Button" value="get">';
