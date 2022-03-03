@@ -7,17 +7,17 @@
 # ARGs (can be passed to Build/Final) <BEGIN>
 ARG SaM_VERSION="2.0.5-3.14"
 ARG IMAGETYPE="application"
-ARG ORIGO_VERSION="2.4.0"
+ARG ORIGO_VERSION="2.5.0"
 ARG LIGHTTPD2_VERSION="20201125"
 ARG CONTENTIMAGE1="node:16.13.2-alpine3.14"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
-ARG DOWNLOADS="https://github.com/origo-map/origo/releases/download/v$ORIGO_VERSION/origo-$ORIGO_VERSION.tar.gz"
+ARG DOWNLOADS="https://github.com/origo-map/origo/archive/refs/tags/v$ORIGO_VERSION.tar.gz"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
-#"   cd origo "\
-" npm install "\
+"   cd origo-$ORIGO_VERSION "\
+"&& npm install "\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
