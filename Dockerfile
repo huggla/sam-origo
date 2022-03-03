@@ -13,7 +13,7 @@ ARG CONTENTIMAGE1="node:16.13.2-alpine3.14"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
-ARG DOWNLOADS="https://github.com/origo-map/origo/archive/refs/tags/v$ORIGO_VERSION.zip"
+ARG DOWNLOADS="http://github.com/origo-map/origo/archive/refs/tags/v$ORIGO_VERSION.zip"
 ARG BUILDDEPS="python2"
 ARG BUILDCMDS=\
 "   cd origo-$ORIGO_VERSION "\
