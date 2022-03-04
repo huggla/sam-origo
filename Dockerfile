@@ -21,9 +21,16 @@ ARG BUILDCMDS=\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
 "&& npm run build "\
-"&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
-"&& cp -a build /finalfs/origo"
-ARG REMOVEDIRS="/origo/origo-documentation /origo/examples"
+"&& rm -rf build/index.html "\
+"&& cp -a build /finalfs/tmp/origo"
+ARG RUNDEPS="\
+        postgresql \
+        php7-fpm \
+        php7-json \
+        php7-opcache \
+        php7-pgsql"
+ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
+ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
