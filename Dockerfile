@@ -25,6 +25,7 @@ ARG BUILDCMDS=\
 "&& cp -a build /finalfs/origo"
 ARG RUNDEPS="musl"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
+ARG FINALCMDS="rm -rf /usr/include"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
