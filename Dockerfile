@@ -23,7 +23,6 @@ ARG BUILDCMDS=\
 "&& npm run build "\
 "&& sed -i 's/origo.js/origo.min.js/' build/index.html "\
 "&& cp -a build /finalfs/origo"
-ARG RUNDEPS="musl"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples"
 # ARGs (can be passed to Build/Final) </END>
 
