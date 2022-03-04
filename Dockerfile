@@ -24,12 +24,7 @@ ARG BUILDCMDS=\
 "&& rm -rf build/index.html "\
 "&& cp -a build /finalfs/tmp/origo"
 ARG RUNDEPS="\
-        postgresql \
-        php7-fpm \
-        php7-json \
-        php7-opcache \
-        php7-pgsql"
-ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
+        postgresql"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 # ARGs (can be passed to Build/Final) </END>
 
