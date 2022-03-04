@@ -23,6 +23,8 @@ ARG BUILDCMDS=\
 "&& npm run build "\
 "&& rm -rf build/index.html "\
 "&& cp -a build /finalfs/tmp/origo"
+ARG RUNDEPS="\
+        busybox"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 # ARGs (can be passed to Build/Final) </END>
 
