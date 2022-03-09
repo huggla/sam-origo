@@ -25,7 +25,7 @@ ARG BUILDCMDS=\
 "&& rm -rf build/index.html "\
 "&& cp -a build /finalfs/tmp/origo"
 ARG RUNDEPS="\
-        postgresql \
+        postgresql14 \
         php7-fpm \
         php7-json \
         php7-opcache \
