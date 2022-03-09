@@ -29,10 +29,10 @@
 		.headForm	{ display:inline; width:12.9vw; padding:0.1vw }
 		.bodyForm	{ width:100vw }
 		.addForm	{ display:flex; padding:0.1vw; float:left; margin-right:0.5vw; margin-bottom:0.4vw }
-		textarea	{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;vertical-align:text-bottom; padding:0.1vw 0.3vw; font-size:0.9vw; line-height:1.5 }
+		textarea	{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;vertical-align:text-bottom; padding:0.2vw 0.3vw 0.2vw 0.3vw; font-size:0.9vw; line-height:1; height:1em }
 		.textareaXLarge	{ width:66vw }
 		.textareaLarge	{ width:33vw }
 		.textareaMedium	{ width:13vw }
-		.textareaSmall	{ width:6vw }
+		.textareaSmall	{ width:4vw }
 		.textareaXSmall	{ width:2vw; resize:none }
 		iframe		{ width:100%; height:20vh; border:1px lightgray; border-style:none none dashed; padding-bottom:0.3vw; margin-bottom:0.3vw }
