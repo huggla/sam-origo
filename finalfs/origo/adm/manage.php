@@ -6,6 +6,7 @@
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
+	include_once("./functions/findParents.php");
 	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
@@ -37,6 +38,9 @@
 
 	$toGroupId=$_POST['toGroupId'];
 	$toMapId=$_POST['toMapId'];
+
+	$fromGroupId=$_POST['fromGroupId'];
+	$fromMapId=$_POST['fromMapId'];
 
 	$newmapId=$_POST['newmapId'];
 	$newcontrolId=$_POST['newcontrolId'];
@@ -207,6 +211,14 @@
 				$sql="UPDATE map_configs.maps SET controls = '{".implode(',', $toMapControls)."}' WHERE map_id = '$toMapId'";
 			}
 		}
+		elseif ($controlButton == 'remove' && isset($fromMapId))
+		{
+			$fromMap=array_column_search($fromMapId, 'map_id', $maps);
+			$fromMapControls=pgArrayToPhp($fromMap['controls']);
+			$controlKey=array_search($controlId, $fromMapControls);
+			unset($fromMapControls[$controlKey]);
+			$sql="UPDATE map_configs.maps SET controls = '{".implode(',', $fromMapControls)."}' WHERE map_id = '$fromMapId'";
+		}
 		if (!empty($sql))
 		{
 			$result=pg_query($dbh, $sql);
@@ -214,7 +226,7 @@
 			{
 				die("Error in SQL query: " . pg_last_error());
 			}
-			if ($controlButton == 'add')
+			if ($controlButton == 'add' || $controlButton == 'remove')
 			{
 				$maps=all_from_table('map_configs.maps');
 			}
@@ -380,6 +392,22 @@
 				$sql="UPDATE map_configs.groups SET groups = '{".implode(',', $toGroupGroups)."}' WHERE group_id = '$toGroupId'";
 			}
 		}
+		elseif ($groupButton == 'remove' && isset($fromMapId))
+		{
+			$fromMap=array_column_search($fromMapId, 'map_id', $maps);
+			$fromMapGroups=pgArrayToPhp($fromMap['groups']);
+			$groupKey=array_search($groupId, $fromMapGroups);
+			unset($fromMapGroups[$groupKey]);
+			$sql="UPDATE map_configs.maps SET groups = '{".implode(',', $fromMapGroups)."}' WHERE map_id = '$fromMapId'";
+		}
+		elseif ($groupButton == 'remove' && isset($fromGroupId))
+		{
+			$fromGroup=array_column_search($fromGroupId, 'group_id', $groups);
+			$fromGroupGroups=pgArrayToPhp($fromGroup['groups']);
+			$groupKey=array_search($groupId, $fromGroupGroups);
+			unset($fromGroupGroups[$groupKey]);
+			$sql="UPDATE map_configs.groups SET groups = '{".implode(',', $fromGroupGroups)."}' WHERE group_id = '$fromGroupId'";
+		}
 		if (!empty($sql))
 		{
 			$result=pg_query($dbh, $sql);
@@ -387,7 +415,7 @@
 			{
 				die("Error in SQL query: " . pg_last_error());
 			}
-			if ($groupButton == 'add' && isset($toMapId))
+			if (($groupButton == 'add' && isset($toMapId)) || ($groupButton == 'remove' && isset($fromMapId)))
 			{
 				$maps=all_from_table('map_configs.maps');
 			}
@@ -474,6 +502,22 @@
 				$sql="UPDATE map_configs.maps SET layers = '{".implode(',', $toMapLayers)."}' WHERE map_id = '$toMapId'";
 			}
 		}
+		elseif ($layerButton == 'remove' && isset($fromMapId))
+		{
+			$fromMap=array_column_search($fromMapId, 'map_id', $maps);
+			$fromMapLayers=pgArrayToPhp($fromMap['layers']);
+			$layerKey=array_search($layerId, $fromMapLayers);
+			unset($fromMapLayers[$layerKey]);
+			$sql="UPDATE map_configs.maps SET layers = '{".implode(',', $fromMapLayers)."}' WHERE map_id = '$fromMapId'";
+		}
+		elseif ($layerButton == 'remove' && isset($fromGroupId))
+		{
+			$fromGroup=array_column_search($fromGroupId, 'group_id', $groups);
+			$fromGroupLayers=pgArrayToPhp($fromGroup['layers']);
+			$layerKey=array_search($layerId, $fromGroupLayers);
+			unset($fromGroupLayers[$layerKey]);
+			$sql="UPDATE map_configs.groups SET layers = '{".implode(',', $fromGroupLayers)."}' WHERE group_id = '$fromGroupId'";
+		}
 		if (!empty($sql))
 		{
 			$result=pg_query($dbh, $sql);
@@ -481,13 +525,13 @@
 			{
 				die("Error in SQL query: " . pg_last_error());
 			}
-			if ($layerButton == 'add')
+			if ($layerButton == 'add' || $layerButton == 'remove')
 			{
-				if (isset($toGroupId))
+				if (isset($toGroupId) || isset($fromGroupId))
 				{
 					$groups=all_from_table('map_configs.groups');
 				}
-				elseif (isset($toMapId))
+				elseif (isset($toMapId) || isset($fromMapId))
 				{
 					$maps=all_from_table('map_configs.maps');
 				}
@@ -750,7 +794,30 @@
 				echo $hiddenInputs;
 				echo '<button type="submit" name="groupButton" value="add">Lägg till i grupp</button>';
 				echo '</form>';
-
+				$mapParents=findParents('map', 'group', $groupId);
+				if (!empty($mapParents))
+				{
+					echo '<form class="addForm" method="post">';
+					echo   '<select class="headSelect" name="fromMapId">';
+					printSelectOptions($mapParents);
+					echo   '</select>';
+					echo   '<input type="hidden" name="groupId" value="'.$groupId.'">';
+					echo $hiddenInputs;
+					echo   '<button type="submit" name="groupButton" value="remove">Ta bort från karta</button>';
+					echo '</form>';
+				}
+				$groupParents=findParents('group', 'group', $groupId);
+				if (!empty($groupParents))
+				{
+					echo '<form class="addForm" method="post">';
+					echo   '<select class="headSelect" name="fromGroupId">';
+					printSelectOptions($groupParents);
+					echo   '</select>';
+					echo   '<input type="hidden" name="groupId" value="'.$groupId.'">';
+					echo $hiddenInputs;
+					echo   '<button type="submit" name="groupButton" value="remove">Ta bort från grupp</button>';
+					echo '</form>';
+				}
 			}
 			echo '<div style="white-space:nowrap">';
 			echo   "<form method='post' onsubmit='confirmStr=\"$confirmStr\"; return confirm(confirmStr);' style='line-height:2'>";
@@ -940,9 +1007,7 @@
 				echo   '</form>';
 				echo '</div>';
 				echo '</th>';
-
 			}
-			
 			echo   '</tr>';
 			echo '</table>';
 			echo '<hr>';
@@ -956,7 +1021,6 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$controlId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$controlId.'Id" name="updateId">'.$controlId.'</textarea>&nbsp;';
-
 		echo      '<label for="'.$controlId.'Options">Inställningar:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$controlId.'Options" name="updateOptions">'.$control['options'].'</textarea>&nbsp;';
 		echo	  '</br>';
@@ -990,6 +1054,18 @@
 		}
 		echo           '<button type="submit" name="controlButton" value="add">Lägg till i karta</button>';
 		echo         '</form>';
+		$mapParents=findParents('map', 'control', $controlId);
+		if (!empty($mapParents))
+		{
+			echo '<form class="addForm" method="post">';
+			echo   '<select class="headSelect" name="fromMapId">';
+			printSelectOptions($mapParents);
+			echo   '</select>';
+			echo   '<input type="hidden" name="controlId" value="'.$controlId.'">';
+			echo $hiddenInputs;
+			echo   '<button type="submit" name="controlButton" value="remove">Ta bort från karta</button>';
+			echo '</form>';
+		}
 	}
 	elseif (isset($footerId) && in_array($footerId, array_column($footers, 'footer_id')))
 	{
@@ -1138,6 +1214,30 @@
 		echo $hiddenInputs;
 		echo         '<button type="submit" name="layerButton" value="add">Lägg till i grupp</button>';
 		echo       '</form>';
+		$mapParents=findParents('map', 'layer', $layerId);
+		if (!empty($mapParents))
+		{
+			echo '<form class="addForm" method="post">';
+			echo   '<select class="headSelect" name="fromMapId">';
+			printSelectOptions($mapParents);
+			echo   '</select>';
+			echo   '<input type="hidden" name="layerId" value="'.$layerId.'">';
+			echo $hiddenInputs;
+			echo   '<button type="submit" name="layerButton" value="remove">Ta bort från karta</button>';
+			echo '</form>';
+		}
+		$groupParents=findParents('group', 'layer', $layerId);
+		if (!empty($groupParents))
+		{
+			echo '<form class="addForm" method="post">';
+			echo   '<select class="headSelect" name="fromGroupId">';
+			printSelectOptions($groupParents);
+			echo   '</select>';
+			echo   '<input type="hidden" name="layerId" value="'.$layerId.'">';
+			echo $hiddenInputs;
+			echo   '<button type="submit" name="layerButton" value="remove">Ta bort från grupp</button>';
+			echo '</form>';
+		}
 		echo       '<table>';
 		echo         '<tr>';
 		echo           '<th>';
