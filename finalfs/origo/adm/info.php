@@ -14,6 +14,7 @@
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
+	include_once("./functions/findParents.php");
 	$functionFiles = array_diff(scandir('./functions/info'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
@@ -47,21 +48,21 @@
 			echo "&nbsp;&nbsp;&nbsp;";
 			if ($childType == 'group' || $childType == 'layer')
 			{
-				echo findParents('map', $childType, $child);
+				printParents('map', $childType, $child);
 				echo "&nbsp;&nbsp;&nbsp;";
-				echo findParents('group', $childType, $child);
+				printParents('group', $childType, $child);
 			}
 			elseif ($childType == 'control' || $childType == 'footer')
 			{
-				echo findParents('map', $childType, $child);
+				printParents('map', $childType, $child);
 			}
 			elseif ($childType == 'source')
 			{
-				echo findParents('layer', $childType, $child);
+				printParents('layer', $childType, $child);
 			}
 			elseif ($childType == 'service')
 			{
-				echo findParents('source', $childType, $child);
+				printParents('source', $childType, $child);
 			}
 		}
 		echo '</div>';
