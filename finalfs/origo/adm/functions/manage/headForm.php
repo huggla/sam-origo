@@ -12,6 +12,10 @@
 			$name=$type.'Id';
 		}
 		echo '<form class="headForm" method="post">';
+		if (isset($_POST['layerCategories']))
+		{
+			echo '<input type="hidden" name="layerCategories" value="'.$_POST['layerCategories'].'">';
+		}
 		if ($type == 'layer')
 		{
 			echo "<select class=\"headSelect\" id=\"layerCategories\" name=\"layerCategories\" onchange='updateSelect(\"layerSelect\", window[this.value]);'></select>";
