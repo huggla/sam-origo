@@ -33,7 +33,7 @@ ARG RUNDEPS="\
 ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
 ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf /origo/index.json"
-ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/bin/postgres /usr/libexec/postgresql14/pg_ctl /usr/libexec/postgresql14/initdb"
+ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/libexec/postgresql14/postgres"
 ARG LINUXUSEROWNED="/origo /origo/origo-cities1.json"
 ARG FINALCMDS=\
 "   cp -a /tmp/origo/* /origo/ "\
@@ -41,7 +41,7 @@ ARG FINALCMDS=\
 "&& rm -rf share "\
 "&& ln -s ../lib ../share ./ "\
 "&& cd bin "\
-"&& find ../../bin ! -type l ! -name postgres ! -name ../../bin -maxdepth 1 -exec ln -s {} ./ + "\
+"&& find ../../libexec/postgresql14 ! -type l ! -name postgres ! -name ../../libexec/postgresql14 -maxdepth 1 -exec ln -s {} ./ + "\
 "&& chmod g+X /usr/bin/* "\
 "&& sed -i 's/index.json/origo-cities1.json/' /origo/index.html"
 # ARGs (can be passed to Build/Final) </END>
