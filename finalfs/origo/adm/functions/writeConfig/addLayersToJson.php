@@ -55,7 +55,7 @@
 				// Set default values </end>
 
 				$layerName = trim(explode('#', $layer['layer_id'], 2)[0]);
-				$json = $json.'{ "name": "'.$layerName.'", "title": "'.$layer['title'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
+				$json = $json.'{ "name": "'.$layerName.'", "source": "'.$layer['source'].'", "title": "'.$layer['title'].'", "format": "'.$layer['format'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
 				if (!empty($layer['style_layer']))
 				{
 					$styleLayerName = trim(explode('#', $layer['style_layer'], 2)[0]);
@@ -139,13 +139,21 @@
 						if (strtoupper($styleLayer['type']) == 'WMS')
 						{
 							$styleSourceProject = trim(explode('#', $styleSource['source_id'], 2)[0]);
+							if (strpos($styleService['base_url'], '?') === false)
+							{
+								$paramSeparator='?';
+							}
+							else
+							{
+								$paramSeparator='&';
+							}
 							if (empty($styleLayer['icon']))
 							{
-								$styleLayer['icon'] = $styleService['base_url'].'/'.$styleSourceProject.'?SERVICE=WMS&REQUEST=GetLegendGraphic&DPI=96&FORMAT=image/png&ICONLABELSPACE=0&LAYERTITLE=TRUE&RULELABEL=FALSE&ITEMFONTSIZE=1&TRANSPARENT=TRUE&BOXSPACE=1.8&SYMBOLWIDTH=6&SYMBOLHEIGHT=6&LAYERSPACE=5&LAYERTITLESPACE=-6&LAYERFONTSIZE=0.5&LAYERFONTCOLOR=%23FFFFFF&LAYERS='.$styleLayerName;
+								$styleLayer['icon'] = $styleService['base_url'].'/'.$styleSourceProject.$paramSeparator.'SERVICE=WMS&REQUEST=GetLegendGraphic&DPI=96&FORMAT=image/png&ICONLABELSPACE=0&LAYERTITLE=TRUE&RULELABEL=FALSE&ITEMFONTSIZE=1&TRANSPARENT=TRUE&BOXSPACE=1.8&SYMBOLWIDTH=6&SYMBOLHEIGHT=6&LAYERSPACE=5&LAYERTITLESPACE=-6&LAYERFONTSIZE=0.5&LAYERFONTCOLOR=%23FFFFFF&LAYERS='.$styleLayerName;
 							}
 							if (empty($styleLayer['icon_extended']) && $group != 'background')
 							{
-								$styleLayer['icon_extended'] = $styleService['base_url'].'/'.$styleSourceProject.'?SERVICE=WMS&REQUEST=GetLegendGraphic&DPI=96&FORMAT=image/png&ICONLABELSPACE=3&LAYERTITLE=TRUE&RULELABEL=TRUE&TRANSPARENT=TRUE&BOXSPACE=1&SYMBOLWIDTH=6&SYMBOLHEIGHT=4&SYMBOLSPACE=3&LAYERSPACE=5&LAYERTITLESPACE=-5.3&LAYERFONTSIZE=0.5&LAYERFONTCOLOR=%23FFFFFF&LAYERS='.$styleLayerName;
+								$styleLayer['icon_extended'] = $styleService['base_url'].'/'.$styleSourceProject.$paramSeparator.'SERVICE=WMS&REQUEST=GetLegendGraphic&DPI=96&FORMAT=image/png&ICONLABELSPACE=3&LAYERTITLE=TRUE&RULELABEL=TRUE&TRANSPARENT=TRUE&BOXSPACE=1&SYMBOLWIDTH=6&SYMBOLHEIGHT=4&SYMBOLSPACE=3&LAYERSPACE=5&LAYERTITLESPACE=-5.3&LAYERFONTSIZE=0.5&LAYERFONTCOLOR=%23FFFFFF&LAYERS='.$styleLayerName;
 							}
 						}
 						elseif (strtoupper($styleLayer['type']) == 'WFS')
