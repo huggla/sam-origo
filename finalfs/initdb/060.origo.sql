@@ -129,3 +129,14 @@ CREATE TABLE map_configs.sources
     info character varying COLLATE pg_catalog."default",
     CONSTRAINT sources_pkey PRIMARY KEY (source_id)
 );
+
+CREATE TABLE map_configs.tilegrids
+(
+    tilegrid_id character varying COLLATE pg_catalog."default" NOT NULL,
+    alignbottomleft boolean,
+    extent box,
+    minzoom integer,
+    resolutions numeric[],
+    tilesize integer,
+    CONSTRAINT tilegrids_pkey PRIMARY KEY (tilegrid_id)
+);
