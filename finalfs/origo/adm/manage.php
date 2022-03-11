@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 	header("Cache-Control: must-revalidate, max-age=0, s-maxage=0, no-cache, no-store");
 
@@ -150,6 +151,7 @@
 	$sources=all_from_table('map_configs.sources');
 	$services=all_from_table('map_configs.services');
 	$footers=all_from_table('map_configs.footers');
+	$tilegrids=all_from_table('map_configs.tilegrids');
 	setLayers();
 
 	if (isset($mapButton) && $mapButton != 'get')
@@ -301,15 +303,7 @@
 			{
 				$ttl="null";
 			}
-			if (!empty($_POST['updateDpi']))
-			{
-				$dpi="'".$_POST['updateDpi']."'";
-			}
-			else
-			{
-				$dpi="null";
-			}
-			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, dpi = $dpi, info = '".$_POST['updateInfo']."', source_id = '".$_POST['updateId']."' WHERE source_id = '$sourceId'";
+			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, info = '".$_POST['updateInfo']."', source_id = '".$_POST['updateId']."' WHERE source_id = '$sourceId'";
 		}
 		$result=pg_query($dbh, $sql);
 		if (!$result)
@@ -472,7 +466,7 @@
 			{
 				$styleConfigStr=", style_config = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -545,7 +539,6 @@
 
 ?>
 
-<!DOCTYPE html>
 <html style="width:100%;height:100%;font-size:0.9vw;line-height:2">
 <head>
 	<meta charset="utf-8"/>
@@ -553,16 +546,23 @@
 		var topFrame="";
 		function toggleTopFrame(type)
 		{
+
 			var x = document.getElementById("topFrame");
+
 			if (x.style.display === "none")
 			{
+
 				x.style.display = "block";
+
 			}
 			else if (topFrame === type)
 			{
+
 				x.style.display = "none";
+
 			}
 			topFrame = type;
+
 		}
 
 		function updateSelect(id, array)
@@ -571,16 +571,24 @@
 			if (select.options != null)
 			{
 				var length = select.options.length;
+
 				for (i = length-1; i >= 0; i--)
 				{
+
 					select.options[i] = null;
+
 				}
 			}
 			array.forEach(function(item)
+
 			{
+
 				var newOption = document.createElement("option");
+
 				newOption.text = item.toString();
+
 				select.add(newOption);
+
 			});
 		}
 		<?php 
@@ -768,9 +776,11 @@
 			if (isset($mapId) && $level == 1)
 			{
 				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
+
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
+
 				echo   '</form>';
 			}
 			echo     '</div>';
@@ -1115,6 +1125,7 @@
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Title" name="updateTitle">'.$layer['title'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Source">Källa:</label>';
 		echo      '<input type="text" list="sourcelist" class="bodySelect" id="'.$layerId.'Source" name="updateSource" value="'.$layer['source'].'" onfocus="this.value='."''".'" />';
+
 		echo      '<datalist id="sourcelist">';
 		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $layer['source']);
 		echo      '</datalist>&nbsp;';
@@ -1152,23 +1163,25 @@
 		echo      '<label for="'.$layerId.'Icon_extended">Utfälld ikon:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Icon_extended" name="updateIcon_extended">'.$layer['icon_extended'].'</textarea>&nbsp;';
 		echo      '<br>';
+		if ($layer['type'] == 'WMS')
+		{
+			echo '<label for="'.$layerId.'Format">Format:</label>';
+			echo '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Format" name="updateFormat">'.$layer['format'].'</textarea>&nbsp;';
+			echo '<label for="'.$layerId.'Featureinfolayer">FeatureInfo-lager:</label>';
+			echo '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
+		}
 		echo      '<label for="'.$layerId.'Stylefilter">Stilfilter:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Stylefilter" name="updateStylefilter">'.$layer['style_filter'].'</textarea>&nbsp;';
-		echo      '<label for="'.$layerId.'Abstract">Sammanfattning:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Abstract" name="updateAbstract">'.$layer['abstract'].'</textarea>&nbsp;';
-		echo      '<br>';
-		echo      '<label for="'.$layerId.'Attributes">Attribut:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
-		echo      '<label for="'.$layerId.'Info">Info:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Style_config">Stilkonfiguration:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Style_config" name="updateStyle_config">'.$layer['style_config'].'</textarea>&nbsp;';
-		if ($layer['type'] == 'WMS')
-		{
-			echo      '<label for="'.$layerId.'Featureinfolayer">FeatureInfo-lager:</label>';
-			echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Featureinfolayer" name="updateFeatureinfolayer">'.$layer['featureinfolayer'].'</textarea>&nbsp;';
-		}
+		echo      '<label for="'.$layerId.'Attributes">Attribut:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attributes" name="updateAttributes">'.$layer['attributes'].'</textarea>&nbsp;';
+		echo      '<br>';
+		echo      '<label for="'.$layerId.'Abstract">Sammanfattning:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Abstract" name="updateAbstract">'.$layer['abstract'].'</textarea>&nbsp;';
+		echo      '<label for="'.$layerId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Categories">Kategorier:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Categories" name="updateCategories">'.trim($layer['categories'], '{}').'</textarea>&nbsp;';
@@ -1283,8 +1296,6 @@
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Fipointtolerance" name="updateFipointtolerance">'.$source['fi_point_tolerance'].'</textarea>&nbsp;';
 		echo      '<label for="'.$sourceId.'Ttl">Ttl:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Ttl" name="updateTtl">'.$source['ttl'].'</textarea>&nbsp;';
-		echo      '<label for="'.$sourceId.'Dpi">Dpi:</label>';
-		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Dpi" name="updateDpi">'.$source['dpi'].'</textarea>&nbsp;';
 		echo      '</br>';
 		echo      '<label for="'.$sourceId.'Info">Info:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$sourceId.'Info" name="updateInfo">'.$source['info'].'</textarea>&nbsp;';
@@ -1420,6 +1431,7 @@
 			echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
 			echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
 			echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
+
 		}
 	?>
 </script>
