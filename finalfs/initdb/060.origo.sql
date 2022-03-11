@@ -126,7 +126,6 @@ CREATE TABLE map_configs.sources
     with_geometry boolean,
     fi_point_tolerance integer,
     ttl integer,
-    dpi integer,
     info character varying COLLATE pg_catalog."default",
     CONSTRAINT sources_pkey PRIMARY KEY (source_id)
 );
