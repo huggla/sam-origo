@@ -13,7 +13,7 @@
 					$parents[]=$potentialParent[$parentType.'_id'];
 				}
 			}
-			elseif ($childType == 'footer' || $childType == 'source' || $childType == 'service')
+			elseif ($childType == 'footer' || $childType == 'source' || $childType == 'service' || $childType == 'tilegrid')
 			{
 				if ($child == $potentialParent[$childType])
 				{
