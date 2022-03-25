@@ -55,7 +55,7 @@
 				// Set default values </end>
 
 				$layerName = trim(explode('#', $layer['layer_id'], 2)[0]);
-				$json = $json.'{ "name": "'.$layerName.'", "source": "'.$layer['source'].'", "title": "'.$layer['title'].'", "format": "'.$layer['format'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
+				$json = $json.'{ "name": "'.$layerName.'", "title": "'.$layer['title'].'", "format": "'.$layer['format'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
 				if (!empty($layer['style_layer']))
 				{
 					$styleLayerName = trim(explode('#', $layer['style_layer'], 2)[0]);
