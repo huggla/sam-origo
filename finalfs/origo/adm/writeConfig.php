@@ -19,7 +19,7 @@
 	{
 		$mapNumber = '';
 	}
-	$configfile = '/origo/'.$mapName.$mapNumber.'.json';
+	$configfile = "/origo/$mapName/index$mapNumber.json";
 	ignore_user_abort(true);
 	$dbh=dbh(CONNECTION_STRING);
 	$conftables = array(
@@ -30,7 +30,8 @@
 		"sources",
 		"services",
 		"groups",
-		"layers"
+		"layers",
+		"tilegrids"
 	);
 	foreach ($conftables as $table)
 	{
