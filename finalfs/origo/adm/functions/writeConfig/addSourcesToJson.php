@@ -2,7 +2,7 @@
 
 	function addSourcesToJson()
 	{
-		GLOBAL $json, $mapSources, $sources, $services;
+		GLOBAL $json, $mapSources, $map, $sources, $services, $tilegrids;
 		$json = $json.'"source": { ';
 		if (!is_array($mapSources))
 		{
@@ -40,7 +40,7 @@
 				{
 					foreach ($sourceColumns as $column)
 					{
-						if ($column != 'source_id' && $column != 'info' && $column != 'base_url' && $column != 'service' && $column != 'project' && !empty($source[$column]))
+						if ($column != 'source_id' && $column != 'info' && $column != 'tilegrid' && $column != 'base_url' && $column != 'service' && $column != 'project' && !empty($source[$column]))
 						{
 							$queryColumns[] = $column;
 						}
@@ -62,6 +62,34 @@
 				if ($wfsSource)
 				{
 					$json = $json.', "workspace": "qgs"';
+				}
+				if (!empty($source['tilegrid']))
+				{
+					$tilegrid = array_column_search($source['tilegrid'], 'tilegrid_id', $tilegrids);
+					$json = $json.', "tileGrid": { ';
+					if (!empty($tilegrid['tilesize']))
+					{
+						$json = $json.'"tileSize": '.$tilegrid['tilesize'].', ';
+					}
+					if (!empty($tilegrid['resolutions']))
+					{
+						$resolutions=$tilegrid['resolutions'];
+					}
+					else
+					{
+						$resolutions=$map['resolutions'];
+					}
+					$json = $json.'"resolutions": [ '.pgArrayToText($resolutions).' ], ';
+					if (!empty($tilegrid['extent']))
+					{
+						$extent=$tilegrid['extent'];
+					}
+					else
+					{
+						$extent=$map['extent'];
+					}
+					$json = $json.'"extent": ['.pgBoxToText($extent).'] ';
+					$json = $json.'}';
 				}
 				$json = $json.'}';
 			}
