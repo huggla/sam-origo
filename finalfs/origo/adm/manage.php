@@ -23,6 +23,7 @@
 	$sourceId=$_POST['sourceId'];
 	$serviceId=$_POST['serviceId'];
 	$footerId=$_POST['footerId'];
+	$tilegridId=$_POST['tilegridId'];
 	$groupId=$_POST['groupId'];
 	if (isset($_POST['groupIds']))
 	{
@@ -50,6 +51,7 @@
 	$newserviceId=$_POST['newserviceId'];
 	$newgroupId=$_POST['newgroupId'];
 	$newfooterId=$_POST['newfooterId'];
+	$newtilegridId=$_POST['newtilegridId'];
 
 	$mapButton=$_POST['mapButton'];
 	$groupButton=$_POST['groupButton'];
@@ -58,6 +60,7 @@
 	$sourceButton=$_POST['sourceButton'];
 	$serviceButton=$_POST['serviceButton'];
 	$footerButton=$_POST['footerButton'];
+	$tilegridButton=$_POST['tilegridButton'];
 
 	$hiddenInputs="";
 	if (isset($footerId))
@@ -76,6 +79,10 @@
 	{
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="controlId" value="'.$controlId.'">';
 	}
+	if (isset($tilegridId))
+	{
+		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="tilegridId" value="'.$tilegridId.'">';
+	}
 	if (isset($serviceId))
 	{
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="serviceId" value="'.$serviceId.'">';
@@ -89,55 +96,62 @@
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="layerId" value="'.$layerId.'">';
 	}
 
-	$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3Focus";
-	if (!isset($mapId) && (isset($_POST['groupIds']) || isset($layerId) || isset($controlId) || isset($sourceId) || isset($serviceId) || isset($footerId)))
+	$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3Focus";
+	if (!isset($mapId) && (isset($_POST['groupIds']) || isset($layerId) || isset($controlId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId)))
 	{
-		if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($footerId))
+		if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId))
 		{
-			if ((empty($groupIds) && isset($layerId)) || isset($controlId) || (empty($groupIds) && isset($sourceId)) || (empty($groupIds) && isset($serviceId)) || isset($footerId))
+			if ((empty($groupIds) && isset($layerId)) || isset($controlId) || (empty($groupIds) && isset($sourceId)) || (empty($groupIds) && isset($serviceId)) || isset($footerId) || isset($tilegridId))
 			{
-				if (isset($_POST['groupIds']) || isset($controlId) || (!isset($layerId) && isset($sourceId)) || isset($serviceId) || isset($footerId))
+				if (isset($_POST['groupIds']) || isset($controlId) || (!isset($layerId) && isset($sourceId)) || isset($serviceId) || isset($footerId) || isset($tilegridId))
 				{
-					if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || (!isset($sourceId) && isset($serviceId)) || isset($footerId))
+					if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || (!isset($sourceId) && isset($serviceId)) || isset($footerId) || (!isset($sourceId) && isset($tilegridId)))
 					{
-						if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($controlId))
+						if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($controlId) || isset($tilegridId))
 						{
-							if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId))
+							if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($tilegridId))
 							{
+								if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($serviceId))
+								{
+								}
+								else
+								{
+									$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+								}
 							}
 							else
 							{
-								$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class="h3NoFocus";
+								$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$tilegridh3class="h3NoFocus";
 							}
 						}
 						else
 						{
-							$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$serviceh3class="h3NoFocus";
+							$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 						}
 					}
 					else
 					{
-						$maph3class=$controlh3class=$grouph3class=$layerh3class=$footerh3class=$serviceh3class="h3NoFocus";
+						$maph3class=$controlh3class=$grouph3class=$layerh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 					}
 				}
 				else
 				{
-					$maph3class=$controlh3class=$grouph3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+					$maph3class=$controlh3class=$grouph3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 				}
 			}
 			else
 			{
-				$maph3class=$controlh3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+				$maph3class=$controlh3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 			}
 		}
 		else
 		{
-			$maph3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+			$maph3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 		}
 	}
 	elseif (isset($mapId))
 	{
-		$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+		$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
 	}
 
 /*
@@ -264,6 +278,31 @@
 		$footers=all_from_table('map_configs.footers');
 	}
 
+	elseif (isset($tilegridButton) && $tilegridButton != 'get')
+	{
+		if ($tilegridButton == 'create')
+		{
+			if (!empty($newtilegridId) && !in_array($newtilegridId, array_column($tilegrids, 'tilegrid_id')))
+			{
+				$sql="INSERT INTO map_configs.tilegrids(tilegrid_id) VALUES ('$newtilegridId')";
+			}
+		}
+		elseif ($tilegridButton == 'delete')
+		{
+			$sql="DELETE FROM map_configs.tilegrids WHERE tilegrid_id = '$tilegridId'";
+		}
+		elseif ($tilegridButton == 'update')
+		{
+			$sql="UPDATE map_configs.tilegrids SET tilesize = '".$_POST['updateTilesize']."', info = '".$_POST['updateInfo']."', tilegrid_id = '".$_POST['updateId']."' WHERE tilegrid_id = '$tilegridId'";
+		}
+		$result=pg_query($dbh, $sql);
+		if (!$result)
+		{
+			die("Error in SQL query: " . pg_last_error());
+		}
+		$tilegrids=all_from_table('map_configs.tilegrids');
+	}
+
 	elseif (isset($sourceButton) && $sourceButton != 'get')
 	{
 		if ($sourceButton == 'create')
@@ -303,7 +342,7 @@
 			{
 				$ttl="null";
 			}
-			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, info = '".$_POST['updateInfo']."', source_id = '".$_POST['updateId']."' WHERE source_id = '$sourceId'";
+			$sql="UPDATE map_configs.sources SET service = '".$_POST['updateService']."', with_geometry = $withgeometry, fi_point_tolerance = $fipointtolerance, ttl = $ttl, info = '".$_POST['updateInfo']."', source_id = '".$_POST['updateId']."', tilegrid = '".$_POST['updateTilegrid']."' WHERE source_id = '$sourceId'";
 		}
 		$result=pg_query($dbh, $sql);
 		if (!$result)
@@ -546,23 +585,16 @@
 		var topFrame="";
 		function toggleTopFrame(type)
 		{
-
 			var x = document.getElementById("topFrame");
-
 			if (x.style.display === "none")
 			{
-
 				x.style.display = "block";
-
 			}
 			else if (topFrame === type)
 			{
-
 				x.style.display = "none";
-
 			}
 			topFrame = type;
-
 		}
 
 		function updateSelect(id, array)
@@ -571,24 +603,16 @@
 			if (select.options != null)
 			{
 				var length = select.options.length;
-
 				for (i = length-1; i >= 0; i--)
 				{
-
 					select.options[i] = null;
-
 				}
 			}
 			array.forEach(function(item)
-
 			{
-
 				var newOption = document.createElement("option");
-
 				newOption.text = item.toString();
-
 				select.add(newOption);
-
 			});
 		}
 		<?php 
@@ -609,7 +633,8 @@
 	<iframe id="hiddenFrame" name="hiddenFrame" style="display:none"></iframe>
 
 <!--  REDIGERA KARTA  -->
-	<table>
+<div style="width:calc( 100vw - 15px ); overflow-x:auto; margin-bottom: 5px">
+	<table style="border-bottom:dashed 1px lightgray; margin-bottom: 2px; border-top:dashed 1px lightgray;">
 		<tr>
 			<th class="thLeft">
 				<h3 class="<?php echo $maph3class; ?>">
@@ -662,15 +687,22 @@
 			</th>
 
 <!--  REDIGERA TJÄNSTER  -->
-			<th class="thRight">
+			<th class="thMiddle">
 				<h3 class="<?php echo $serviceh3class; ?>">
 					Redigera tjänst
 				</h3>
 				<?php headForm('service'); ?>
 			</th>
+<!--  REDIGERA TILEGRIDS  -->
+			<th class="thRight">
+				<h3 class="<?php echo $tilegridh3class; ?>">
+					Redigera tilegrid
+				</h3>
+				<?php headForm('tilegrid'); ?>
+			</th>
 		</tr>
 	</table>
-	<hr>
+</div>
 <?php
 /*
  ************************
@@ -703,7 +735,6 @@
 			echo   '<form method="post" style="line-height:2">';
 			echo      '<label for="'.$groupId.'Id">Id:</label>';
 			echo      '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Id" name="updateId">'.$groupId.'</textarea>&nbsp;';
-			
 			echo      '<label for="'.$groupId.'Layers">Lager:</label>';
 			echo      '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Layers" name="updateLayers">'.trim($group['layers'], '{}').'</textarea>&nbsp;';
 			echo      '<label for="'.$groupId.'Groups">Grupper:</label>';
@@ -776,11 +807,9 @@
 			if (isset($mapId) && $level == 1)
 			{
 				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
-
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
-
 				echo   '</form>';
 			}
 			echo     '</div>';
@@ -1084,7 +1113,6 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$footerId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$footerId.'Id" name="updateId">'.$footerId.'</textarea>&nbsp;';
-
 		echo      '<label for="'.$footerId.'Img">Logotyp:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$footerId.'Img" name="updateImg">'.$footer['img'].'</textarea>&nbsp;';
 		echo      '<label for="'.$footerId.'Url">Url:</label>';
@@ -1125,7 +1153,6 @@
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Title" name="updateTitle">'.$layer['title'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Source">Källa:</label>';
 		echo      '<input type="text" list="sourcelist" class="bodySelect" id="'.$layerId.'Source" name="updateSource" value="'.$layer['source'].'" onfocus="this.value='."''".'" />';
-
 		echo      '<datalist id="sourcelist">';
 		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $layer['source']);
 		echo      '</datalist>&nbsp;';
@@ -1296,6 +1323,10 @@
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Fipointtolerance" name="updateFipointtolerance">'.$source['fi_point_tolerance'].'</textarea>&nbsp;';
 		echo      '<label for="'.$sourceId.'Ttl">Ttl:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Ttl" name="updateTtl">'.$source['ttl'].'</textarea>&nbsp;';
+		echo      '<label for="'.$sourceId.'Tilegrid">Tilegrid:</label>';
+		echo         '<select class="bodySelect" id="'.$sourceId.'Tilegrid" name="updateTilegrid">';
+		printSelectOptions(array_merge(array(""), array_column($tilegrids, 'tilegrid_id')), $source['tilegrid']);
+		echo         '</select>&nbsp;';
 		echo      '</br>';
 		echo      '<label for="'.$sourceId.'Info">Info:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$sourceId.'Info" name="updateInfo">'.$source['info'].'</textarea>&nbsp;';
@@ -1360,6 +1391,33 @@
 		echo         '</form>';
 		echo       '</div>';
 		echo     '</th>';
+		if (!empty($source['tilegrid']))
+		{
+			echo     '<th>';
+			echo       '<h3>Redigera tilegrid</h3>';
+			echo       '<div style="display:flex;">';
+			echo         '<form class="headForm" method="post">';
+			echo           '<select onchange="this.form.submit()" class="headSelect" name="tilegridId">';
+			echo             '<option value="'.$source['tilegrid'].'">'.$source['tilegrid'].'</option>';
+			echo           '</select>';
+			echo           '<input type="hidden" name="sourceId" value="'.$sourceId.'">';
+			if (isset($layerId))
+			{
+				echo   '<input type="hidden" name="layerId" value="'.$layerId.'">';
+			}
+			if (isset($mapId))
+			{
+				echo   '<input type="hidden" name="mapId" value="'.$mapId.'">';
+			}
+			if (!empty($tmpGroupIds))
+			{
+				echo   '<input type="hidden" name="groupIds" value="'.implode(',', $tmpGroupIds).'">';
+			}
+			echo           '<button type="submit" class="headButton" name="tilegridButton" value="get" style="">Hämta</button>';
+			echo         '</form>';
+			echo       '</div>';
+			echo     '</th>';
+		}
 		echo   '</tr>';
 		echo '</table>';
 		echo '<hr>';
@@ -1422,6 +1480,37 @@
 		echo '</div>';
 	}
 
+	if (isset($tilegridId) && in_array($tilegridId, array_column($tilegrids, 'tilegrid_id')))
+	{
+		$tilegrid=array_column_search($tilegridId, 'tilegrid_id', $tilegrids);
+		echo '<div style="display:flex;">';
+		echo   '<form method="post" style="line-height:2">';
+		echo      '<label for="'.$tilegridId.'Id">Id:</label>';
+		echo      '<textarea rows="1" class="textareaMedium" id="'.$tilegridId.'Id" name="updateId">'.$tilegridId.'</textarea>&nbsp;';
+		echo      '<label for="'.$tilegridId.'Tilesize">Tile-storlek:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$tilegridId.'Tilesize" name="updateTilesize">'.$tilegrid['tilesize'].'</textarea>&nbsp;';
+		echo      '<label for="'.$tilegridId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$tilegridId.'Info" name="updateInfo">'.$tilegrid['info'].'</textarea>&nbsp;';
+		echo      '<input type="hidden" name="tilegridId" value="'.$tilegridId.'">';
+		if (isset($mapId))
+		{
+			echo '<input type="hidden" name="mapId" value="'.$mapId.'">';
+		}
+		echo      '<div class="buttonDiv">';
+  		echo        '<button class="updateButton" type="submit" name="tilegridButton" value="update">Uppdatera</button>';
+		infoButton('tilegrid');
+		echo      '</div>';
+		echo   '</form>';
+		echo   "<form method='post' onsubmit='confirmStr=\"Är du säker att du vill radera tilegriden $tilegridId? Referenser till tilegriden hanteras separat.\"; return confirm(confirmStr);' style='line-height:2'>";
+		echo      '<input type="hidden" name="tilegridId" value="'.$tilegridId.'">';
+		if (isset($mapId))
+		{
+			echo '<input type="hidden" name="mapId" value="'.$mapId.'">';
+		}
+		echo     "<button class='deleteButton2' type='submit' name='tilegridButton' value='delete'>Radera</button>";
+		echo   '</form>';
+		echo '</div>';
+	}
 ?>
 <script>
 	updateSelect("layerCategories", categories);
@@ -1431,7 +1520,6 @@
 			echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
 			echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
 			echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
-
 		}
 	?>
 </script>
