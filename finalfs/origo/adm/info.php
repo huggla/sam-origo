@@ -31,6 +31,7 @@
 	elseif ($childType == 'footer') { $childTypeSv='sidfot'; }
 	elseif ($childType == 'source') { $childTypeSv='källa'; }
 	elseif ($childType == 'service') { $childTypeSv='tjänst'; }
+	else { $childTypeSv=$childType; }
 
 	if (!empty($child))
 	{
@@ -61,6 +62,10 @@
 				printParents('layer', $childType, $child);
 			}
 			elseif ($childType == 'service')
+			{
+				printParents('source', $childType, $child);
+			}
+			elseif ($childType == 'tilegrid')
 			{
 				printParents('source', $childType, $child);
 			}
