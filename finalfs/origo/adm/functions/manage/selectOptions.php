@@ -2,7 +2,7 @@
 
 	function selectOptions($tablename, $setSelected=false)
 	{
-		GLOBAL $maps, $controls, $groups, $layers, $sources, $services, $footers, $mapId, $controlId, $groupId, $layerId, $sourceId, $serviceId, $footerId;
+		GLOBAL $maps, $controls, $groups, $layers, $sources, $services, $footers, $tilegrids, $mapId, $controlId, $groupId, $layerId, $sourceId, $serviceId, $footerId, $tilegridId;
 		eval("\$table=\$$tablename;");
 		$type=rtrim($tablename, 's');
 		$column=$type."_id";
