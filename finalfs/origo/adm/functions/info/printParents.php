@@ -9,6 +9,7 @@
 			elseif ($parentType == 'group') { $parentsTypeSv='grupper'; }
 			elseif ($parentType == 'layer') { $parentsTypeSv='lager'; }
 			elseif ($parentType == 'source') { $parentsTypeSv='källor'; }
+			else { $parentsTypeSv=$parentType; }
 			echo "<b>$parentsTypeSv: </b>";
 			$first=true;
 			foreach ($parents as $parent)
