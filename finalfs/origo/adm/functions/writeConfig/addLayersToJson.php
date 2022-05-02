@@ -31,6 +31,10 @@
 				{
 					$layer['style_config'] = '';
 				}
+				if ($layer['attributes'] == '[]' || $layer['attributes'] == '{}' || $layer['attributes'] == '""' || $layer['attributes'] == 'null')
+				{
+					$layer['attributes'] = '';
+				}
 				// Set default values <start>
 				if (empty($layer['type']))
 				{
