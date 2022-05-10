@@ -475,7 +475,7 @@
 		{
 			if (!empty($_POST['updateAttributes']))
 			{
-				$attributesStr=", attributes = '".$_POST['updateAttributes']."'";
+				$attributesStr=", attributes = '".pg_escape_string($_POST['updateAttributes'])."'";
 			}
 			else
 			{
@@ -585,16 +585,23 @@
 		var topFrame="";
 		function toggleTopFrame(type)
 		{
+
 			var x = document.getElementById("topFrame");
+
 			if (x.style.display === "none")
 			{
+
 				x.style.display = "block";
+
 			}
 			else if (topFrame === type)
 			{
+
 				x.style.display = "none";
+
 			}
 			topFrame = type;
+
 		}
 
 		function updateSelect(id, array)
@@ -603,16 +610,24 @@
 			if (select.options != null)
 			{
 				var length = select.options.length;
+
 				for (i = length-1; i >= 0; i--)
 				{
+
 					select.options[i] = null;
+
 				}
 			}
 			array.forEach(function(item)
+
 			{
+
 				var newOption = document.createElement("option");
+
 				newOption.text = item.toString();
+
 				select.add(newOption);
+
 			});
 		}
 		<?php 
@@ -735,6 +750,7 @@
 			echo   '<form method="post" style="line-height:2">';
 			echo      '<label for="'.$groupId.'Id">Id:</label>';
 			echo      '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Id" name="updateId">'.$groupId.'</textarea>&nbsp;';
+			
 			echo      '<label for="'.$groupId.'Layers">Lager:</label>';
 			echo      '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Layers" name="updateLayers">'.trim($group['layers'], '{}').'</textarea>&nbsp;';
 			echo      '<label for="'.$groupId.'Groups">Grupper:</label>';
@@ -807,9 +823,11 @@
 			if (isset($mapId) && $level == 1)
 			{
 				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
+
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
+
 				echo   '</form>';
 			}
 			echo     '</div>';
@@ -1113,6 +1131,7 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$footerId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$footerId.'Id" name="updateId">'.$footerId.'</textarea>&nbsp;';
+
 		echo      '<label for="'.$footerId.'Img">Logotyp:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$footerId.'Img" name="updateImg">'.$footer['img'].'</textarea>&nbsp;';
 		echo      '<label for="'.$footerId.'Url">Url:</label>';
@@ -1153,6 +1172,7 @@
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Title" name="updateTitle">'.$layer['title'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Source">Källa:</label>';
 		echo      '<input type="text" list="sourcelist" class="bodySelect" id="'.$layerId.'Source" name="updateSource" value="'.$layer['source'].'" onfocus="this.value='."''".'" />';
+
 		echo      '<datalist id="sourcelist">';
 		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $layer['source']);
 		echo      '</datalist>&nbsp;';
@@ -1323,10 +1343,12 @@
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Fipointtolerance" name="updateFipointtolerance">'.$source['fi_point_tolerance'].'</textarea>&nbsp;';
 		echo      '<label for="'.$sourceId.'Ttl">Ttl:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$sourceId.'Ttl" name="updateTtl">'.$source['ttl'].'</textarea>&nbsp;';
+
 		echo      '<label for="'.$sourceId.'Tilegrid">Tilegrid:</label>';
 		echo         '<select class="bodySelect" id="'.$sourceId.'Tilegrid" name="updateTilegrid">';
 		printSelectOptions(array_merge(array(""), array_column($tilegrids, 'tilegrid_id')), $source['tilegrid']);
 		echo         '</select>&nbsp;';
+
 		echo      '</br>';
 		echo      '<label for="'.$sourceId.'Info">Info:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$sourceId.'Info" name="updateInfo">'.$source['info'].'</textarea>&nbsp;';
@@ -1391,6 +1413,7 @@
 		echo         '</form>';
 		echo       '</div>';
 		echo     '</th>';
+
 		if (!empty($source['tilegrid']))
 		{
 			echo     '<th>';
@@ -1418,6 +1441,7 @@
 			echo       '</div>';
 			echo     '</th>';
 		}
+
 		echo   '</tr>';
 		echo '</table>';
 		echo '<hr>';
@@ -1487,8 +1511,10 @@
 		echo   '<form method="post" style="line-height:2">';
 		echo      '<label for="'.$tilegridId.'Id">Id:</label>';
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$tilegridId.'Id" name="updateId">'.$tilegridId.'</textarea>&nbsp;';
+
 		echo      '<label for="'.$tilegridId.'Tilesize">Tile-storlek:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$tilegridId.'Tilesize" name="updateTilesize">'.$tilegrid['tilesize'].'</textarea>&nbsp;';
+
 		echo      '<label for="'.$tilegridId.'Info">Info:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$tilegridId.'Info" name="updateInfo">'.$tilegrid['info'].'</textarea>&nbsp;';
 		echo      '<input type="hidden" name="tilegridId" value="'.$tilegridId.'">';
@@ -1511,6 +1537,8 @@
 		echo   '</form>';
 		echo '</div>';
 	}
+
+
 ?>
 <script>
 	updateSelect("layerCategories", categories);
@@ -1520,6 +1548,7 @@
 			echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
 			echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
 			echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
+
 		}
 	?>
 </script>
