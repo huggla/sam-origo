@@ -216,7 +216,7 @@
 		elseif ($controlButton == 'add')
 		{
 			$toMap=array_column_search($toMapId, 'map_id', $maps);
-			$toMapControls=explode(',', trim($toMap['controls'], '{}'));
+			$toMapControls=pgArrayToPhp($toMap['controls']);
 			if (empty($toMapControls[0]))
 			{
 				$toMapControls=array();
@@ -505,7 +505,7 @@
 			{
 				$styleConfigStr=", style_config = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -725,6 +725,9 @@
  ************************
 */
 	$level=0;
+
+	//  Om grupp eller karta vald
+
 	$tmpGroupIds=$groupIds;
 	if (isset($mapId) && !isset($_POST['groupIds']))
 	{
@@ -1071,6 +1074,9 @@
 			$level++;
 		}
 	}
+
+	//  Om kontroll vald
+
 	if (isset($controlId) && in_array($controlId, array_column($controls, 'control_id')))
 	{
 		$control=array_column_search($controlId, 'control_id', $controls);
@@ -1124,6 +1130,9 @@
 			echo '</form>';
 		}
 	}
+
+	//  Om sidfot vald
+
 	elseif (isset($footerId) && in_array($footerId, array_column($footers, 'footer_id')))
 	{
 		$footer=array_column_search($footerId, 'footer_id', $footers);
@@ -1161,6 +1170,9 @@
 		echo   '</form>';
 		echo '</div>';
 	}
+
+	//  Om lager vald
+
 	elseif (isset($layerId) && in_array($layerId, array_column($layers, 'layer_id')))
 	{
 		$layer=array_column_search($layerId, 'layer_id', $layers);
@@ -1172,7 +1184,6 @@
 		echo      '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Title" name="updateTitle">'.$layer['title'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Source">Källa:</label>';
 		echo      '<input type="text" list="sourcelist" class="bodySelect" id="'.$layerId.'Source" name="updateSource" value="'.$layer['source'].'" onfocus="this.value='."''".'" />';
-
 		echo      '<datalist id="sourcelist">';
 		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $layer['source']);
 		echo      '</datalist>&nbsp;';
@@ -1205,6 +1216,17 @@
 		echo      '<label for="'.$layerId.'Opacity">Opacitet:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Opacity" name="updateOpacity">'.$layer['opacity'].'</textarea>&nbsp;';
 		echo      '<br>';
+		$layerService=array_column_search($layer['source'], 'source_id', $sources)['service'];
+		if ($layerService == 'restricted')
+		{
+			echo "<img src='../img/png/lock_yellow.png' alt='Skyddat lager' title='Skyddat lager'>&nbsp;";
+			echo '<label for="'.$layerId.'Adusers">Användare:</label>';
+			echo '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Adusers" name="updateAdusers">'.trim($layer['adusers'], '{}').'</textarea>&nbsp;';
+			echo '<label for="'.$layerId.'Adgroups">Grupper:</label>';
+			echo '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Adgroups" name="updateAdgroups">'.trim($layer['adgroups'], '{}').'</textarea>&nbsp;';
+			echo "<img src='../img/png/lock_yellow.png' alt='Skyddat lager' title='Skyddat lager'>";
+			echo '<br>';
+		}
 		echo      '<label for="'.$layerId.'Icon">Ikon:</label>';
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Icon" name="updateIcon">'.$layer['icon'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Icon_extended">Utfälld ikon:</label>';
@@ -1324,6 +1346,9 @@
 		echo       '</table>';
 		echo       '<hr>';
 	}
+
+	//  Om källa vald
+
 	if (isset($sourceId) && in_array($sourceId, array_column($sources, 'source_id')))
 	{
 		$source=array_column_search($sourceId, 'source_id', $sources);
@@ -1446,6 +1471,9 @@
 		echo '</table>';
 		echo '<hr>';
 	}
+
+	//  Om tjänst vald
+
 	if (isset($serviceId) && in_array($serviceId, array_column($services, 'service_id')))
 	{
 		$service=array_column_search($serviceId, 'service_id', $services);
@@ -1503,6 +1531,8 @@
 		echo   '</form>';
 		echo '</div>';
 	}
+
+	//  Om tilegrid vald
 
 	if (isset($tilegridId) && in_array($tilegridId, array_column($tilegrids, 'tilegrid_id')))
 	{
