@@ -3,6 +3,7 @@
 	include_once("./functions/dbh.php");
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/array_column_search.php");
+	include_once("./functions/all_from_table.php");
 	$functionFiles = array_diff(scandir('./functions/writeConfig'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
@@ -85,4 +86,20 @@
 	addLayersToJson();
 	$json = $json.' }';
 	file_put_contents($configfile, json_format($json));
+	$layers=all_from_table('map_configs.layers');
+	$sources=all_from_table('map_configs.sources');
+	$restrictedLayers=array();
+	foreach ($layers as $layer)
+	{
+		$layerService=array_column_search($layer['source'], 'source_id', $sources)['service'];
+		if ($layerService == 'restricted')
+		{
+			$restrictedLayers[]=array('name' => explode('#', $layer['layer_id'])[0], 'authorized_users' => $layer['adusers'], 'authorized_groups' => $layer['adgroups']);
+		}
+	}
+	array_walk($restrictedLayers, function(&$restrictedLayer) {
+		$restrictedLayer['authorized_users'] = pgArrayToPhp(str_replace('"', '', (strtolower($restrictedLayer['authorized_users']))));
+		$restrictedLayer['authorized_groups'] = pgArrayToPhp(str_replace('"', '', (strtolower($restrictedLayer['authorized_groups']))));
+	});
+	defineFileConstant('RESTRICTEDLAYERS', $restrictedLayers);
 ?>
