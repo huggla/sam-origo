@@ -70,6 +70,8 @@ CREATE TABLE map_configs.layers
     info character varying COLLATE pg_catalog."default",
     categories character varying[] COLLATE pg_catalog."default",
     format character varying COLLATE pg_catalog."default" DEFAULT 'image/png'::character varying,
+    adusers character varying[] COLLATE pg_catalog."default",
+    adgroups character varying[] COLLATE pg_catalog."default",
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
 );
 
