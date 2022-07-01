@@ -26,7 +26,7 @@
 				{
 					$json = $json.', "abstract": "'.$group['abstract'].'"';
 				}
-				if (!empty($group['groups']))
+				if (!empty(trim($group['groups'], '{}')))
 				{
 					addGroupsToJson($group['groups']);
 				}
