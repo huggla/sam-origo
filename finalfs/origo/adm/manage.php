@@ -1189,7 +1189,7 @@
 		echo      '</datalist>&nbsp;';
 		echo      '<label for="'.$layerId.'Type">Typ:</label>';
 		echo         '<select class="miniSelect" id="'.$layerId.'Type" name="updateType">';
-		printSelectOptions(array("WMS", "WFS", "OSM", "GEOJSON"), $layer['type']);
+		printSelectOptions(array("WMS", "WFS", "OSM", "GEOJSON", "GROUP"), $layer['type']);
 		echo         '</select>&nbsp;';
 		if ($layer['type'] == 'WFS')
 		{
