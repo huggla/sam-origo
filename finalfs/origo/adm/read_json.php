@@ -102,10 +102,7 @@ foreach ($json_arr['groups'] as $group)
 		$jsonGroups[]=$group;
 	}
 }
-if (!empty($backgroundGroup))
-{
-	$jsonGroups[]=$backgroundGroup;
-}
+
 preg_match('/(.*)("source": *{.*)/s', $json, $matches);
 $jsonPreSource=$matches[1].'}';
 
@@ -147,17 +144,24 @@ foreach ($jsonSource as $sourceId => $source)
 		parse_str(substr($source['url'], strpos($source['url'], "?") + 1), $urlQuery);
 		$source['url']=substr($source['url'], 0, strpos($source['url'], "?"));
 	}
-	if ($_POST['services'] == 'yes' && !in_array($source['url'], $jsonServices))
+	if ($_POST['services'] == 'yes')
 	{
-		$jsonServices["service$serviceCount"]=$source['url'];
-		$source['service']=array_search($source['url'], $jsonServices)."#$importId";
-		$sql="INSERT INTO map_configs.services(service_id, base_url) VALUES ('".$source['service']."', '".$source['url']."')";
-		$result=pg_query($dbh, $sql);
-		if (!$result)
+		if (!in_array($source['url'], $jsonServices))
 		{
-			die("Error in SQL query: " . pg_last_error());
+			$jsonServices["service$serviceCount"]=$source['url'];
+			$source['service']=array_search($source['url'], $jsonServices)."#$importId";
+			$sql="INSERT INTO map_configs.services(service_id, base_url) VALUES ('".$source['service']."', '".$source['url']."')";
+			$result=pg_query($dbh, $sql);
+			if (!$result)
+			{
+				die("Error in SQL query: " . pg_last_error());
+			}
+			$serviceCount++;
 		}
-		$serviceCount++;
+		else
+		{
+			$source['service']=array_search($source['url'], $jsonServices)."#$importId";
+		}
 	}
 	if ($_POST['sources'] == 'yes')
 	{
@@ -208,11 +212,11 @@ function renamedup($name, $count=0)
 	GLOBAL $uniqueLayers;
 	if ($count > 0)
 	{
-		$newname="$name$count";
+		$newname="$name#$count";
 	}
 	else
 	{
-		$newname=$name;
+		$newname="$name#";
 	}
 	if (in_array($newname, $uniqueLayers))
 	{
@@ -229,9 +233,22 @@ function renamedup($name, $count=0)
 $uniqueLayers=array();
 $mapLayers=array();
 $groupsLayers=array();
+$allLayers=array();
 if ($_POST['layers'] == 'yes')
 {
-	foreach ($jsonLayers as $layer)
+	foreach ($jsonLayers as $jsonLayer)
+	{
+		if ($jsonLayer['type'] == 'GROUP')
+		{
+			foreach ($jsonLayer['layers'] as $groupLayerLayer)
+			{
+				$groupLayerLayer['group']='groupLayer';
+				$allLayers[]=$groupLayerLayer;
+			}
+		}
+		$allLayers[]=$jsonLayer;
+	}
+	foreach ($allLayers as $layer)
 	{
 		$layer['name']=renamedup($layer['name']);
 		if ($_POST['styles'] == 'yes')
@@ -240,47 +257,110 @@ if ($_POST['layers'] == 'yes')
 
 			if (count($layerStyle[0]) > 1)
 			{
-				$layerStyleConfig=json_encode($layerStyle, JSON_PRETTY_PRINT);
-				$layerIcon='';
-				$layerStyleFilter='';
+				if (count($layerStyle[0]) === 2 && (!empty($layerStyle[0][0]['icon']['src'])) && (!empty($layerStyle[0][1]['icon']['src'])) && ($layerStyle[0][0]['extendedLegend'] || $layerStyle[0][1]['extendedLegend']))
+				{
+					$layerStyleConfig='[]';
+					if ($layerStyle[0][0]['extendedLegend'])
+					{
+						$layerExtendedIcon=$layerStyle[0][0]['icon']['src'];
+						$layerIcon=$layerStyle[0][1]['icon']['src'];
+					}
+					else
+					{
+						$layerExtendedIcon=$layerStyle[0][1]['icon']['src'];
+						$layerIcon=$layerStyle[0][0]['icon']['src'];
+					}
+					if ($layerStyle[0][0]['filter'] || $layerStyle[0][1]['filter'])
+					{
+						if ($layerStyle[0][0]['filter'])
+						{
+							$layerStyleFilter=$layerStyle[0][0]['filter'];
+						}
+						else
+						{
+							$layerStyleFilter=$layerStyle[0][1]['filter'];
+						}
+					}
+					else
+					{
+						$layerStyleFilter='';
+					}
+				}
+				else
+				{
+					$layerStyleConfig=json_encode($layerStyle, JSON_PRETTY_PRINT);
+					$layerIcon='';
+					$layerExtendedIcon='';
+					$layerStyleFilter='';
+				}
 			}
 			else
 			{
 				if (!empty($layerStyle[0][0]['icon']['src']))
 				{
 					$layerStyleConfig='[]';
-					$layerIcon=$layerStyle[0][0]['icon']['src'];
 					$layerStyleFilter=$layerStyle[0][0]['filter'];
+					if ($layerStyle[0][0]['extendedLegend'])
+					{
+						$layerIcon='';
+						$layerExtendedIcon=$layerStyle[0][0]['icon']['src'];
+					}
+					else
+					{
+						$layerIcon=$layerStyle[0][0]['icon']['src'];
+						$layerExtendedIcon='';
+					}
 				}
 				elseif (!empty($layerStyle[0][0]['image']['src']))
 				{
 					$layerStyleConfig='[]';
 					$layerIcon=$layerStyle[0][0]['image']['src'];
-					$layerStyleFilter='';
+					$layerExtendedIcon='';
+					$layerStyleFilter=$layerStyle[0][0]['filter'];
 				}
 				else
 				{
 					$layerStyleConfig=json_encode($layerStyle, JSON_PRETTY_PRINT);
 					$layerIcon='';
+					$layerExtendedIcon='';
 					$layerStyleFilter='';
 				}
 
 			}
-
-		}
-		if (empty($layer['group']))
-		{
-			$mapLayers[]=$layer['name']."#$importId";
-		}
-		else
-		{
-			if (is_array($groupsLayers[$layer['group']]))
+			if (!empty($layer['clusterStyle']))
 			{
-				$groupsLayers[$layer['group']][]=$layer['name']."#$importId";
+				$layerClusterStyle=json_encode($jsonStyles[$layer['clusterStyle']], JSON_PRETTY_PRINT);
 			}
 			else
 			{
-				$groupsLayers[$layer['group']]=array($layer['name']."#$importId");
+				$layerClusterStyle='[]';
+			}
+		}
+		else
+		{
+			$layerStyleConfig='[]';
+			$layerIcon='';
+			$layerExtendedIcon='';
+			$layerStyleFilter='';
+			$layerClusterStyle='[]';
+		}
+		if (empty($layer['group']))
+		{
+			$mapLayers[]=$layer['name']."$importId";
+		}
+		else
+		{
+			if ($layer['group'] == 'none')
+			{
+				$noneLayer=true;
+			}
+			if (is_array($groupsLayers[$layer['group']]))
+			{
+				$groupsLayers[$layer['group']][]=$layer['name']."$importId";
+			}
+			else
+			{
+				$groupsLayers[$layer['group']]=array($layer['name']."$importId");
 			}
 		}
 		if (!empty($layer['queryable']))
@@ -295,15 +375,47 @@ if ($_POST['layers'] == 'yes')
 		{
 			$layer['opacity']=1;
 		}
-		if (!empty($layer['visible']))
+		if (isset($layer['visible']))
 		{
 			$layerVisible=var_export($layer['visible'], true);
 		}
 		else
 		{
-			$layerVisible='false';
+			$layerVisible='true';
 		}
-		$sql="INSERT INTO map_configs.layers(layer_id, title, format, type, attributes, abstract, queryable, featureinfolayer, opacity, visible, source, style_config, icon, style_filter) VALUES ('".$layer['name']."#$importId', '".$layer['title']."', '".$layer['format']."', '".$layer['type']."', ".pg_escape_literal(json_encode($layer['attributes'], JSON_PRETTY_PRINT)).", ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $layer['abstract']))).", '$layerQueryable', '".$layer['featureinfolayer']."', '".$layer['opacity']."', '$layerVisible', '".$layer['source']."#$importId', ".pg_escape_literal($layerStyleConfig).", '$layerIcon', ".pg_escape_literal($layerStyleFilter).")";
+		if ($layer['type'] == 'GROUP')
+		{
+			$layerLayers_arr=array();
+			foreach ($layer['layers'] as $layerLayer)
+			{
+				$layerLayers_arr[]=$layerLayer['name']."#$importId";
+			}
+			$layerLayers='{'.implode(',', $layerLayers_arr).'}';
+			$layerSource='';
+		}
+		else
+		{
+			$layerLayers='{}';
+			$layerSource=$layer['source']."#$importId";
+		}
+		$layersColumns='layer_id, title, format, type, attributes, abstract, queryable, featureinfolayer, opacity, visible, source, style_config, icon, style_filter, icon_extended, layers, layertype, clusterstyle';
+		$layersValues="'".$layer['name']."$importId', '".$layer['title']."', '".$layer['format']."', '".$layer['type']."', ".pg_escape_literal(json_encode($layer['attributes'], JSON_PRETTY_PRINT)).", ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $layer['abstract']))).", '$layerQueryable', '".$layer['featureinfoLayer']."', '".$layer['opacity']."', '$layerVisible', '$layerSource', ".pg_escape_literal($layerStyleConfig).", '$layerIcon', ".pg_escape_literal($layerStyleFilter).", '$layerExtendedIcon', '$layerLayers', '".$layer['layerType']."', '$layerClusterStyle'";
+		if (!empty($layer['maxScale']))
+		{
+			$layersColumns=$layersColumns.', maxscale';
+			$layersValues=$layersValues.", '".$layer['maxScale']."'";
+		}
+		if (!empty($layer['minScale']))
+		{
+			$layersColumns=$layersColumns.', minscale';
+			$layersValues=$layersValues.", '".$layer['minScale']."'";
+		}
+		if (!empty($layer['clusterOptions']) && $layer['clusterOptions'] !== '[]')
+		{
+			$layersColumns=$layersColumns.', clusteroptions';
+			$layersValues=$layersValues.", ".pg_escape_literal(json_encode($layer['clusterOptions'], JSON_PRETTY_PRINT));
+		}
+		$sql="INSERT INTO map_configs.layers($layersColumns) VALUES ($layersValues)";
 		$result=pg_query($dbh, $sql);
 		if (!$result)
 		{
@@ -319,6 +431,7 @@ function recursiveGroups($groupsArr)
 	$parentGroups=array();
 	foreach ($groupsArr as $group)
 	{
+
 		$parentGroups[]=$group['name']."#$importId";
 		if (!empty($group['groups']))
 		{
@@ -349,6 +462,14 @@ function recursiveGroups($groupsArr)
 
 if ($_POST['groups'] == 'yes')
 {
+	if ($noneLayer && $group['name'] == 'background')
+	{
+		$jsonGroups[]=array('name' => "none");
+	}
+	if (!empty($backgroundGroup))
+	{
+		$jsonGroups[]=$backgroundGroup;
+	}
 	$mapGroups=recursiveGroups($jsonGroups);
 }
 
@@ -360,7 +481,7 @@ foreach ($jsonProj4Defs as $def)
 	{
 		if (!in_array($def['code'], array_column($proj4defs, 'code')))
 		{
-			$sql="INSERT INTO map_configs.proj4defs(code, projection) VALUES ('".$def['code']."', '".$def['projection']."')";
+			$sql="INSERT INTO map_configs.proj4defs(code, projection, alias) VALUES ('".$def['code']."', '".$def['projection']."', '".$def['alias']."')";
 			$result=pg_query($dbh, $sql);
 			if (!$result)
 			{
@@ -402,6 +523,7 @@ if ($_POST['map'] == 'yes')
 	{
 		$jsonConstrainResolution='true';
 	}
+
 	$sql="INSERT INTO map_configs.maps(map_id, mapgrid, projectioncode, projectionextent, featureinfooptions, extent, center, zoom, enablerotation, constrainresolution, resolutions, controls, groups, layers, proj4defs, footer) VALUES ('".$_POST['mapid']."', '".var_export($jsonMapGrid['visible'], true)."', '$jsonProjectionCode', '(".$jsonProjectionExtent[0].",".$jsonProjectionExtent[1]."),(".$jsonProjectionExtent[2].",".$jsonProjectionExtent[3].")', '".json_encode($jsonFeatureinfoOptions, JSON_PRETTY_PRINT)."', '(".$jsonExtent[0].",".$jsonExtent[1]."),(".$jsonExtent[2].",".$jsonExtent[3].")', '(".$jsonCenter[0].",".$jsonCenter[1].")', '$jsonZoom', '$jsonEnableRotation', '$jsonConstrainResolution', '$jsonResolutions', '{".implode(',', $mapControls)."}', '{".implode(',', $mapGroups)."}', '{".implode(',', $mapLayers)."}', '{".implode(',', $mapProj4Defs)."}', '$mapFooter')";
 	$result=pg_query($dbh, $sql);
 	if (!$result)
