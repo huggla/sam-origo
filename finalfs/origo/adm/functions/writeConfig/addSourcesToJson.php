@@ -8,6 +8,7 @@
 		{
 			$mapSources = pgArrayToPhp($mapSources);
 		}
+
 		$mapSources = array_unique($mapSources);
 		$firstSource = true;
 		foreach ($mapSources as $sourceId)
