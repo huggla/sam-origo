@@ -1,13 +1,23 @@
 <?php
 
-	function addLayersToJson()
+	function addLayersToJson($mapLayers, $groupLayer=false)
 	{
-		GLOBAL $mapLayers, $layers, $json, $mapStyles, $mapSources, $sources, $services;
+		GLOBAL $layers, $json, $mapStyles, $mapSources, $sources, $services, $mapStyleLayers;
 		$json = $json. '"layers": [ ';
 		$firstLayer = true;
-		$mapSources = array();
-		$mapStyleLayers = array();
-		$mapStyles = array();
+		if (!isset($mapSources))
+		{
+			$mapSources = array();
+		}
+		if (!isset($mapStyleLayers))
+		{
+			$mapStyleLayers = array();
+		}
+		if (!isset($mapStyles))
+		{
+			$mapStyles = array();
+		}
+
 		foreach ($mapLayers as $group => $groupLayers)
 		{
 			foreach ($groupLayers as $layer)
@@ -21,20 +31,24 @@
 					$json = $json.', ';
 				}
 				$layer = array_column_search($layer, 'layer_id', $layers);
-				$source = array_column_search($layer['source'], 'source_id', $sources);
-				if ($layer['type'] == 'WFS')
+				if ($layer['type'] !== 'GROUP')
 				{
-					$layer['source'] = $layer['source'].'@wfs';
+					$source = array_column_search($layer['source'], 'source_id', $sources);
+					if ($layer['type'] == 'WFS')
+					{
+						$layer['source'] = $layer['source'].'@wfs';
+					}
+					$service = array_column_search($source['service'], 'service_id', $services);
+					if ($layer['attributes'] == '[]' || $layer['attributes'] == '{}' || $layer['attributes'] == '""' || $layer['attributes'] == 'null')
+					{
+						$layer['attributes'] = '';
+					}
 				}
-				$service = array_column_search($source['service'], 'service_id', $services);
 				if ($layer['style_config'] == '[]' || $layer['style_config'] == '{}' || $layer['style_config'] == '""' || $layer['style_config'] == 'null')
 				{
 					$layer['style_config'] = '';
 				}
-				if ($layer['attributes'] == '[]' || $layer['attributes'] == '{}' || $layer['attributes'] == '""' || $layer['attributes'] == 'null')
-				{
-					$layer['attributes'] = '';
-				}
+
 				// Set default values <start>
 				if (empty($layer['type']))
 				{
@@ -44,7 +58,7 @@
 				{
 					$layer['style_layer'] = $layer['layer_id'];
 				}
-				if (empty($layer['queryable']))
+				if (empty($layer['queryable']) && $layer['type'] !== 'GROUP')
 				{
 					$layer['queryable'] = 't';
 				}
@@ -52,14 +66,18 @@
 				{
 					$layer['visible'] = 'f';
 				}
-				if (empty($layer['legend']))
+				if (empty($layer['legend']) && $layer['type'] !== 'GROUP')
 				{
 					$layer['legend'] = 'f';
 				}
 				// Set default values </end>
 
 				$layerName = trim(explode('#', $layer['layer_id'], 2)[0]);
-				$json = $json.'{ "name": "'.$layerName.'", "title": "'.$layer['title'].'", "group": "'.$group.'", "type": "'.$layer['type'].'"';
+				$json = $json.'{ "name": "'.$layerName.'", "title": "'.$layer['title'].'", "type": "'.$layer['type'].'"';
+				if (!$groupLayer)
+				{
+					$json = $json.', "group": "'.$group.'"';
+				}
 				if (!empty($layer['format']) && $layer['format'] !== 'image/png')
 				{
 					$json = $json.', "format": "'.$layer['format'].'"';
@@ -81,6 +99,10 @@
 				if ($layer['visible'] == 't')
 				{
 					$json = $json.', "visible": true';
+				}
+				elseif ($layer['visible'] == 'f')
+				{
+					$json = $json.', "visible": false';
 				}
 				if (empty($group) && $layer['legend'] == 't')
 				{
@@ -121,12 +143,40 @@
 				{
 					$json = $json.', "abstract": "'.$layer['abstract'].'"';
 				}
-				if (!empty($layer['attributes']))
+				if (!empty($layer['attributes']) && $layer['type'] !== 'GROUP')
 				{
 					$json = $json.', "attributes": '.$layer['attributes'];
 				}
+				if (!empty($layer['maxscale']))
+				{
+					$json = $json.', "maxScale": '.$layer['maxscale'];
+				}
+				if (!empty($layer['minscale']))
+				{
+					$json = $json.', "minScale": '.$layer['minscale'];
+				}
+
+				if (!empty($layer['layertype']))
+				{
+					$json = $json.', "layerType": "'.$layer['layertype'].'"';
+					if ($layer['layertype'] == 'cluster')
+					{
+						$json = $json.', "clusterStyle": "'.$layer['style_layer'].'-cluster"';
+						if (!empty($layer['clusteroptions']) && $layer['clusteroptions'] !== '{}')
+						{
+							$json = $json.', "clusterOptions": '.$layer['clusteroptions'];
+						}
+					}
+				}
+
+				if ($layer['type'] === 'GROUP')
+				{
+					$json = $json.', ';
+					addLayersToJson(array(pgArrayToPhp($layer['layers'])), true);
+				}
 				$json = $json.'}';
-				if (!in_array($layer['source'], $mapSources))
+
+				if (!empty($layer['source']) && !in_array($layer['source'], $mapSources))
 				{
 					$mapSources[] = $layer['source'];
 				}
@@ -193,22 +243,37 @@
 							$styleLayer['icon_extended'] = $styleLayer['icon_extended'].'ttl=36000';
 						}
 					}
+					$styleLayerId=$styleLayer['layer_id'];
 					if ($group == 'background')
 					{
-						$styleLayer['layer_id'] = $styleLayer['layer_id'].'-bg';
+						$styleLayer['layer_id'] = $styleLayerId.'-bg';
 					}
 					if (!in_array($styleLayer['layer_id'], $mapStyleLayers))
 					{
 						$mapStyleLayers[] = $styleLayer['layer_id'];
 						$mapStyles[] = $styleLayer;
+						if (!empty($styleLayer['clusterstyle']) && $styleLayer['clusterstyle'] !== '[]')
+						{
+							$styleLayer['layer_id'] = $styleLayerId.'-cluster';
+							if (!in_array($styleLayer['layer_id'], $mapStyleLayers))
+							{
+								$mapStyleLayers[] = $styleLayer['layer_id'];
+								$styleLayer['style_config']=$styleLayer['clusterstyle'];
+								$mapStyles[] = $styleLayer;
+							}
+						}
 					}
 				}
 			}
 		}
-		$json = $json.' ], ';
-		addSourcesToJson();
-		$json = $json.', ';
-		addStylesToJson();
+		$json = $json.' ]';
+		if (!$groupLayer)
+		{
+			$json = $json.', ';
+			addSourcesToJson();
+			$json = $json.', ';
+			addStylesToJson();
+		}
 	}
 
 ?>
