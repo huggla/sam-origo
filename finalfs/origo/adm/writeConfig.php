@@ -20,7 +20,7 @@
 	{
 		$mapNumber = '';
 	}
-	$configfile = "/origo/$mapName/index$mapNumber.json";
+	$configfile = "/origo/apa.json";
 	ignore_user_abort(true);
 	$dbh=dbh(CONNECTION_STRING);
 	$conftables = array(
@@ -48,7 +48,15 @@
 	if (!empty($map['footer']))
 	{
 		$footer = array_column_search($map['footer'], 'footer_id', $footers);
-		$json = $json.'"footer": { "img": "'.$footer['img'].'", "url" : "'.$footer['url'].'", "text": "'.$footer['text'].'" },';
+		if (!empty($footer['text']))
+		{
+			$footerText=', "text": "'.$footer['text'].'"';
+		}
+		else
+		{
+			$footerText='';
+		}
+		$json = $json.'"footer": { "img": "'.$footer['img'].'", "url" : "'.$footer['url'].'"'.$footerText.' },';
 	}
 	$json = $json.'"mapGrid": { "visible": '.pgBoolToText($map['mapgrid']).' } },';
 	// PageSettings </end>
@@ -70,7 +78,15 @@
 			$json = $json.', ';
 		}
 		$proj4def = array_column_search($proj4def, 'code', $proj4defs);
-		$json = $json.'{ "code": "'.$proj4def['code'].'", "projection": "'.$proj4def['projection'].'" }';
+		if (!empty($proj4def['alias']))
+		{
+			$proj4defAlias=', "alias": "'.$proj4def['alias'].'"';
+		}
+		else
+		{
+			$proj4defAlias='';
+		}
+		$json = $json.'{ "code": "'.$proj4def['code'].'", "projection": "'.$proj4def['projection'].'"'.$proj4defAlias.' }';
 	}
 	$json = $json.'], ';
 	// Proj4Defs </end>
@@ -83,7 +99,7 @@
 	$mapLayers = array('root' => pgArrayToPhp($map['layers']));
 	addGroupsToJson($map['groups']);
 	$json = $json.', ';
-	addLayersToJson();
+	addLayersToJson($mapLayers);
 	$json = $json.' }';
 	file_put_contents($configfile, json_format($json));
 	$layers=all_from_table('map_configs.layers');
