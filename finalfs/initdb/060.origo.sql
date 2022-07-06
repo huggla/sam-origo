@@ -72,6 +72,12 @@ CREATE TABLE map_configs.layers
     format character varying COLLATE pg_catalog."default" DEFAULT 'image/png'::character varying,
     adusers character varying[] COLLATE pg_catalog."default",
     adgroups character varying[] COLLATE pg_catalog."default",
+    layers character varying[] COLLATE pg_catalog."default",
+    layertype character varying COLLATE pg_catalog."default",
+    clusteroptions json,
+    maxscale integer,
+    minscale integer,
+    clusterstyle json,
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
 );
 
@@ -117,6 +123,7 @@ CREATE TABLE map_configs.services
 (
     service_id character varying COLLATE pg_catalog."default" NOT NULL,
     base_url character varying COLLATE pg_catalog."default",
+    alias character varying COLLATE pg_catalog."default",
     info character varying COLLATE pg_catalog."default",
     CONSTRAINT services_pkey PRIMARY KEY (service_id)
 );
