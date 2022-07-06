@@ -19,7 +19,7 @@ function addControlsToJson()
 		$control = array_column_search($control, 'control_id', $controls);
 		$controlName = trim(explode('#', $control['control_id'], 2)[0]);
 		$json = $json.'{ "name": "'.$controlName.'"';
-		if (!empty($control['options']))
+		if (!empty($control['options']) && $control['options'] !== 'null')
 		{
 			$json = $json.', "options": '.$control['options'];
 		}
