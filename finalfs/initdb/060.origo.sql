@@ -78,6 +78,7 @@ CREATE TABLE map_configs.layers
     maxscale integer,
     minscale integer,
     clusterstyle json,
+    attribution character varying COLLATE pg_catalog."default",
     CONSTRAINT layers_pkey PRIMARY KEY (layer_id)
 );
 
