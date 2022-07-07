@@ -81,7 +81,15 @@ $jsonControls=$json_arr['controls'];
 $jsonLayers=$json_arr['layers'];
 $jsonStyles=$json_arr['styles'];
 $jsonPageSettings=$json_arr['pageSettings'];
-$jsonMapGrid=$jsonPageSettings['mapGrid'];
+
+if (isset($jsonPageSettings['mapGrid']))
+{
+	$jsonMapGrid=$jsonPageSettings['mapGrid'];
+}
+else
+{
+	$jsonMapGrid['visible']=false;
+}
 $jsonFooter=$jsonPageSettings['footer'];
 $jsonProjectionCode=$json_arr['projectionCode'];
 $jsonProjectionExtent=$json_arr['projectionExtent'];
@@ -398,8 +406,8 @@ if ($_POST['layers'] == 'yes')
 			$layerLayers='{}';
 			$layerSource=$layer['source']."#$importId";
 		}
-		$layersColumns='layer_id, title, format, type, attributes, abstract, queryable, featureinfolayer, opacity, visible, source, style_config, icon, style_filter, icon_extended, layers, layertype, clusterstyle';
-		$layersValues="'".$layer['name']."$importId', '".$layer['title']."', '".$layer['format']."', '".$layer['type']."', ".pg_escape_literal(json_encode($layer['attributes'], JSON_PRETTY_PRINT)).", ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $layer['abstract']))).", '$layerQueryable', '".$layer['featureinfoLayer']."', '".$layer['opacity']."', '$layerVisible', '$layerSource', ".pg_escape_literal($layerStyleConfig).", '$layerIcon', ".pg_escape_literal($layerStyleFilter).", '$layerExtendedIcon', '$layerLayers', '".$layer['layerType']."', '$layerClusterStyle'";
+		$layersColumns='layer_id, title, format, type, attributes, abstract, queryable, featureinfolayer, opacity, visible, source, style_config, icon, style_filter, icon_extended, layers, layertype, clusterstyle, attribution';
+		$layersValues="'".$layer['name']."$importId', '".$layer['title']."', '".$layer['format']."', '".$layer['type']."', ".pg_escape_literal(json_encode($layer['attributes'], JSON_PRETTY_PRINT)).", ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $layer['abstract']))).", '$layerQueryable', '".$layer['featureinfoLayer']."', '".$layer['opacity']."', '$layerVisible', '$layerSource', ".pg_escape_literal($layerStyleConfig).", '$layerIcon', ".pg_escape_literal($layerStyleFilter).", '$layerExtendedIcon', '$layerLayers', '".$layer['layerType']."', '$layerClusterStyle', '".$layer['attribution']."'";
 		if (!empty($layer['maxScale']))
 		{
 			$layersColumns=$layersColumns.', maxscale';
@@ -523,13 +531,24 @@ if ($_POST['map'] == 'yes')
 	{
 		$jsonConstrainResolution='true';
 	}
+	$mapColumns='map_id, mapgrid, projectioncode, projectionextent, featureinfooptions, extent, enablerotation, constrainresolution, resolutions, controls, groups, layers, proj4defs, footer';
 
-	$sql="INSERT INTO map_configs.maps(map_id, mapgrid, projectioncode, projectionextent, featureinfooptions, extent, center, zoom, enablerotation, constrainresolution, resolutions, controls, groups, layers, proj4defs, footer) VALUES ('".$_POST['mapid']."', '".var_export($jsonMapGrid['visible'], true)."', '$jsonProjectionCode', '(".$jsonProjectionExtent[0].",".$jsonProjectionExtent[1]."),(".$jsonProjectionExtent[2].",".$jsonProjectionExtent[3].")', '".json_encode($jsonFeatureinfoOptions, JSON_PRETTY_PRINT)."', '(".$jsonExtent[0].",".$jsonExtent[1]."),(".$jsonExtent[2].",".$jsonExtent[3].")', '(".$jsonCenter[0].",".$jsonCenter[1].")', '$jsonZoom', '$jsonEnableRotation', '$jsonConstrainResolution', '$jsonResolutions', '{".implode(',', $mapControls)."}', '{".implode(',', $mapGroups)."}', '{".implode(',', $mapLayers)."}', '{".implode(',', $mapProj4Defs)."}', '$mapFooter')";
+	$mapValues="'".$_POST['mapid']."', '".var_export($jsonMapGrid['visible'], true)."', '$jsonProjectionCode', '(".$jsonProjectionExtent[0].",".$jsonProjectionExtent[1]."),(".$jsonProjectionExtent[2].",".$jsonProjectionExtent[3].")', '".json_encode($jsonFeatureinfoOptions, JSON_PRETTY_PRINT)."', '(".$jsonExtent[0].",".$jsonExtent[1]."),(".$jsonExtent[2].",".$jsonExtent[3].")', '$jsonEnableRotation', '$jsonConstrainResolution', '$jsonResolutions', '{".implode(',', $mapControls)."}', '{".implode(',', $mapGroups)."}', '{".implode(',', $mapLayers)."}', '{".implode(',', $mapProj4Defs)."}', '$mapFooter'";
+	if (!empty($jsonCenter))
+	{
+		$mapColumns=$mapColumns.', center';
+		$mapValues=$mapValues.", '(".$jsonCenter[0].",".$jsonCenter[1].")'";
+	}
+	if (!empty($jsonZoom))
+	{
+		$mapColumns=$mapColumns.', zoom';
+		$mapValues=$mapValues.", '$jsonZoom'";
+	}
+	$sql="INSERT INTO map_configs.maps($mapColumns) VALUES ($mapValues)";
 	$result=pg_query($dbh, $sql);
 	if (!$result)
 	{
 		die("Error in SQL query: " . pg_last_error());
 	}
 }
-
 ?>
