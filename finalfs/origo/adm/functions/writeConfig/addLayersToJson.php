@@ -82,6 +82,10 @@
 				{
 					$json = $json.', "format": "'.$layer['format'].'"';
 				}
+				if (!empty($layer['attribution']))
+				{
+					$json = $json.', "attribution": "'.$layer['attribution'].'"';
+				}
 				if (!empty($layer['style_layer']))
 				{
 					$styleLayerName = trim(explode('#', $layer['style_layer'], 2)[0]);
