@@ -20,7 +20,7 @@
 	{
 		$mapNumber = '';
 	}
-	$configfile = "/origo/apa.json";
+	$configfile = '/origo/'.$mapName.$mapNumber.'.json';
 	ignore_user_abort(true);
 	$dbh=dbh(CONNECTION_STRING);
 	$conftables = array(
