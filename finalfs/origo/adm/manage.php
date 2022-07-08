@@ -168,6 +168,7 @@
 	$tilegrids=all_from_table('map_configs.tilegrids');
 	setLayers();
 
+	// Map button pressed
 	if (isset($mapButton) && $mapButton != 'get')
 	{
 		if ($mapButton == 'create')
@@ -196,6 +197,7 @@
 		}
 	}
 
+	// Control button pressed
 	elseif (isset($controlButton) && $controlButton != 'get')
 	{
 		if ($controlButton == 'create')
@@ -253,6 +255,7 @@
 		}
 	}
 
+	// Footer button pressed
 	elseif (isset($footerButton) && $footerButton != 'get')
 	{
 		if ($footerButton == 'create')
@@ -278,6 +281,7 @@
 		$footers=all_from_table('map_configs.footers');
 	}
 
+	// Tilegrid button pressed
 	elseif (isset($tilegridButton) && $tilegridButton != 'get')
 	{
 		if ($tilegridButton == 'create')
@@ -303,6 +307,7 @@
 		$tilegrids=all_from_table('map_configs.tilegrids');
 	}
 
+	// Source button pressed
 	elseif (isset($sourceButton) && $sourceButton != 'get')
 	{
 		if ($sourceButton == 'create')
@@ -352,6 +357,7 @@
 		$sources=all_from_table('map_configs.sources');
 	}
 
+	// Service button pressed
 	elseif (isset($serviceButton) && $serviceButton != 'get')
 	{
 		if ($serviceButton == 'create')
@@ -380,6 +386,7 @@
 		}
 	}
 
+	// Group button pressed
 	elseif (isset($groupButton) && $groupButton != 'get')
 	{
 		if ($groupButton == 'create')
@@ -458,6 +465,8 @@
 			}
 		}
 	}
+
+	// Layer button pressed
 	elseif (isset($layerButton) && $layerButton != 'get')
 	{
 		if ($layerButton == 'create')
@@ -505,7 +514,39 @@
 			{
 				$styleConfigStr=", style_config = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}' $editableStr $tiledStr $attributesStr $styleConfigStr WHERE layer_id = '$layerId'";
+			if (!empty($_POST['updateMaxscale']))
+			{
+				$maxscaleStr=", maxscale = '".$_POST['updateMaxscale']."'";
+			}
+			else
+			{
+				$maxscaleStr=", maxscale = null";
+			}
+			if (!empty($_POST['updateMinscale']))
+			{
+				$minscaleStr=", minscale = '".$_POST['updateMinscale']."'";
+			}
+			else
+			{
+				$minscaleStr=", minscale = null";
+			}
+			if (!empty($_POST['updateClusterstyle']))
+			{
+				$clusterstyleStr=", clusterstyle = '".$_POST['updateClusterstyle']."'";
+			}
+			else
+			{
+				$clusterstyleStr=", clusterstyle = '[]'";
+			}
+			if (!empty($_POST['updateClusteroptions']))
+			{
+				$clusteroptionsStr=", clusteroptions = '".$_POST['updateClusteroptions']."'";
+			}
+			else
+			{
+				$clusteroptionsStr=", clusteroptions = '[]'";
+			}
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', attribution = '".$_POST['updateAttribution']."', layertype = '".$_POST['updateLayertype']."', layers = '{".$_POST['updateLayers']."}', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}' $editableStr $tiledStr $attributesStr $styleConfigStr $maxscaleStr $minscaleStr $clusterstyleStr $clusteroptionsStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -1253,7 +1294,33 @@
 		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Info" name="updateInfo">'.$layer['info'].'</textarea>&nbsp;';
 		echo      '<br>';
 		echo      '<label for="'.$layerId.'Categories">Kategorier:</label>';
-		echo      '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Categories" name="updateCategories">'.trim($layer['categories'], '{}').'</textarea>&nbsp;';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Categories" name="updateCategories">'.trim($layer['categories'], '{}').'</textarea>&nbsp;';
+		echo      '<label for="'.$layerId.'Attribution">Tillskrivning:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Attribution" name="updateAttribution">'.$layer['attribution'].'</textarea>&nbsp;';
+		echo      '<br>';
+		echo      '<label for="'.$layerId.'Maxscale">Maxskala:</label>';
+		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Maxscale" name="updateMaxscale">'.$layer['maxscale'].'</textarea>&nbsp;';
+		echo      '<label for="'.$layerId.'Minscale">Minskala:</label>';
+		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Minscale" name="updateMinscale">'.$layer['minscale'].'</textarea>&nbsp;';
+		if ($layer['type'] == 'GROUP')
+		{
+			echo '<label for="'.$layerId.'Layers">Lager:</label>';
+			echo '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Layers" name="updateLayers">'.trim($layer['layers'], '{}').'</textarea>&nbsp;';
+		}
+		if ($layer['type'] == 'WFS')
+		{
+			echo '<label for="'.$layerId.'Layertype">WFS-typ:</label>';
+			echo '<textarea rows="1" class="textareaMedium" id="'.$layerId.'Layertype" name="updateLayertype">'.$layer['layertype'].'</textarea>&nbsp;';
+			if ($layer['layertype'] == 'cluster')
+			{
+				echo '<label for="'.$layerId.'Clusterstyle">Klusterstil:</label>';
+				echo '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Clusterstyle" name="updateClusterstyle">'.$layer['clusterstyle'].'</textarea>&nbsp;';
+				echo '<br>';
+				echo '<label for="'.$layerId.'Clusteroptions">Klusteralternativ:</label>';
+				echo '<textarea rows="1" class="textareaLarge" id="'.$layerId.'Clusteroptions" name="updateClusteroptions">'.$layer['clusteroptions'].'</textarea>&nbsp;';
+			}
+		}
+
 		echo      '<input type="hidden" name="layerId" value="'.$layerId.'">';
 		if (isset($mapId))
 		{
