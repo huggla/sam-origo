@@ -106,6 +106,7 @@ CREATE TABLE map_configs.maps
     styles character varying[] COLLATE pg_catalog."default",
     footer character varying COLLATE pg_catalog."default",
     info character varying COLLATE pg_catalog."default",
+    tilegrid character varying COLLATE pg_catalog."default",
     CONSTRAINT map_pk PRIMARY KEY (map_id)
 );
 
