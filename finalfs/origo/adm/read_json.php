@@ -531,9 +531,36 @@ if ($_POST['map'] == 'yes')
 	{
 		$jsonConstrainResolution='true';
 	}
-	$mapColumns='map_id, mapgrid, projectioncode, projectionextent, featureinfooptions, extent, enablerotation, constrainresolution, resolutions, controls, groups, layers, proj4defs, footer';
+	if ($_POST['tilegrids'] == 'yes' && !empty($json_arr['tileGridOptions']))
+	{
+		$pregStr='/(.*)("tileGridOptions": *{[^}]*})/s';
+		preg_match($pregStr, $jsonPreSource, $matches);
+		$jsonTileGridOptions_str=$matches[2];
+		if (preg_match('/"resolutions": *\[([^\]]*)\]/', $jsonTileGridOptions_str, $matches))
+		{
+			$json_arr['tileGridOptions']['resolutions']='{'.$matches[1].'}';
+		}
+		else
+		{
+			$json_arr['tileGridOptions']['resolutions']=$jsonResolutions;
+		}
+		if (!in_array($json_arr['tileGridOptions'], $jsonTilegrids, true))
+		{
+			$tilegridId="tilegrid$tilegridCount#$importId";
+			$jsonTilegrids[$tilegridId]=$json_arr['tileGridOptions'];
 
-	$mapValues="'".$_POST['mapid']."', '".var_export($jsonMapGrid['visible'], true)."', '$jsonProjectionCode', '(".$jsonProjectionExtent[0].",".$jsonProjectionExtent[1]."),(".$jsonProjectionExtent[2].",".$jsonProjectionExtent[3].")', '".json_encode($jsonFeatureinfoOptions, JSON_PRETTY_PRINT)."', '(".$jsonExtent[0].",".$jsonExtent[1]."),(".$jsonExtent[2].",".$jsonExtent[3].")', '$jsonEnableRotation', '$jsonConstrainResolution', '$jsonResolutions', '{".implode(',', $mapControls)."}', '{".implode(',', $mapGroups)."}', '{".implode(',', $mapLayers)."}', '{".implode(',', $mapProj4Defs)."}', '$mapFooter'";
+			$sql="INSERT INTO map_configs.tilegrids(tilegrid_id, tilesize, resolutions) VALUES ('$tilegridId', '".$json_arr['tileGridOptions']['tileSize']."', '".$json_arr['tileGridOptions']['resolutions']."')";
+			$result=pg_query($dbh, $sql);
+			if (!$result)
+			{
+				die("Error in SQL query: " . pg_last_error());
+			}
+			$tilegridCount++;
+		}
+	}
+	$mapColumns='map_id, mapgrid, projectioncode, projectionextent, featureinfooptions, extent, enablerotation, constrainresolution, resolutions, controls, groups, layers, proj4defs, footer, tilegrid';
+
+	$mapValues="'".$_POST['mapid']."', '".var_export($jsonMapGrid['visible'], true)."', '$jsonProjectionCode', '(".$jsonProjectionExtent[0].",".$jsonProjectionExtent[1]."),(".$jsonProjectionExtent[2].",".$jsonProjectionExtent[3].")', '".json_encode($jsonFeatureinfoOptions, JSON_PRETTY_PRINT)."', '(".$jsonExtent[0].",".$jsonExtent[1]."),(".$jsonExtent[2].",".$jsonExtent[3].")', '$jsonEnableRotation', '$jsonConstrainResolution', '$jsonResolutions', '{".implode(',', $mapControls)."}', '{".implode(',', $mapGroups)."}', '{".implode(',', $mapLayers)."}', '{".implode(',', $mapProj4Defs)."}', '$mapFooter', '$tilegridId'";
 	if (!empty($jsonCenter))
 	{
 		$mapColumns=$mapColumns.', center';
@@ -551,4 +578,5 @@ if ($_POST['map'] == 'yes')
 		die("Error in SQL query: " . pg_last_error());
 	}
 }
+
 ?>
