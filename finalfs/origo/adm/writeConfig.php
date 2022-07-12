@@ -63,6 +63,11 @@
 	$json = $json.'"projectionCode": "'.$map['projectioncode'].'", ';
 	$json = $json.'"projectionExtent": ['.pgBoxToText($map['projectionextent']).'], ';
 	$json = $json.'"featureinfoOptions": '.$map['featureinfooptions'].', ';
+	if (!empty($map['tilegrid']))
+	{
+		$tilegrid = array_column_search($map['tilegrid'], 'tilegrid_id', $tilegrids);
+		$json = $json.'"tileGridOptions": { "tileSize": '.$tilegrid['tilesize'].' },';
+	}
 	// Proj4Defs <start>
 	$mapProj4defs = pgArrayToPhp($map['proj4defs']);
 	$json = $json.'"proj4Defs": [';
