@@ -8,6 +8,7 @@
 	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
 	include_once("./functions/findParents.php");
+	include_once("./functions/setLayers.php");
 	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
