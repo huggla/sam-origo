@@ -41,18 +41,16 @@ $importid=uniqid();
 			exit;
 }
 
-
 	include_once("./constants/CONNECTION_STRING.php");
 	include_once("./functions/dbh.php");
-	include_once("./functions/pgArrayToPhp.php");
-	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
-	include_once("./functions/findParents.php");
-	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
+	include_once("./functions/setLayers.php");
+	$functionFiles = array_diff(scandir('./functions/read_json'), array('.', '..'));
 	foreach ($functionFiles as $functionFile)
 	{
-		include_once("./functions/manage/$functionFile");
+		include_once("./functions/read_json/$functionFile");
 	}
+
 	$dbh=dbh(CONNECTION_STRING);
 
 /*
@@ -212,29 +210,6 @@ if ($_POST['controls'] == 'yes')
 		{
 			die("Error in SQL query: " . pg_last_error());
 		}
-	}
-}
-
-function renamedup($name, $count=0)
-{
-	GLOBAL $uniqueLayers;
-	if ($count > 0)
-	{
-		$newname="$name#$count";
-	}
-	else
-	{
-		$newname="$name#";
-	}
-	if (in_array($newname, $uniqueLayers))
-	{
-		$count++;
-		return renamedup($name, $count);
-	}
-	else
-	{
-		$uniqueLayers[]=$newname;
-		return $newname;
 	}
 }
 
@@ -431,41 +406,6 @@ if ($_POST['layers'] == 'yes')
 			die("Error in SQL query: " . pg_last_error());
 		}
 	}
-}
-
-function recursiveGroups($groupsArr)
-{
-	GLOBAL $dbh, $groups, $importId, $groupsLayers;
-	$parentGroups=array();
-	foreach ($groupsArr as $group)
-	{
-
-		$parentGroups[]=$group['name']."#$importId";
-		if (!empty($group['groups']))
-		{
-			$childGroups=recursiveGroups($group['groups']);
-		}
-		else
-		{
-			$childGroups=array();
-		}
-		if (!empty($group['expanded']))
-		{
-			$groupExpanded=var_export($group['expanded'], true);
-		}
-		else
-		{
-			$groupExpanded='false';
-		}
-		$sql="INSERT INTO map_configs.groups(group_id, title, expanded, abstract, groups, layers) VALUES ('".$group['name']."#$importId', '".$group['title']."', '$groupExpanded', ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $group['abstract']))).", '{".implode(',', $childGroups)."}', '{".implode(',', $groupsLayers[$group['name']])."}')";
-		$result=pg_query($dbh, $sql);
-		if (!$result)
-		{
-			var_dump($sql);
-			die("Error in SQL query: $sql" . pg_last_error());
-		}
-	}
-	return $parentGroups;
 }
 
 if ($_POST['groups'] == 'yes')
