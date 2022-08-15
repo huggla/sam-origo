@@ -116,6 +116,7 @@ CREATE TABLE map_configs.proj4defs
 (
     code character varying COLLATE pg_catalog."default" NOT NULL,
     projection character varying COLLATE pg_catalog."default" NOT NULL,
+    alias character varying COLLATE pg_catalog."default",
     CONSTRAINT proj4defs_pkey PRIMARY KEY (code)
 );
 
