@@ -5,12 +5,12 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="2.0.6-3.15"
+ARG SaM_VERSION="2.0.6-3.16"
 ARG IMAGETYPE="application"
 ARG ORIGO_VERSION="2.5.0"
-ARG LIGHTTPD2_VERSION="20220324"
-ARG PHP_VERSION="7.4.19"
-ARG CONTENTIMAGE1="node:alpine3.15"
+ARG LIGHTTPD2_VERSION="20220818"
+ARG PHP_VERSION="8.1.9"
+ARG CONTENTIMAGE1="node:alpine3.16"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
@@ -26,14 +26,14 @@ ARG BUILDCMDS=\
 "&& cp -a build /finalfs/tmp/origo"
 ARG RUNDEPS="\
         postgresql14 \
-        php7-fpm \
-        php7-json \
-        php7-opcache \
-        php7-pgsql"
-ARG MAKEDIRS="/etc/php7/conf.d /etc/php7/php-fpm.d"
+        php81-fpm \
+        php81-json \
+        php81-opcache \
+        php81-pgsql"
+ARG MAKEDIRS="/etc/php81/conf.d /etc/php81/php-fpm.d"
 ARG REMOVEDIRS="/origo/origo-documentation /origo/examples /usr/include"
-ARG REMOVEFILES="/etc/php7/php-fpm.d/www.conf /origo/index.json"
-ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm7 /usr/libexec/postgresql14/postgres"
+ARG REMOVEFILES="/etc/php81/php-fpm.d/www.conf /origo/index.json"
+ARG STARTUPEXECUTABLES="/usr/sbin/php-fpm81 /usr/libexec/postgresql14/postgres"
 ARG LINUXUSEROWNED="/origo /origo/origo-cities1.json"
 ARG FINALCMDS=\
 "   cp -a /tmp/origo/* /origo/ "\
@@ -70,13 +70,13 @@ COPY --from=build /finalfs /
 # =========================================================================
 ARG POSTGRES_CONFIG_DIR="/etc/postgres"
 
-ENV VAR_FINAL_COMMAND="php-fpm7 --force-stderr && postgres --config_file=\"\$VAR_POSTGRES_CONFIG_FILE\" & lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
+ENV VAR_FINAL_COMMAND="php-fpm81 --force-stderr && postgres --config_file=\"\$VAR_POSTGRES_CONFIG_FILE\" & lighttpd2 -c '\$VAR_CONFIG_DIR/angel.conf'" \
     VAR_ORIGO_CONFIG_DIR="/etc/origo" \
     VAR_OPERATION_MODE="dual" \
     VAR_setup1_module_load="[ 'mod_deflate','mod_fastcgi' ]" \
     VAR_WWW_DIR="/origo" \
-    VAR_SOCKET_FILE="/run/php7-fpm/socket" \
-    VAR_LOG_FILE="/var/log/php7/error.log" \
+    VAR_SOCKET_FILE="/run/php81-fpm/socket" \
+    VAR_LOG_FILE="/var/log/php81/error.log" \
     VAR_wwwconf_listen='$VAR_SOCKET_FILE' \
     VAR_wwwconf_pm="dynamic" \
     VAR_wwwconf_pm__max_children="5" \
