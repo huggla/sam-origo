@@ -1,5 +1,5 @@
 setPhpIni(){
-   local file="/etc/php7/conf.d/50-setting.ini"
+   local file="/etc/php81/conf.d/50-setting.ini"
    local phpini_dblUScore="."
    configFromVarGroup phpini > "$file"
 }
