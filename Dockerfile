@@ -5,16 +5,16 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="2.0.6-3.15"
+ARG SaM_VERSION="2.0.6-3.16"
 ARG IMAGETYPE="application"
 ARG ORIGO_VERSION="2.5.0"
-ARG LIGHTTPD2_VERSION="20220504"
-ARG CONTENTIMAGE1="node:alpine3.15"
+ARG LIGHTTPD2_VERSION="20220818"
+ARG CONTENTIMAGE1="node:alpine3.16"
 ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
 ARG DOWNLOADS="https://github.com/origo-map/origo/archive/refs/tags/v$ORIGO_VERSION.zip"
-ARG BUILDDEPS="python2"
+ARG BUILDDEPS="python3"
 ARG BUILDCMDS=\
 "   cd origo-$ORIGO_VERSION "\
 "&& npm install "\
