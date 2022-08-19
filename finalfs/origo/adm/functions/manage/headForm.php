@@ -21,6 +21,10 @@
 			echo "<select class=\"headSelect\" id=\"layerCategories\" name=\"layerCategories\" onchange='updateSelect(\"layerSelect\", window[this.value]);'></select>";
 			$selectId='id="'.$type.'Select"';
 		}
+		else
+		{
+			$selectId='';
+		}
 		echo   "<select $selectId onchange=\"this.form.submit()\" class=\"headSelect\" name=\"$name\">";
 		selectOptions($type.'s', true);
 		echo   '</select>';
