@@ -547,7 +547,7 @@
 			{
 				$clusteroptionsStr=", clusteroptions = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', attribution = '".$_POST['updateAttribution']."', layertype = '".$_POST['updateLayertype']."', layers = '{".$_POST['updateLayers']."}', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}' $editableStr $tiledStr $attributesStr $styleConfigStr $maxscaleStr $minscaleStr $clusterstyleStr $clusteroptionsStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', attribution = '".$_POST['updateAttribution']."', layertype = '".$_POST['updateLayertype']."', layers = '{".$_POST['updateLayers']."}', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}', swiper = '".$_POST['updateSwiper']."' $editableStr $tiledStr $attributesStr $styleConfigStr $maxscaleStr $minscaleStr $clusterstyleStr $clusteroptionsStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
@@ -1307,6 +1307,10 @@
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Maxscale" name="updateMaxscale">'.$layer['maxscale'].'</textarea>&nbsp;';
 		echo      '<label for="'.$layerId.'Minscale">Minskala:</label>';
 		echo      '<textarea rows="1" class="textareaSmall" id="'.$layerId.'Minscale" name="updateMinscale">'.$layer['minscale'].'</textarea>&nbsp;';
+		echo      '<label for="'.$layerId.'Swiper">Swiper-lager:</label>';
+		echo         '<select class="miniSelect" id="'.$layerId.'Swiper" name="updateSwiper">';
+		printSelectOptions(array("", "f", "t", "under"), $layer['swiper']);
+		echo         '</select>&nbsp;';
 		if ($layer['type'] == 'GROUP')
 		{
 			echo '<label for="'.$layerId.'Layers">Lager:</label>';
