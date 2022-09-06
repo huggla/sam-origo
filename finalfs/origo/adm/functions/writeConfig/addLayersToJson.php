@@ -108,6 +108,14 @@
 				{
 					$json = $json.', "visible": false';
 				}
+				if ($layer['swiper'] == 't')
+				{
+					$json = $json.', "isSwiperLayer": true';
+				}
+				elseif ($layer['swiper'] == 'under')
+				{
+					$json = $json.', "isUnderSwiper": true';
+				}
 				if (empty($group) && $layer['legend'] == 't')
 				{
 					$json = $json.', "legend": true';
