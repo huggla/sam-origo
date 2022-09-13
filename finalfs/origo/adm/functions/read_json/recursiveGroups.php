@@ -24,7 +24,7 @@ function recursiveGroups($groupsArr)
 		{
 			$groupExpanded='false';
 		}
-		$sql="INSERT INTO map_configs.groups(group_id, title, expanded, abstract, groups, layers) VALUES ('".$group['name']."#$importId', '".$group['title']."', '$groupExpanded', ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $group['abstract']))).", '{".implode(',', $childGroups)."}', '{".implode(',', $groupsLayers[$group['name']])."}')";
+		$sql="INSERT INTO map_configs.groups(group_id, title, expanded, abstract, groups, layers) VALUES ('".$group['name']."#$importId', '".$group['title']."', '$groupExpanded', ".pg_escape_literal(str_replace(array('"'), '\"', str_replace(array("\r\n", "\r", "\n"), "<br />", $group['abstract']))).", '{".implode(',', $childGroups)."}', '{".implode(',', (array) $groupsLayers[$group['name']])."}')";
 		$result=pg_query($dbh, $sql);
 		if (!$result)
 		{
