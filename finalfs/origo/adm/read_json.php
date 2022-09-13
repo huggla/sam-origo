@@ -43,6 +43,7 @@ $importid=uniqid();
 
 	include_once("./constants/CONNECTION_STRING.php");
 	include_once("./functions/dbh.php");
+	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/all_from_table.php");
 	include_once("./functions/setLayers.php");
 	$functionFiles = array_diff(scandir('./functions/read_json'), array('.', '..'));
