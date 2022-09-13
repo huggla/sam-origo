@@ -403,7 +403,7 @@
 		}
 		elseif ($groupButton == 'update')
 		{
-			$sql="UPDATE map_configs.groups SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', expanded = '".$_POST['updateExpanded']."', group_id = '".$_POST['updateId']."', info = '".$_POST['updateInfo']."' WHERE group_id = '".end($groupIds)."'";
+			$sql="UPDATE map_configs.groups SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', title = '".$_POST['updateTitle']."', abstract = ".pg_escape_literal($_POST['updateAbstract']).", expanded = '".$_POST['updateExpanded']."', group_id = '".$_POST['updateId']."', info = '".$_POST['updateInfo']."' WHERE group_id = '".end($groupIds)."'";
 		}
 		elseif ($groupButton == 'add' && isset($toMapId))
 		{
@@ -547,7 +547,7 @@
 			{
 				$clusteroptionsStr=", clusteroptions = '[]'";
 			}
-			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = '".$_POST['updateAbstract']."', source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = '".$_POST['updateStylefilter']."', layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', attribution = '".$_POST['updateAttribution']."', layertype = '".$_POST['updateLayertype']."', layers = '{".$_POST['updateLayers']."}', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}', swiper = '".$_POST['updateSwiper']."' $editableStr $tiledStr $attributesStr $styleConfigStr $maxscaleStr $minscaleStr $clusterstyleStr $clusteroptionsStr WHERE layer_id = '$layerId'";
+			$sql="UPDATE map_configs.layers SET title = '".$_POST['updateTitle']."', abstract = ".pg_escape_literal($_POST['updateAbstract']).", source = '".$_POST['updateSource']."', type = '".$_POST['updateType']."', queryable ='".$_POST['updateQueryable']."', visible = '".$_POST['updateVisible']."', icon = '".$_POST['updateIcon']."', icon_extended = '".$_POST['updateIcon_extended']."', style_filter = ".pg_escape_literal($_POST['updateStylefilter']).", layer_id = '".$_POST['updateId']."', opacity = '".$_POST['updateOpacity']."', info = '".$_POST['updateInfo']."', featureinfolayer = '".$_POST['updateFeatureinfolayer']."', categories = '{".$_POST['updateCategories']."}', format = '".$_POST['updateFormat']."', attribution = '".$_POST['updateAttribution']."', layertype = '".$_POST['updateLayertype']."', layers = '{".$_POST['updateLayers']."}', adusers = '{".$_POST['updateAdusers']."}', adgroups = '{".$_POST['updateAdgroups']."}', swiper = '".$_POST['updateSwiper']."' $editableStr $tiledStr $attributesStr $styleConfigStr $maxscaleStr $minscaleStr $clusterstyleStr $clusteroptionsStr WHERE layer_id = '$layerId'";
 		}
 		elseif ($layerButton == 'add' && isset($toGroupId))
 		{
