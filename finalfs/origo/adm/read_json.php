@@ -519,5 +519,8 @@ if ($_POST['map'] == 'yes')
 		die("Error in SQL query: " . pg_last_error());
 	}
 }
-
+if ($result)
+{
+	echo "Import lyckades!";
+}
 ?>
