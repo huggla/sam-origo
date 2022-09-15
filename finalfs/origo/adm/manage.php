@@ -872,11 +872,16 @@
 			if (isset($mapId) && $level == 1)
 			{
 				echo   "<form onsubmit='confirmStr=\"Är du säker att du vill skriva över den befintliga konfigurationen för $mapId?\"; return confirm(confirmStr);' action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
-
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
-
+				echo   '</form>';
+				echo '</div><div style="margin-top:-0.5vw;margin-bottom:-1vw>;float:right">';
+				echo   "<form action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
+				echo     '<input type="hidden" name="getJson" value="y">';
+				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
+				echo       'Exportera JSON';
+				echo     '</button>';
 				echo   '</form>';
 			}
 			echo     '</div>';
