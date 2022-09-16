@@ -936,7 +936,7 @@
 					echo '</form>';
 				}
 			}
-			echo '<div style="white-space:nowrap;margin-bottom:-1vw">';
+			echo '<div style="white-space:nowrap;margin-bottom:-2vw">';
 			echo   "<form method='post' onsubmit='confirmStr=\"$confirmStr\"; return confirm(confirmStr);' style='line-height:2'>";
 			if (isset($mapId))
 			{
