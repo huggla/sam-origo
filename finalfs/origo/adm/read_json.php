@@ -38,6 +38,9 @@ $importid=uniqid();
 			echo       'Importera';
 			echo     '</button>';
 			echo   '</form>';
+			echo   '<form action="manage.php">';
+			echo     '<input type="submit" value="Till konfigurationsverktyget" />';
+			echo   '</form>';
 			exit;
 }
 
@@ -523,7 +526,7 @@ if ($result)
 {
 	echo "Import lyckades!";
 	echo '<form action="manage.php">';
-	echo   '<input type="submit" value="OK" />';
+	echo   '<input type="submit" value="Till konfigurationsverktyget" />';
 	echo '</form>';
 }
 ?>
