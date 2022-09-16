@@ -5,7 +5,7 @@
 if (empty($_POST['json']))
 {
 $importid=uniqid();
-			echo   '<form method="post" style="line-height:2">';
+			echo   "<form method=\"post\" onsubmit='confirmStr=\"Att importera en hel origokonfiguration i JSON-format till databasen är riskabelt. Det kan innebära att ett stort antal redundanta poster läggs till i databasen och att redan befintliga origokonfigurationer slutar att fungera. Är du säker på att du vill importera till databasen?\"; return confirm(confirmStr);' style=\"line-height:2\">";
 			echo      '<label for="json">Json:</label>';
 			echo      '<textarea rows="1" id="json" name="json"></textarea>&nbsp;<br>';
 			echo      '<label for="importid">Unikt import-id:</label>';
