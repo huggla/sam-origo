@@ -688,6 +688,12 @@
 <body>
 	<iframe id="topFrame" name="topFrame" style="display:none"></iframe>
 	<iframe id="hiddenFrame" name="hiddenFrame" style="display:none"></iframe>
+	<form action="read_json.php">
+		<input class="topInput" type="submit" value="Importera JSON" />
+	</form>
+	<form action="help.php" target="topFrame">
+		<input class="topInput" onclick="toggleTopFrame('help');" type="submit" value="Hjälp" />
+	</form>
 
 <!--  REDIGERA KARTA  -->
 <div style="width:calc( 100vw - 15px ); overflow-x:auto; margin-bottom: 5px">
