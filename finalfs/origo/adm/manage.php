@@ -882,7 +882,7 @@
 				echo       'Skriv kartkonfiguration';
 				echo     '</button>';
 				echo   '</form>';
-				echo '</div><div style="margin-top:-0.5vw;margin-bottom:-1vw;float:right">';
+				echo '</div><div style="margin-top:-0.5vw;margin-bottom:-1vw;margin-right:4vw;float:right">';
 				echo   "<form action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
 				echo     '<input type="hidden" name="getJson" value="y">';
 				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
