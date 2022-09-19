@@ -843,7 +843,7 @@
 				printSelectOptions(array_merge(array(""), array_column($tilegrids, 'tilegrid_id')), $group['tilegrid']);
 				echo         '</select>&nbsp;';
 				$childType="map";
-				$deleteButtonClass="deleteButton3";
+				$deleteButtonClass="deleteButton3b";
 			}
 			echo '<label for="'.$groupId.'Info">Info:</label>';
 			echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Info" name="updateInfo">'.$group['info'].'</textarea>&nbsp;';
