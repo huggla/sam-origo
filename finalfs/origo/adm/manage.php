@@ -832,7 +832,7 @@
 				echo '<label for="'.$groupId.'Controls">Kontroller:</label>';
 				echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Controls" name="updateControls">'.trim($group['controls'], '{}').'</textarea>&nbsp;';
 				echo '<label for="'.$groupId.'Featureinfooptions">FeatureInfoOptions:</label>';
-				echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Featureinfooptions" name="updateFeatureinfooptions">'.$group['featureinfooptions'].'</textarea>&nbsp;';
+				echo '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Featureinfooptions" name="updateFeatureinfooptions">'.$group['featureinfooptions'].'</textarea>&nbsp;';
 				echo '<br>';
 				echo '<label for="'.$groupId.'Center">Mittpunkt:</label>';
 				echo '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Center" name="updateCenter">'.$group['center'].'</textarea>&nbsp;';
