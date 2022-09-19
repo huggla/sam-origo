@@ -4,6 +4,7 @@
 		.headButton	{ width:3.3vw }
 		.topInput	{ font-family:OpenSans,"Droid Sans",Verdana,"DejaVu Sans","Bitstream Vera Sans",sans-serif;padding:0.12vw; font-size:0.9vw; border-width:1px; border-style:solid; line-height:1.2; margin-left:0.1vw; margin-right:0.5vw;margin-bottom:0.3vw;white-space:nowrap;background-color:powderblue;float:left }
 		.updateButton	{ margin-top:0.5vw; margin-right:0.5vw }
+		.exportButton	{ margin-top:0.5vw; margin-right:0.5vw; position:absolute; right:9.5vw }
 		.deleteButton1	{ margin-top:0.5vw; color:red }
 		.deleteButton2	{ margin-top:2.65vw; color:red }
 		.deleteButton3	{ margin-top: 4.8vw; color:red }
