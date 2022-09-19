@@ -885,7 +885,7 @@
 				echo '</div><div style="margin-top:-0.5vw;margin-bottom:-2vw;margin-right:4vw;float:right">';
 				echo   "<form action=\"writeConfig.php\" method=\"get\" target=\"hiddenFrame\">";
 				echo     '<input type="hidden" name="getJson" value="y">';
-				echo     "<button class=\"updateButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
+				echo     "<button class=\"exportButton\" type=\"submit\" name=\"map\" value=\"$mapId\">";
 				echo       'Exportera JSON';
 				echo     '</button>';
 				echo   '</form>';
