@@ -6,7 +6,7 @@
 		$allPotentialParents=all_from_table('map_configs.'.$parentType.'s');
 		foreach ($allPotentialParents as $potentialParent)
 		{
-			if (($childType == 'control' || $childType == 'group' || $childType == 'layer') && ($parentType == 'map' || $parentType == 'group'))
+			if (($childType == 'control' || $childType == 'group' || $childType == 'layer' || $childType == 'proj4def') && ($parentType == 'map' || $parentType == 'group'))
 			{
 				if (in_array($child, pgArrayToPhp($potentialParent[$childType.'s'])))
 				{
