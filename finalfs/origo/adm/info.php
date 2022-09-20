@@ -38,7 +38,14 @@
 		echo "<div style='float:left'>";
 		echo "<h2>$child</h2> ($childTypeSv)</br>";
 		$allOfChildType=all_from_table('map_configs.'.$childType.'s');
-		$info=array_column_search($child, $childType.'_id', $allOfChildType)['info'];
+		if ($childType == 'proj4def')
+		{
+			$info=array_column_search($child, 'code', $allOfChildType)['info'];
+		}
+		else
+		{
+			$info=array_column_search($child, $childType.'_id', $allOfChildType)['info'];
+		}
 		if (!empty($info))
 		{
 			echo "$info</br>";
@@ -53,7 +60,7 @@
 				echo "&nbsp;&nbsp;&nbsp;";
 				printParents('group', $childType, $child);
 			}
-			elseif ($childType == 'control' || $childType == 'footer')
+			elseif ($childType == 'control' || $childType == 'footer' || $childType == 'proj4def')
 			{
 				printParents('map', $childType, $child);
 			}
