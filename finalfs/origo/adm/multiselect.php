@@ -102,7 +102,15 @@
 	$values=all_from_table('map_configs.'.$_GET['type']);
 
 	echo '<select onChange="update(this);" data-sorted-values="" multiple style="float:left;height:100%;margin-right:5px">';
-	foreach (array_column($values, rtrim($_GET['type'], 's').'_id') as $option)
+	if ($_GET['type'] == 'proj4defs')
+	{
+		$idColumn='code';
+	}
+	else
+	{
+		$idColumn=rtrim($_GET['type'], 's').'_id';
+	}
+	foreach (array_column($values, $idColumn) as $option)
 	{
 		$options="<option value='$option'";
 		$options="$options>$option</option>";
@@ -121,8 +129,12 @@
 	{
 		$header='Lager';
 	}
+	else
+	{
+		$header=ucfirst($_GET['type']);
+	}
 	echo '<h3>'.$header.'</h3>';
-	echo '<textarea readonly id="selection" style="display:flex;overflow:auto;width:-webkit-fill-available;width:-moz-available"></textarea>';
+	echo '<textarea readonly id="selection" style="display:flex;overflow:auto;width:-webkit-fill-available"></textarea>';
 	echo '<button onClick="window.location.reload();">Töm</button>&nbsp;';
 	echo '<button onclick="myFunction();">Kopiera text</button>';
 ?>
