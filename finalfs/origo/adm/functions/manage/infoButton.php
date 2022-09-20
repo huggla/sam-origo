@@ -2,7 +2,7 @@
 
 	function infoButton($type)
 	{
-		GLOBAL $mapId, $groupId, $controlId, $layerId, $sourceId, $serviceId, $footerId, $tilegridId;
+		GLOBAL $mapId, $groupId, $controlId, $layerId, $sourceId, $serviceId, $footerId, $tilegridId, $proj4defId;
 		$evalStr="\$id=\$".$type."Id;";
 		eval($evalStr);
 		echo   '<form></form>';
