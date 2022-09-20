@@ -25,6 +25,7 @@
 	$serviceId=$_POST['serviceId'];
 	$footerId=$_POST['footerId'];
 	$tilegridId=$_POST['tilegridId'];
+	$proj4defId=$_POST['proj4defId'];
 	$groupId=$_POST['groupId'];
 	if (isset($_POST['groupIds']))
 	{
@@ -53,6 +54,7 @@
 	$newgroupId=$_POST['newgroupId'];
 	$newfooterId=$_POST['newfooterId'];
 	$newtilegridId=$_POST['newtilegridId'];
+	$newproj4defId=$_POST['newproj4defId'];
 
 	$mapButton=$_POST['mapButton'];
 	$groupButton=$_POST['groupButton'];
@@ -62,6 +64,7 @@
 	$serviceButton=$_POST['serviceButton'];
 	$footerButton=$_POST['footerButton'];
 	$tilegridButton=$_POST['tilegridButton'];
+	$proj4defButton=$_POST['proj4defButton'];
 
 	$hiddenInputs="";
 	if (isset($footerId))
@@ -84,6 +87,10 @@
 	{
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="tilegridId" value="'.$tilegridId.'">';
 	}
+	if (isset($proj4defId))
+	{
+		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="proj4defId" value="'.$proj4defId.'">';
+	}
 	if (isset($serviceId))
 	{
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="serviceId" value="'.$serviceId.'">';
@@ -97,62 +104,69 @@
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="layerId" value="'.$layerId.'">';
 	}
 
-	$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3Focus";
-	if (!isset($mapId) && (isset($_POST['groupIds']) || isset($layerId) || isset($controlId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId)))
+	$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3Focus";
+	if (!isset($mapId) && (isset($_POST['groupIds']) || isset($layerId) || isset($controlId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId) || isset($proj4defId)))
 	{
-		if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId))
+		if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($footerId) || isset($tilegridId) || isset($proj4defId))
 		{
-			if ((empty($groupIds) && isset($layerId)) || isset($controlId) || (empty($groupIds) && isset($sourceId)) || (empty($groupIds) && isset($serviceId)) || isset($footerId) || isset($tilegridId))
+			if ((empty($groupIds) && isset($layerId)) || isset($controlId) || (empty($groupIds) && isset($sourceId)) || (empty($groupIds) && isset($serviceId)) || isset($footerId) || isset($tilegridId) || isset($proj4defId))
 			{
-				if (isset($_POST['groupIds']) || isset($controlId) || (!isset($layerId) && isset($sourceId)) || isset($serviceId) || isset($footerId) || isset($tilegridId))
+				if (isset($_POST['groupIds']) || isset($controlId) || (!isset($layerId) && isset($sourceId)) || isset($serviceId) || isset($footerId) || isset($tilegridId) || isset($proj4defId))
 				{
-					if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || (!isset($sourceId) && isset($serviceId)) || isset($footerId) || (!isset($sourceId) && isset($tilegridId)))
+					if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || (!isset($sourceId) && isset($serviceId)) || isset($footerId) || (!isset($sourceId) && isset($tilegridId)) || isset($proj4defId))
 					{
-						if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($controlId) || isset($tilegridId))
+						if (isset($_POST['groupIds']) || isset($layerId) || isset($sourceId) || isset($serviceId) || isset($controlId) || isset($tilegridId) || isset($proj4defId))
 						{
-							if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($tilegridId))
+							if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($tilegridId) || isset($proj4defId))
 							{
-								if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($serviceId))
+								if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($serviceId) || isset($proj4defId))
 								{
+									if (isset($_POST['groupIds']) || isset($controlId) || isset($layerId) || isset($sourceId) || isset($footerId) || isset($serviceId) || isset($tilegridId))
+									{
+									}
+									else
+									{
+										$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+									}
 								}
 								else
 								{
-									$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class="h3NoFocus";
+									$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$proj4defh3class="h3NoFocus";
 								}
 							}
 							else
 							{
-								$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$tilegridh3class="h3NoFocus";
+								$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 							}
 						}
 						else
 						{
-							$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+							$maph3class=$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 						}
 					}
 					else
 					{
-						$maph3class=$controlh3class=$grouph3class=$layerh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+						$maph3class=$controlh3class=$grouph3class=$layerh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 					}
 				}
 				else
 				{
-					$maph3class=$controlh3class=$grouph3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+					$maph3class=$controlh3class=$grouph3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 				}
 			}
 			else
 			{
-				$maph3class=$controlh3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+				$maph3class=$controlh3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 			}
 		}
 		else
 		{
-			$maph3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+			$maph3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 		}
 	}
 	elseif (isset($mapId))
 	{
-		$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class="h3NoFocus";
+		$controlh3class=$grouph3class=$layerh3class=$sourceh3class=$footerh3class=$serviceh3class=$tilegridh3class=$proj4defh3class="h3NoFocus";
 	}
 
 /*
@@ -167,6 +181,7 @@
 	$services=all_from_table('map_configs.services');
 	$footers=all_from_table('map_configs.footers');
 	$tilegrids=all_from_table('map_configs.tilegrids');
+	$proj4defs=all_from_table('map_configs.proj4defs');
 	setLayers();
 
 	// Map button pressed
@@ -185,7 +200,7 @@
 		}
 		elseif ($mapButton == 'update')
 		{
-			$sql="UPDATE map_configs.maps SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', controls = '{".$_POST['updateControls']."}', featureinfooptions = '".$_POST['updateFeatureinfooptions']."', center = '".$_POST['updateCenter']."', zoom = '".$_POST['updateZoom']."', footer = '".$_POST['updateFooter']."', info = '".$_POST['updateInfo']."', map_id = '".$_POST['updateId']."', tilegrid = '".$_POST['updateTilegrid']."' WHERE map_id = '$mapId'";
+			$sql="UPDATE map_configs.maps SET layers = '{".$_POST['updateLayers']."}', groups = '{".$_POST['updateGroups']."}', controls = '{".$_POST['updateControls']."}', proj4defs = '{".$_POST['updateProj4defs']."}', featureinfooptions = '".$_POST['updateFeatureinfooptions']."', center = '".$_POST['updateCenter']."', zoom = '".$_POST['updateZoom']."', footer = '".$_POST['updateFooter']."', info = '".$_POST['updateInfo']."', map_id = '".$_POST['updateId']."', tilegrid = '".$_POST['updateTilegrid']."' WHERE map_id = '$mapId'";
 		}
 		if (!empty($sql))
 		{
@@ -306,6 +321,32 @@
 			die("Error in SQL query: " . pg_last_error());
 		}
 		$tilegrids=all_from_table('map_configs.tilegrids');
+	}
+
+	// Proj4def button pressed
+	elseif (isset($proj4defButton) && $proj4defButton != 'get')
+	{
+		if ($proj4defButton == 'create')
+		{
+			if (!empty($newproj4defId) && !in_array($newproj4defId, array_column($proj4defs, 'code')))
+			{
+				$sql="INSERT INTO map_configs.proj4defs(code) VALUES ('$newproj4defId')";
+			}
+		}
+		elseif ($proj4defButton == 'delete')
+		{
+			$sql="DELETE FROM map_configs.proj4defs WHERE code = '$proj4defId'";
+		}
+		elseif ($proj4defButton == 'update')
+		{
+			$sql="UPDATE map_configs.proj4defs SET code = '".$_POST['updateCode']."', projection = '".$_POST['updateProjection']."', alias = '".$_POST['updateAlias']."', info = '".$_POST['updateInfo']."' WHERE code = '$proj4defId'";
+		}
+		$result=pg_query($dbh, $sql);
+		if (!$result)
+		{
+			die("Error in SQL query: " . pg_last_error());
+		}
+		$proj4defs=all_from_table('map_configs.proj4defs');
 	}
 
 	// Source button pressed
@@ -686,14 +727,18 @@
 
 </head>
 <body>
-	<iframe id="topFrame" name="topFrame" style="display:none"></iframe>
-	<iframe id="hiddenFrame" name="hiddenFrame" style="display:none"></iframe>
 	<form action="read_json.php">
+
 		<input class="topInput" type="submit" value="Importera JSON" />
+
 	</form>
 	<form action="help.php" target="topFrame">
 		<input class="topInput" onclick="toggleTopFrame('help');" type="submit" value="Hjälp" />
+
 	</form>
+	<iframe id="topFrame" name="topFrame" style="display:none"></iframe>
+	<iframe id="hiddenFrame" name="hiddenFrame" style="display:none"></iframe>
+
 
 <!--  REDIGERA KARTA  -->
 <div style="width:calc( 100vw - 15px ); overflow-x:auto; margin-bottom: 5px">
@@ -757,11 +802,19 @@
 				<?php headForm('service'); ?>
 			</th>
 <!--  REDIGERA TILEGRIDS  -->
-			<th class="thRight">
+			<th class="thMiddle">
 				<h3 class="<?php echo $tilegridh3class; ?>">
 					Redigera tilegrid
 				</h3>
 				<?php headForm('tilegrid'); ?>
+			</th>
+<!--  REDIGERA PROJ4DEFS  -->
+			<th class="thRight">
+				<h3 class="<?php echo $proj4defh3class; ?>">
+					Redigera proj4defs
+				</h3>
+				<?php headForm('proj4def'); ?>
+				<?php multiselectButton('proj4defs'); ?>
 			</th>
 		</tr>
 	</table>
@@ -831,6 +884,10 @@
 
 				echo '<label for="'.$groupId.'Controls">Kontroller:</label>';
 				echo '<textarea rows="1" class="textareaLarge" id="'.$groupId.'Controls" name="updateControls">'.trim($group['controls'], '{}').'</textarea>&nbsp;';
+
+				echo '<label for="'.$groupId.'Proj4defs">Proj4defs:</label>';
+				echo '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Proj4defs" name="updateProj4defs">'.trim($group['proj4defs'], '{}').'</textarea>&nbsp;';
+
 				echo '<label for="'.$groupId.'Featureinfooptions">FeatureInfoOptions:</label>';
 				echo '<textarea rows="1" class="textareaMedium" id="'.$groupId.'Featureinfooptions" name="updateFeatureinfooptions">'.$group['featureinfooptions'].'</textarea>&nbsp;';
 				echo '<br>';
@@ -1655,6 +1712,45 @@
 		echo '</div>';
 	}
 
+	//  Om proj4def vald
+
+	if (isset($proj4defId) && in_array($proj4defId, array_column($proj4defs, 'code')))
+	{
+		$proj4def=array_column_search($proj4defId, 'code', $proj4defs);
+		echo '<div style="display:flex;">';
+		echo   '<form method="post" style="line-height:2">';
+		echo      '<label for="'.$proj4defId.'Code">Kod:</label>';
+		echo      '<textarea rows="1" class="textareaMedium" id="'.$proj4defId.'Code" name="updateCode">'.$proj4defId.'</textarea>&nbsp;';
+
+		echo      '<label for="'.$proj4defId.'Projection">Projektion:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$proj4defId.'Projection" name="updateProjection">'.$proj4def['projection'].'</textarea>&nbsp;';
+
+		echo      '<label for="'.$proj4defId.'Alias">Alias:</label>';
+		echo      '<textarea rows="1" class="textareaMedium" id="'.$proj4defId.'Alias" name="updateAlias">'.$proj4def['alias'].'</textarea>&nbsp;';
+		echo      '<br>';
+		echo      '<label for="'.$proj4defId.'Info">Info:</label>';
+		echo      '<textarea rows="1" class="textareaLarge" id="'.$proj4defId.'Info" name="updateInfo">'.$proj4def['info'].'</textarea>&nbsp;';
+
+		echo      '<input type="hidden" name="proj4defId" value="'.$proj4defId.'">';
+		if (isset($mapId))
+		{
+			echo '<input type="hidden" name="mapId" value="'.$mapId.'">';
+		}
+		echo      '<div class="buttonDiv">';
+  		echo        '<button class="updateButton" type="submit" name="proj4defButton" value="update">Uppdatera</button>';
+		infoButton('proj4def');
+		echo      '</div>';
+		echo   '</form>';
+		echo   "<form method='post' onsubmit='confirmStr=\"Är du säker att du vill radera proj4def $proj4defId? Referenser till aktuell proj4def hanteras separat.\"; return confirm(confirmStr);' style='line-height:2'>";
+		echo      '<input type="hidden" name="proj4defId" value="'.$proj4defId.'">';
+		if (isset($mapId))
+		{
+			echo '<input type="hidden" name="mapId" value="'.$mapId.'">';
+		}
+		echo     "<button class='deleteButton2' type='submit' name='proj4defButton' value='delete'>Radera</button>";
+		echo   '</form>';
+		echo '</div>';
+	}
 
 ?>
 <script>
