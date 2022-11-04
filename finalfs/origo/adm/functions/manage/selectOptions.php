@@ -14,9 +14,16 @@
 		{
 			$column=$type."_id";
 		}
-		if ($setSelected)
+		if ($setSelected !== false)
 		{
-			eval("\$id=\$$type".'Id;');
+			if ($setSelected !== true)
+			{
+				$id=$setSelected;
+			}
+			else
+			{
+				eval("\$id=\$$type".'Id;');
+			}
 			printSelectOptions(array_column($table, $column), $id);
 		}
 		else
