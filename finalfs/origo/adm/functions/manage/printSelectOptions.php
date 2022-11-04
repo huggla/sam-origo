@@ -12,7 +12,7 @@
 					$selectOption="$selectOption selected";
 				}
 			}
-			$selectOption="$selectOption>$value</option>";
+			$selectOption="$selectOption>".ltrim(substr($value, strrpos($value,',')), ',')."</option>";
 			echo $selectOption;
 		}
 	}
