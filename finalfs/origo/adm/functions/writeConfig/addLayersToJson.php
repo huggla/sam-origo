@@ -148,6 +148,10 @@
 						if ($layer['editable'] == 't')
 						{
 							$json = $json.', "editable": true';
+							if (!empty($layer['allowededitoperations']))
+							{
+								$json = $json.', "allowedEditOperations": "'.$layer['allowededitoperations'].'"';
+							}
 						}
 					}
 				}
