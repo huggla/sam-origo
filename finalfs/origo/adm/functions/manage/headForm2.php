@@ -31,7 +31,7 @@
 		}
 		if ($table == 'layers')
 		{
-			echo "<select class=\"headSelect\" id=\"layerCategories\" name=\"layerCategories\" onchange='updateSelect(\"layerSelect\", window[this.value]);'></select>";
+			echo "<select class=\"headSelect\" id=\"layerCategories\" name=\"layerCategories\" onchange='updateSelect(\"layerSelect\", window[this.value]);'></select><br>";
 			$selectId='id="'.$type.'Select"';
 		}
 		else
