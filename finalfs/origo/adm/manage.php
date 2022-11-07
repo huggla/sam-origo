@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 	header("Cache-Control: must-revalidate, max-age=0, s-maxage=0, no-cache, no-store");
-
 	include_once("./constants/CONNECTION_STRING.php");
 	include_once("./functions/dbh.php");
 	include_once("./functions/pgArrayToPhp.php");
@@ -37,7 +36,6 @@
 	{
 		$groupId=$_POST['groupId']=$groupIds[0];
 	}
-
 	$idVarsNames=array_keys(array_filter($_POST, function($key) {return (substr($key, -2) == 'Id');}, ARRAY_FILTER_USE_KEY));
 	$hiddenInputs="";
 	foreach ($idVarsNames as $idVarName)
@@ -48,7 +46,6 @@
 	{
 		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="groupIds" value="'.implode(',', $GLOBALS['groupIds']).'">';
 	}
-
 	$configTables=array_unique(array_merge(array('maps','groups','layers','sources'), configTablesNamesFromSchema($configSchema)));
 	$focusSet=false;
 	foreach ($configTables as $table)
@@ -76,11 +73,10 @@
 	}
 
 /*
- *************************
- *  DATABAS-OPERATIONER  *
- *************************
+ *********************************
+ *  DATABAS-OPERATIONER <start>  *
+ *********************************
 */
-
 	$pressedButton=array_keys(array_filter($_POST, function($key) {return (substr($key, -6) == 'Button');}, ARRAY_FILTER_USE_KEY))[0];
 	if (isset($pressedButton))
 	{
@@ -276,6 +272,7 @@
 					{
 						if (($targetKey = array_search($pressedButtonCommandTargetTableValue, $targetColumnArr)) !== false)
 						{
+
 							unset($targetColumnArr[$targetKey]);
 						}
 					}
@@ -302,7 +299,11 @@
 			}
 		}
 	}
-
+/*
+ *********************************
+ *  DATABAS-OPERATIONER </end>  *
+ *********************************
+*/
 ?>
 
 <html style="width:100%;height:100%;font-size:0.9vw;line-height:2">
@@ -310,25 +311,19 @@
 	<meta charset="utf-8"/>
 	<script>
 		var topFrame="";
+
 		function toggleTopFrame(type)
 		{
-
 			var x = document.getElementById("topFrame");
-
 			if (x.style.display === "none")
 			{
-
 				x.style.display = "block";
-
 			}
 			else if (topFrame === type)
 			{
-
 				x.style.display = "none";
-
 			}
 			topFrame = type;
-
 		}
 
 		function updateSelect(id, array)
@@ -337,24 +332,16 @@
 			if (select.options != null)
 			{
 				var length = select.options.length;
-
 				for (i = length-1; i >= 0; i--)
 				{
-
 					select.options[i] = null;
-
 				}
 			}
 			array.forEach(function(item)
-
 			{
-
 				var newOption = document.createElement("option");
-
 				newOption.text = item.toString();
-
 				select.add(newOption);
-
 			});
 		}
 		<?php 
@@ -368,106 +355,103 @@
 	<style>
 		<?php include("./styles/manage.css"); ?>
 	</style>
-
 </head>
 <body>
 	<form action="read_json.php">
-
 		<input class="topInput" type="submit" value="Importera JSON" />
-
 	</form>
 	<form action="help.php" target="topFrame">
 		<input class="topInput" onclick="toggleTopFrame('help');" type="submit" value="Hjälp" />
-
 	</form>
 	<iframe id="topFrame" name="topFrame" style="display:none"></iframe>
 	<iframe id="hiddenFrame" name="hiddenFrame" style="display:none"></iframe>
-
+	<div style="width:calc( 100vw - 15px ); overflow-x:auto; margin-bottom: 5px">
+		<table style="border-bottom:dashed 1px lightgray; margin-bottom: 2px; border-top:dashed 1px lightgray;">
+			<tr>
 
 <!--  REDIGERA KARTA  -->
-<div style="width:calc( 100vw - 15px ); overflow-x:auto; margin-bottom: 5px">
-	<table style="border-bottom:dashed 1px lightgray; margin-bottom: 2px; border-top:dashed 1px lightgray;">
-		<tr>
-			<th class="thLeft">
-				<h3 class="<?php echo $maph3class; ?>">
-					Redigera karta
-				</h3>
-				<?php headForm2('maps'); ?>
-			</th>
+				<th class="thLeft">
+					<h3 class="<?php echo $maph3class; ?>">
+						Redigera karta
+					</h3>
+					<?php headForm2('maps'); ?>
+				</th>
 
 <!--  REDIGERA KONTROLLER  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $controlh3class; ?>">
-					Redigera kontroll
-				</h3>
-				<?php headForm2('controls'); ?>
-				<?php multiselectButton('controls'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $controlh3class; ?>">
+						Redigera kontroll
+					</h3>
+					<?php headForm2('controls'); ?>
+					<?php multiselectButton('controls'); ?>
+				</th>
 
 <!--  REDIGERA GRUPP  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $grouph3class; ?>">
-					Redigera grupp
-				</h3>
-				<?php headForm2('groups'); ?>
-				<?php multiselectButton('groups'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $grouph3class; ?>">
+						Redigera grupp
+					</h3>
+					<?php headForm2('groups'); ?>
+					<?php multiselectButton('groups'); ?>
+				</th>
 
 <!--  REDIGERA LAGER  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $layerh3class; ?>">
-					Redigera lager
-				</h3>
-				<?php headForm2('layers'); ?>
-				<?php multiselectButton('layers'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $layerh3class; ?>">
+						Redigera lager
+					</h3>
+					<?php headForm2('layers'); ?>
+					<?php multiselectButton('layers'); ?>
+				</th>
 
 <!--  REDIGERA KÄLLOR  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $sourceh3class; ?>">
-					Redigera källa
-				</h3>
-				<?php headForm2('sources'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $sourceh3class; ?>">
+						Redigera källa
+					</h3>
+					<?php headForm2('sources'); ?>
+				</th>
 
 <!--  REDIGERA SIDFÖTTER  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $footerh3class; ?>">
-					Redigera sidfot
-				</h3>
-				<?php headForm2('footers'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $footerh3class; ?>">
+						Redigera sidfot
+					</h3>
+					<?php headForm2('footers'); ?>
+				</th>
 
 <!--  REDIGERA TJÄNSTER  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $serviceh3class; ?>">
-					Redigera tjänst
-				</h3>
-				<?php headForm2('services'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $serviceh3class; ?>">
+						Redigera tjänst
+					</h3>
+					<?php headForm2('services'); ?>
+				</th>
+
 <!--  REDIGERA TILEGRIDS  -->
-			<th class="thMiddle">
-				<h3 class="<?php echo $tilegridh3class; ?>">
-					Redigera tilegrid
-				</h3>
-				<?php headForm2('tilegrids'); ?>
-			</th>
+				<th class="thMiddle">
+					<h3 class="<?php echo $tilegridh3class; ?>">
+						Redigera tilegrid
+					</h3>
+					<?php headForm2('tilegrids'); ?>
+				</th>
+
 <!--  REDIGERA PROJ4DEFS  -->
-			<th class="thRight">
-				<h3 class="<?php echo $proj4defh3class; ?>">
-					Redigera proj4defs
-				</h3>
-				<?php headForm2('proj4defs'); ?>
-				<?php multiselectButton('proj4defs'); ?>
-			</th>
-		</tr>
-	</table>
-</div>
+				<th class="thRight">
+					<h3 class="<?php echo $proj4defh3class; ?>">
+						Redigera proj4defs
+					</h3>
+					<?php headForm2('proj4defs'); ?>
+					<?php multiselectButton('proj4defs'); ?>
+				</th>
+			</tr>
+		</table>
+	</div>
 <?php
 /*
- ************************
- *  DYNAMISKT INNEHÅLL  *
- ************************
+ ********************************
+ *  DYNAMISKT INNEHÅLL <start>  *
+ ********************************
 */
 	// Om karta vald
 	$target='map';
@@ -554,19 +538,22 @@
 	{
 		printProj4defForm($proj4defId);
 	}
-
+/*
+ *******************************
+ *  DYNAMISKT INNEHÅLL </end>  *
+ *******************************
+*/
 ?>
-<script>
-	updateSelect("layerCategories", categories);
-	<?php
-		if (isset($_POST['layerCategories']))
-		{
-			echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
-			echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
-			echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
-
-		}
-	?>
-</script>
+	<script>
+		updateSelect("layerCategories", categories);
+		<?php
+			if (isset($_POST['layerCategories']))
+			{
+				echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
+				echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
+				echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
+			}
+		?>
+	</script>
 </body>
 </html>
