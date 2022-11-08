@@ -39,7 +39,11 @@
 			$selectId='';
 		}
 		echo   "<select $selectId onchange=\"this.form.submit()\" class=\"headSelect\" name=\"$name\">";
-		if ($table == 'groups')
+		if ($table == 'maps')
+		{
+			selectOptions($table, true);
+		}
+		elseif ($table == 'groups')
 		{
 			if (isset($mapId))
 			{
@@ -56,7 +60,14 @@
 		}
 		else
 		{
-			selectOptions($table, true);
+			if (isset($mapId) || isset($groupIds[0]))
+			{
+				selectOptions($table);
+			}
+			else
+			{
+				selectOptions($table, true);
+			}
 		}
 		echo   '</select>';
 		echo   '<button type="submit" class="headButton" name="'.$type.'Button" value="get">';
