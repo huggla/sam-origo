@@ -24,11 +24,11 @@
 			{
 				eval("\$id=\$$type".'Id;');
 			}
-			printSelectOptions(array_column($table, $column), $id);
+			printSelectOptions(array_merge(array(""),array_column($table, $column)), $id);
 		}
 		else
 		{
-			printSelectOptions(array_column($table, $column));
+			printSelectOptions(array_merge(array(""),array_column($table, $column)));
 		}
 	}
 
