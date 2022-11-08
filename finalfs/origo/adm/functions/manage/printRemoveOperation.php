@@ -9,7 +9,7 @@
 				$str=ucfirst($tabletype);
 				echo '<form class="addForm" method="post">';
 				echo '<select class="headSelect" name="from'.$str.'Id">';
-				printSelectOptions($mapParents);
+				printSelectOptions(array_merge(array(""),$mapParents));
 				echo '</select>';
 				echo '<input type="hidden" name="'.$target.'Id" value="'.$targetId.'">';
 				echo $hiddenInputs;
