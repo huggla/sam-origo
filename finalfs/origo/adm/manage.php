@@ -24,10 +24,6 @@
 	{
 		$groupIds=array();
 	}
-	if (isset($mapId) && empty($groupIds))
-	{
-		//$groupIds[]=$mapId;
-	}
 	if (isset($groupId) && empty($groupIds))
 	{
 		$groupIds[]=$groupId;
