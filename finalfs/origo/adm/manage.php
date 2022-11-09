@@ -274,23 +274,23 @@
 					}
 					$sql="UPDATE $configSchema.$targetTable SET $targetColumn = '{".implode(',', $targetColumnArr)."}' WHERE $targetIdColumn = '$targetId'";
 				}
-				if (!empty($sql))
+			}
+			if (!empty($sql))
+			{
+				$result=pg_query($dbh, $sql);
+				if (!$result)
 				{
-					$result=pg_query($dbh, $sql);
-					if (!$result)
-					{
-						die("Error in SQL query: " . pg_last_error());
-					}
-					unset($sql);
-					if ($pressedButtonCommandTargetTable == 'layers')
-					{
-						setLayers();
-					}
-					else
-					{
-						$tableWithSchema=$configSchema.'.'.$pressedButtonCommandTargetTable;
-						eval("\$$pressedButtonCommandTargetTable=all_from_table('$tableWithSchema');");
-					}
+					die("Error in SQL query: " . pg_last_error());
+				}
+				unset($sql);
+				if ($pressedButtonCommandTargetTable == 'layers')
+				{
+					setLayers();
+				}
+				else
+				{
+					$tableWithSchema=$configSchema.'.'.$pressedButtonCommandTargetTable;
+					eval("\$$pressedButtonCommandTargetTable=all_from_table('$tableWithSchema');");
 				}
 			}
 		}
