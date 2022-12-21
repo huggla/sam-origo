@@ -1,6 +1,7 @@
 <?php
-	function appendDbColumnsToSql($dbColumns, $sql)
+	function appendUpdatedColumnsToSql($dbColumns, $sql)
 	{
+		$first=true;
 		foreach ($dbColumns as $column => $value)
 		{
 			if (empty($value) && $value !== '0')
@@ -11,7 +12,15 @@
 			{
 				$value=pg_escape_literal($value);
 			}
-			$sql=$sql.", $column = $value";
+			if ($first)
+			{
+				$first=false;
+			}
+			else
+			{
+				$sql=$sql.',';
+			}
+			$sql=$sql." $column = $value";
 		}
 		return $sql;
 	}
