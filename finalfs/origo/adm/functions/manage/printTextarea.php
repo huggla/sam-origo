@@ -1,40 +1,13 @@
 <?php
-	function printTextarea($targetId, $column, $class, $label=null)
+	function printTextarea($target, $column, $class, $label)
 	{
-		$target=$GLOBALS['target'];
-		$targetTable=$target.'s';
-		$targetTableArr=$GLOBALS[$targetTable];
-		if ($target == 'proj4def')
-		{
-			$idColumn='code';
-		}
-		else
-		{
-			$idColumn=$target.'_id';
-		}
-		$targetArr=array_column_search($targetId, $idColumn, $targetTableArr);
-		$ucColumn=ucfirst($column);
-		if ($ucColumn != 'Id' && $ucColumn != 'Code')
+		$targetId=current($target)[pkColumnOfTable(key($target).'s')];
+		$columnValue=current($target)[$column];
+		if (preg_match('/^\{([^"\{\[]*("[^:])?)*\}$/', $columnValue))
 		{ 
-			$dbSchema=$GLOBALS['configSchema'];
-			$columnDataType=dataTypeOfTableColumn($dbSchema, $targetTable, $column);
-			if ($columnDataType == 'ARRAY')
-			{
-				$columnValue=trim($targetArr[$column], '{}');
-			}
-			else
-			{
-				$columnValue=$targetArr[$column];
-			}
+			$columnValue=trim($columnValue, '{}');
 		}
-		else
-		{
-			$columnValue=$targetId;
-		}
-		if (!isset($label))
-		{
-			$label=$ucColumn.':';
-		}
+		$ucColumn=ucfirst($column);
 		echo <<<HERE
 			<label for="{$targetId}{$ucColumn}">{$label}</label>
 			<textarea rows="1" class="{$class}" id="{$targetId}{$ucColumn}" name="update{$ucColumn}">{$columnValue}</textarea>&nbsp;
