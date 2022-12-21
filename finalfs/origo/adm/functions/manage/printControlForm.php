@@ -10,7 +10,7 @@
 		echo '<div class="buttonDiv">';
 		printUpdateButton('control');
 		$control['control']=$control['control']['control_id'];
-        printInfoButton($control);
+		printInfoButton($control);
 		echo '</div></form></div>';
 		$deleteConfirmStr="Är du säker att du vill radera kontrollen ".$control['control']."? Referenser till kontrollen hanteras separat.";
 		printDeleteButton($control, $deleteConfirmStr, 'deleteButton1');
