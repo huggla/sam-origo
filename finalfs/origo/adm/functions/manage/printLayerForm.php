@@ -1,95 +1,89 @@
 <?php
-	function printLayerForm($targetId)
+	function printLayerForm($layer, $operationTables, $sources, $inheritPosts)
 	{
-		GLOBAL $hiddenInputs, $sources;
-		$target=$GLOBALS['target'];
-		$targetTable=$target.'s';
-		$targetTableArr=$GLOBALS[$targetTable];
-		$targetArr=array_column_search($targetId, $target.'_id', $targetTableArr);
-		echo <<<HERE
-		<div>
-			<div style="float:left;">
-				<form method="post" style="line-height:2">
-		HERE;
-		printTextarea($targetId, 'id', 'textareaMedium');
-		printTextarea($targetId, 'title', 'textareaMedium', 'Titel:');
-		printSourceList($targetId, 'title', 'textareaMedium', 'Titel:');
-		printUpdateSelect($targetId, 'type', 'miniSelect', 'Typ:', array("", "WMS", "WFS", "OSM", "GEOJSON", "GROUP", "WMTS"));
-		if ($targetArr['type'] == 'WFS')
+		echo '<div><div style="float:left;"><form method="post" style="line-height:2">';
+		printTextarea($layer, 'layer_id', 'textareaMedium', 'Id:');
+		printTextarea($layer, 'title', 'textareaMedium', 'Titel:');
+		printSourceList($layer, $sources);
+		printUpdateSelect($layer, array('type'=>array("WMS", "WFS", "OSM", "GEOJSON", "GROUP", "WMTS")), 'miniSelect', 'Typ:');
+		if (isset($layer['layer']['type']))
 		{
-			printUpdateSelect($targetId, 'editable', 'miniSelect', 'Redigerbar:', array("", "f", "t"));
-			if ($targetArr['editable'] == "t")
+			if ($layer['layer']['type'] == 'WFS')
 			{
-				printTextarea($targetId, 'allowededitoperations', 'textareaMedium', 'Redigeringsalt.:');
-				echo '<br>';
+				printUpdateSelect($layer, array('editable'=>array("f", "t")), 'miniSelect', 'Redigerbar:');
+				if (current($layer)['editable'] == "t")
+				{
+					printTextarea($layer, 'allowededitoperations', 'textareaMedium', 'Redigeringsalt.:');
+					echo '<br>';
+				}
+			}
+			elseif ($layer['layer']['type'] == 'WMS')
+			{
+				printUpdateSelect($layer, array('tiled'=>array("f", "t")), 'miniSelect', 'Tiled:');
 			}
 		}
-		elseif ($targetArr['type'] == 'WMS')
-		{
-			printUpdateSelect($targetId, 'tiled', 'miniSelect', 'Tiled:', array("", "f", "t"));
-		}
-		printUpdateSelect($targetId, 'queryable', 'miniSelect', 'Klickbar:', array("", "f", "t"));
-		printUpdateSelect($targetId, 'visible', 'miniSelect', 'Synlig:', array("", "f", "t"));
-		printTextarea($targetId, 'opacity', 'textareaSmall', 'Opacitet:');
+		printUpdateSelect($layer, array('queryable'=>array("f", "t")), 'miniSelect', 'Klickbar:');
+		printUpdateSelect($layer, array('visible'=>array("f", "t")), 'miniSelect', 'Synlig:');
+		printTextarea($layer, 'opacity', 'textareaSmall', 'Opacitet:');
 		echo '<br>';
-		$layerService=array_column_search($targetArr['source'], 'source_id', $sources)['service'];
-		if ($layerService == 'restricted')
+		if (isset($layer['layer']['service']) && $layer['layer']['service'] == 'restricted')
 		{
 			echo "<img src='../img/png/lock_yellow.png' alt='Skyddat lager' title='Skyddat lager'>&nbsp;";
-			printTextarea($targetId, 'adusers', 'textareaLarge', 'Användare:');
-			printTextarea($targetId, 'adgroups', 'textareaLarge', 'Grupper:');
-			echo "<img src='../img/png/lock_yellow.png' alt='Skyddat lager' title='Skyddat lager'>";
-			echo '<br>';
+			printTextarea($layer, 'adusers', 'textareaLarge', 'Användare:');
+			printTextarea($layer, 'adgroups', 'textareaLarge', 'Grupper:');
+			echo "<img src='../img/png/lock_yellow.png' alt='Skyddat lager' title='Skyddat lager'><br>";
 		}
-		printTextarea($targetId, 'icon', 'textareaLarge', 'Ikon:');
-		printTextarea($targetId, 'icon_extended', 'textareaLarge', 'Utfälld ikon:');
+		printTextarea($layer, 'icon', 'textareaLarge', 'Ikon:');
+		printTextarea($layer, 'icon_extended', 'textareaLarge', 'Utfälld ikon:');
 		echo '<br>';
-		if ($targetArr['type'] == 'WMS')
+		if (isset($layer['layer']['type']) && $layer['layer']['type'] == 'WMS')
 		{
-			printTextarea($targetId, 'format', 'textareaMedium');
-			printTextarea($targetId, 'featureinfolayer', 'textareaMedium', 'FeatureInfo-lager:');
+			printTextarea($layer, 'format', 'textareaMedium', 'Format:');
+			printTextarea($layer, 'featureinfolayer', 'textareaMedium', 'FeatureInfo-lager:');
 		}
-		printTextarea($targetId, 'stylefilter', 'textareaLarge', 'Stilfilter:');
+		printTextarea($layer, 'style_filter', 'textareaLarge', 'Stilfilter:');
 		echo '<br>';
-		printTextarea($targetId, 'style_config', 'textareaLarge', 'Stilkonfiguration:');
-		printTextarea($targetId, 'attributes', 'textareaLarge', 'Attribut:');
+		printTextarea($layer, 'style_config', 'textareaLarge', 'Stilkonfiguration:');
+		printTextarea($layer, 'attributes', 'textareaLarge', 'Attribut:');
 		echo '<br>';
-		printTextarea($targetId, 'abstract', 'textareaLarge', 'Sammanfattning:');
-		printTextarea($targetId, 'info', 'textareaLarge');
+		printTextarea($layer, 'abstract', 'textareaLarge', 'Sammanfattning:');
+		printTextarea($layer, 'info', 'textareaLarge', 'Info:');
 		echo '<br>';
-		printTextarea($targetId, 'categories', 'textareaLarge', 'Kategorier:');
-		printTextarea($targetId, 'attribution', 'textareaLarge', 'Tillskrivning:');
+		printTextarea($layer, 'categories', 'textareaLarge', 'Kategorier:');
+		printTextarea($layer, 'attribution', 'textareaLarge', 'Tillskrivning:');
 		echo '<br>';
-		printTextarea($targetId, 'maxscale', 'textareaSmall', 'Maxskala:');
-		printTextarea($targetId, 'minscale', 'textareaSmall', 'Minskala:');
-		printUpdateSelect($targetId, 'swiper', 'miniSelect', 'Swiper-lager:', array("", "f", "t", "under"));
-		if ($targetArr['type'] == 'GROUP')
+		printTextarea($layer, 'maxscale', 'textareaSmall', 'Maxskala:');
+		printTextarea($layer, 'minscale', 'textareaSmall', 'Minskala:');
+		printUpdateSelect($layer, array('swiper'=>array("f", "t", "under")), 'miniSelect', 'Swiper-lager:');
+		if (isset($layer['layer']['type']))
 		{
-			printTextarea($targetId, 'layers', 'textareaMedium', 'Lager:');
-		}
-		elseif ($targetArr['type'] == 'WFS')
-		{
-			printTextarea($targetId, 'layertype', 'textareaMedium', 'WFS-typ:');
-			if ($targetArr['layertype'] == 'cluster')
+			if ($layer['layer']['type'] == 'GROUP')
 			{
-				printTextarea($targetId, 'clusterstyle', 'textareaLarge', 'Klusterstil:');
-				echo '<br>';
-				printTextarea($targetId, 'clusteroptions', 'textareaLarge', 'Klusteralternativ:');
+				printTextarea($layer, 'layers', 'textareaMedium', 'Lager:');
+			}
+			elseif ($layer['layer']['type'] == 'WFS')
+			{
+				printTextarea($layer, 'layertype', 'textareaMedium', 'WFS-typ:');
+				if (isset($layer['layer']['layertype']) && $layer['layer']['layertype'] == 'cluster')
+				{
+					printTextarea($layer, 'clusterstyle', 'textareaLarge', 'Klusterstil:');
+					echo '<br>';
+					printTextarea($layer, 'clusteroptions', 'textareaLarge', 'Klusteralternativ:');
+				}
 			}
 		}
-		echo $hiddenInputs;
-		echo 			'<div class="buttonDiv">';
-		printUpdateButton();
-                printInfoButton($targetId);
-		echo 			'</div>';
-		echo 		'</form>';
-		echo 	'</div>';
-		$deleteConfirmStr="Är du säker att du vill radera lagret $targetId? Referenser till lagret hanteras separat.";
-		printDeleteButton($targetId, $deleteConfirmStr, 'deleteButton6');
+		printHiddenInputs($inheritPosts);
+		echo '<div class="buttonDiv">';
+		printUpdateButton('layer');
+		$layer['layer']=$layer['layer']['layer_id'];
+		printInfoButton($layer);
+		echo '</div></form></div>';
+		$deleteConfirmStr="Är du säker att du vill radera lagret ".$layer['layer']."? Referenser till lagret hanteras separat.";
+		printDeleteButton($layer, $deleteConfirmStr, 'deleteButton6');
 		echo '</div>';
-		printAddOperation('maps', $targetId, 'Lägg till i karta');
-		printRemoveOperation('maps', $targetId, 'Ta bort från karta');
-		printAddOperation('groups', $targetId, 'Lägg till i grupp');
-		printRemoveOperation('groups', $targetId, 'Ta bort från grupp');
+		printAddOperation($layer, array('maps'=>array_column($operationTables['maps'], 'map_id')), 'Lägg till i karta', $inheritPosts);
+		printRemoveOperation($layer, array('maps'=>$operationTables['maps']), 'Ta bort från karta', $inheritPosts);
+		printAddOperation($layer, array('groups'=>array_column($operationTables['groups'], 'group_id')), 'Lägg till i grupp', $inheritPosts);
+		printRemoveOperation($layer, array('groups'=>$operationTables['groups']),'Ta bort från grupp', $inheritPosts);
 	}
 ?>
