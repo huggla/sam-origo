@@ -1,8 +1,8 @@
 <?php
-
-	function printParents($parentType, $childType, $child)
+	function printParents($potentialParents, $child)
 	{
-		$parents=findParents($parentType, $childType, $child);
+		$parents=findParents($potentialParents, $child);
+		$parentType=rtrim(key($potentialParents), 's');
 		if (!empty($parents))
 		{
 			if     ($parentType == 'map') { $parentsTypeSv='kartor'; }
@@ -31,5 +31,4 @@
 			return false;
 		}
 	}
-
 ?>
