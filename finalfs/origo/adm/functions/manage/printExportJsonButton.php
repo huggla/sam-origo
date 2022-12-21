@@ -1,7 +1,6 @@
 <?php
-	function printExportJsonButton()
+	function printExportJsonButton($mapId)
 	{
-		GLOBAL $mapId;
 		echo <<<HERE
 			<div class="exportButtonDiv">
 				<form action="writeConfig.php" method="get" target="hiddenFrame">
