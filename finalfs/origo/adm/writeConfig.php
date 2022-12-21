@@ -20,9 +20,10 @@
 	{
 		$mapNumber = '';
 	}
-	$configfile = '/origo/'.$mapName.$mapNumber.'.json';
+	$configfile = "/origo/$mapName/index$mapNumber.json";
 	ignore_user_abort(true);
 	$dbh=dbh(CONNECTION_STRING);
+	$configSchema='map_configs';
 	$conftables = array(
 		"maps",
 		"controls",
@@ -116,8 +117,8 @@
 	else
 	{
 		file_put_contents($configfile, $json);
-		$layers=all_from_table('map_configs.layers');
-		$sources=all_from_table('map_configs.sources');
+		$layers=all_from_table($dbh, $configSchema, 'layers');
+		$sources=all_from_table($dbh, $configSchema, 'sources');
 		$restrictedLayers=array();
 		foreach ($layers as $layer)
 		{
