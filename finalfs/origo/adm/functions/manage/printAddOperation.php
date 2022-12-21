@@ -1,15 +1,13 @@
 <?php
-	function printAddOperation($tablename, $targetId, $buttontext)
+	function printAddOperation($target, $addToTable, $buttontext, $inheritPosts)
 	{
-			GLOBAL $target;
-			$str=rtrim(ucfirst($tablename), 's');
+			$str=rtrim(ucfirst(key($addToTable)), 's');
 			echo '<form class="addForm" method="post">';
 			echo '<select class="headSelect" name="to'.$str.'Id">';
-			selectOptions($tablename, false);
+			printSelectOptions(array_merge(array(""),current($addToTable)));
 			echo '</select>';
-			echo '<input type="hidden" name="'.$target.'Id" value="'.$targetId.'">';
-			echo $hiddenInputs;
-			echo '<button type="submit" name="'.$target.'Button" value="operation">'.$buttontext.'</button>';
+			printHiddenInputs($inheritPosts);
+			echo '<button type="submit" name="'.key($target).'Button" value="operation">'.$buttontext.'</button>';
 			echo '</form>';
 	}
 ?>
