@@ -1,36 +1,31 @@
 <?php
-	function printMapForm($mapId)
+	function printMapForm($map, $selectables, $inheritPosts)
 	{
-		GLOBAL $hiddenInputs, $target;
-		echo <<<HERE
-		<div>
-			<div style="float:left;">
-				<form method="post" style="line-height:2">
-		HERE;
-		printTextarea($mapId, 'id', 'textareaMedium');
-		printTextarea($mapId, 'layers', 'textareaLarge', 'Lager:');
-		printTextarea($mapId, 'groups', 'textareaLarge', 'Grupper:');
-		echo 			'<br>';
-		printUpdateSelect($mapId, 'footers', 'bodySelect', 'Sidfot:');
-		printTextarea($mapId, 'controls', 'textareaLarge', 'Kontroller:');
-		printTextarea($mapId, 'proj4defs', 'textareaMedium');
-		printTextarea($mapId, 'featureinfooptions', 'textareaMedium', 'FeatureInfoOptions:');
-		echo 			'<br>';
-		printTextarea($mapId, 'center', 'textareaMedium', 'Mittpunkt:');
-		printTextarea($mapId, 'zoom', 'textareaXSmall');
-		printUpdateSelect($mapId, 'tilegrids', 'bodySelect', 'Tilegrid:');
-		printTextarea($mapId, 'info', 'textareaLarge');
-		echo $hiddenInputs;
-		echo 			'<div class="buttonDiv">';
-		printUpdateButton();
-                printInfoButton($mapId);
-		printWriteConfigButton();
-		echo 			'</div>';
-		printExportJsonButton();
-		echo 		'</form>';
-		echo 	'</div>';
-		$deleteConfirmStr="Är du säker på att du vill radera kartan $mapId? Ingående kontroller, grupper och lager påverkas ej.";
-		printDeleteButton($mapId, $deleteConfirmStr, 'deleteButton3b');
+		echo '<div><div style="float:left;"><form method="post" style="line-height:2">';
+		printTextarea($map, 'map_id', 'textareaMedium', 'Id:');
+		printTextarea($map, 'layers', 'textareaLarge', 'Lager:');
+		printTextarea($map, 'groups', 'textareaLarge', 'Grupper:');
+		echo '<br>';
+		printUpdateSelect($map, array('footer'=>$selectables['footers']), 'bodySelect', 'Sidfot:');
+		printTextarea($map, 'controls', 'textareaLarge', 'Kontroller:');
+		printTextarea($map, 'proj4defs', 'textareaMedium', 'Proj4defs:');
+		printTextarea($map, 'featureinfooptions', 'textareaMedium', 'FeatureInfoOptions:');
+		echo '<br>';
+		printTextarea($map, 'center', 'textareaMedium', 'Mittpunkt:');
+		printTextarea($map, 'zoom', 'textareaXSmall', 'Zoom:');
+		printUpdateSelect($map, array('tilegrid'=>$selectables['tilegrids']), 'bodySelect', 'Tilegrid:');
+		printTextarea($map, 'info', 'textareaLarge', 'Info:');
+		$map['map']=$map['map']['map_id'];
+		printHiddenInputs($inheritPosts);
+		echo '<div class="buttonDiv">';
+		printUpdateButton('map');
+		printInfoButton($map);
+		printWriteConfigButton($map['map']);
+		echo '</div>';
+		printExportJsonButton($map['map']);
+		echo '</form></div>';
+		$deleteConfirmStr="Är du säker på att du vill radera kartan ".$map['map']."? Ingående kontroller, grupper och lager påverkas ej.";
+		printDeleteButton($map, $deleteConfirmStr, 'deleteButton3b');
 		echo '</div>';
 	}
 ?>
