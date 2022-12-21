@@ -7,344 +7,155 @@
 	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
 	include_once("./functions/findParents.php");
-	include_once("./functions/setLayers.php");
-	$functionFiles = array_diff(scandir('./functions/manage'), array('.', '..'));
-	foreach ($functionFiles as $functionFile)
+	include_once("./functions/layerCategories.php");
+	include_once("./functions/pkColumnOfTable.php");
+	include_once("./functions/includeDirectory.php");
+	includeDirectory("./functions/manage");
+	$post=$_POST;
+	unset($_POST);
+	if (isset($post['groupIds']))
 	{
-		include_once("./functions/manage/$functionFile");
+		$groupIdsArray=explode(',', $post['groupIds']);
+		if (!isset($post['groupId']))
+		{
+			$post['groupId']=$groupIdsArray[0];
+		}
 	}
-	$dbh=dbh(CONNECTION_STRING);
-	$configSchema='map_configs';
-	extract($_POST);
-	if (isset($groupIds))
+	elseif (isset($post['groupId']))
 	{
-		$groupIds=explode(',', $groupIds);
+		$post['groupIds']=$post['groupId'];
+		$groupIdsArray=array($post['groupId']);
 	}
 	else
 	{
-		$groupIds=array();
+		$groupIdsArray=array();
 	}
-	if (isset($groupId) && empty($groupIds))
+	//var_dump($post);
+	$idPosts=array_filter($post, function($key) {return (substr($key, -2) == 'Id');}, ARRAY_FILTER_USE_KEY);
+	unset($idPosts['fromMapId'], $idPosts['toMapId']);
+	$focusTable=focusTable($idPosts);
+	$dbh=dbh(CONNECTION_STRING);
+	$configSchema='map_configs';
+	$configTables=configTables($dbh, $configSchema);
+	$layerCategories=layerCategories($configTables['layers']);
+	$pressedButton=array_keys(array_filter($post, function($key) {return (substr($key, -6) == 'Button');}, ARRAY_FILTER_USE_KEY));
+	if (isset($pressedButton[0]))
 	{
-		$groupIds[]=$groupId;
+		$pressedButton=$pressedButton[0];
 	}
-	elseif (!isset($mapId) && !empty($groupIds) && !isset($groupId))
+	else
 	{
-		$groupId=$_POST['groupId']=$groupIds[0];
+		unset($pressedButton);
 	}
-	$idVarsNames=array_keys(array_filter($_POST, function($key) {return (substr($key, -2) == 'Id');}, ARRAY_FILTER_USE_KEY));
-	$hiddenInputs="";
-	foreach ($idVarsNames as $idVarName)
-	{
-		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="'.$idVarName.'" value="'.$GLOBALS[$idVarName].'">';
-	}
-	if (!empty($GLOBALS['groupIds']))
-	{
-		$hiddenInputs=$hiddenInputs.'<input type="hidden" name="groupIds" value="'.implode(',', $GLOBALS['groupIds']).'">';
-	}
-	$configTables=array_unique(array_merge(array('maps','groups','layers','sources'), configTablesNamesFromSchema($configSchema)));
-	$focusSet=false;
-	foreach ($configTables as $table)
-	{
-		if ($table == 'layers')
-		{
-			setLayers();
-		}
-		else
-		{
-			$tableWithSchema=$configSchema.'.'.$table;
-			eval("\$$table=all_from_table('$tableWithSchema');");
-		}
-		$table=rtrim($table, 's');
-		$classVar=$table.'h3class';
-		if (!$focusSet && in_array($table.'Id', $idVarsNames))
-		{
-			$focusSet=true;
-			eval("\$$classVar='h3Focus';");
-		}
-		else
-		{
-			eval("\$$classVar='h3NoFocus';");
-		}
-	}
-
-/*
- *********************************
- *  DATABAS-OPERATIONER <start>  *
- *********************************
-*/
-	$pressedButton=array_keys(array_filter($_POST, function($key) {return (substr($key, -6) == 'Button');}, ARRAY_FILTER_USE_KEY))[0];
 	if (isset($pressedButton))
 	{
-		$pressedButtonCommand=$$pressedButton;
-		if ($pressedButtonCommand != 'get')
+		$command=$post[$pressedButton];
+		$sql="";
+		if ($command == 'create' && !empty($post[substr($pressedButton, 0, -6).'IdNew']))
 		{
-			$pressedButtonCommandTarget=substr($pressedButton, 0, -6);
-			$pressedButtonCommandTargetTable=$pressedButtonCommandTarget.'s';
-			$pressedButtonCommandTargetTableArray=$$pressedButtonCommandTargetTable;
-			if ($pressedButtonCommandTarget == 'proj4def')
+			$target=array(substr($pressedButton, 0, -6) => $post[substr($pressedButton, 0, -6).'IdNew']);
+			$targetTable=key($target).'s';
+			$targetPkColumn=pkColumnOfTable($targetTable);
+			if (!in_array(current($target), array_column($configTables[$targetTable], $targetPkColumn)))
 			{
-				$pressedButtonCommandTargetTableKey='code';
+				$sql="INSERT INTO $configSchema.$targetTable($targetPkColumn) VALUES ('".current($target)."')";
 			}
-			else
+			unset($targetTable, $targetPkColumn);
+		}
+		elseif ($command == 'delete' && !empty($post[substr($pressedButton, 0, -6).'IdDel']))
+		{
+			$target=array(substr($pressedButton, 0, -6) => $post[substr($pressedButton, 0, -6).'IdDel']);
+			$targetTable=key($target).'s';
+			$targetPkColumn=pkColumnOfTable($targetTable);
+			if (in_array(current($target), array_column($configTables[$targetTable], $targetPkColumn)))
 			{
-				$pressedButtonCommandTargetTableKey=$pressedButtonCommandTarget.'_id';
+				$sql="DELETE FROM $configSchema.$targetTable WHERE $targetPkColumn = '".current($target)."'";
 			}
-			if ($pressedButtonCommand == 'create')
+			unset($targetTable, $targetPkColumn);
+		}
+		elseif (isset($post[substr($pressedButton, 0, -6).'Id']))
+		{
+			$target=array(substr($pressedButton, 0, -6) => $post[substr($pressedButton, 0, -6).'Id']);
+			if ($command == 'update')
 			{
-				$pressedButtonCommandTargetTableValue=${$pressedButtonCommandTarget.'IdNew'};
-				if (!empty($pressedButtonCommandTargetTableValue) && !in_array($pressedButtonCommandTargetTableValue, array_column($pressedButtonCommandTargetTableArray, $pressedButtonCommandTargetTableKey)))
+				$updatePosts=array_filter($post, function($key) {return (substr($key, 0, 6) == 'update');}, ARRAY_FILTER_USE_KEY);
+				$sql=sqlForUpdate($target, $configSchema, $updatePosts);
+				unset($updatePosts);
+			}
+			elseif ($command == 'operation')
+			{
+				if (!empty($post['toMapId']) || !empty($post['fromMapId']))
 				{
-					$sql="INSERT INTO $configSchema.$pressedButtonCommandTargetTable($pressedButtonCommandTargetTableKey) VALUES ('$pressedButtonCommandTargetTableValue')";
+					$parentKey='map';
 				}
-			}
-			elseif ($pressedButtonCommand == 'delete')
-			{
-				$pressedButtonCommandTargetTableValue=${$pressedButtonCommandTarget.'IdDel'};
-				if (!empty($pressedButtonCommandTargetTableValue) && in_array($pressedButtonCommandTargetTableValue, array_column($pressedButtonCommandTargetTableArray, $pressedButtonCommandTargetTableKey)))
+				elseif (!empty($post['toGroupId']) || !empty($post['fromGroupId']))
 				{
-					$sql="DELETE FROM $configSchema.$pressedButtonCommandTargetTable WHERE $pressedButtonCommandTargetTableKey = '$pressedButtonCommandTargetTableValue'";
+					$parentKey='group';
 				}
-			}
-			else
-			{
-				$pressedButtonCommandTargetTableValue=${$pressedButtonCommandTarget.'Id'};
-				if ($pressedButtonCommand == 'update')
+				if (isset($parentKey))
 				{
-					$sql="UPDATE $configSchema.$pressedButtonCommandTargetTable SET";
-					$sql=$sql." $pressedButtonCommandTargetTableKey = ".pg_escape_literal($updateId);
-					$sql=$sql.", info = ".pg_escape_literal($updateInfo);
-					if ($pressedButtonCommandTarget == 'map')
-					{
-						$dbColumns=array(
-							'featureinfooptions'	=> $updateFeatureinfooptions,
-							'center'		=> $updateCenter,
-							'zoom'			=> $updateZoom,
-							'footer'		=> $updateFooter,
-							'tilegrid'		=> $updateTilegrid,
-							'layers'		=> '{'.$updateLayers.'}',
-							'groups'		=> '{'.$updateGroups.'}',
-							'controls'		=> '{'.$updateControls.'}',
-							'proj4defs'		=> '{'.$updateProj4defs.'}'
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'group')
-					{
-						$dbColumns=array(
-							'title'			=> $updateTitle,
-							'abstract'		=> $updateAbstract,
-							'expanded'		=> $updateExpanded,
-							'layers'		=> '{'.$updateLayers.'}',
-							'groups'		=> '{'.$updateGroups.'}'
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'control')
-					{
-						$dbColumns=array(
-							'options'		=> $updateOptions
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'footer')
-					{
-						$dbColumns=array(
-							'img'			=> $updateImg,
-							'url'			=> $updateUrl,
-							'text'			=> $updateText
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'tilegrid')
-					{
-						$dbColumns=array(
-							'tilesize'		=> $updateTilesize
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'proj4def')
-					{
-						$dbColumns=array(
-							'projection'		=> $updateProjection,
-							'alias'			=> $updateAlias
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'service')
-					{
-						$dbColumns=array(
-							'base_url'		=> $updateBaseurl
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'source')
-					{
-						$dbColumns=array(
-							'service'		=> $updateService,
-							'with_geometry'		=> $updateWithgeometry,
-							'fi_point_tolerance'	=> $updateFipointtolerance,
-							'ttl'			=> $updateTtl,
-							'tilegrid'		=> $updateTilegrid
-						);
-					}
-					elseif ($pressedButtonCommandTarget == 'layer')
-					{
-						$dbColumns=array(
-							'attributes'		=> $updateAttributes,
-							'editable'		=> $updateEditable,
-							'allowededitoperations'	=> $updateAllowededitoperations,
-							'tiled'			=> $updateTiled,
-							'style_config'		=> $updateStyle_config,
-							'maxscale'		=> $updateMaxscale,
-							'minscale'		=> $updateMinscale,
-							'clusterstyle'		=> $updateClusterstyle,
-							'clusteroptions'	=> $updateClusteroptions,
-							'title'			=> $updateTitle,
-							'abstract'		=> $updateAbstract,
-							'source'		=> $updateSource,
-							'type'			=> $updateType,
-							'queryable'		=> $updateQueryable,
-							'visible'		=> $updateVisible,
-							'icon'			=> $updateIcon,
-							'icon_extended'		=> $updateIcon_extended,
-							'style_filter'		=> $updateStylefilter,
-							'opacity'		=> $updateOpacity,
-							'featureinfolayer'	=> $updateFeatureinfolayer,
-							'format'		=> $updateFormat,
-							'attribution'		=> $updateAttribution,
-							'layertype'		=> $updateLayertype,
-							'swiper'		=> $updateSwiper,
-							'categories'		=> '{'.$updateCategories.'}',
-							'layers'		=> '{'.$updateLayers.'}',
-							'adusers'		=> '{'.$updateAdusers.'}',
-							'adgroups'		=> '{'.$updateAdgroups.'}'
-						);
-					}
-					$sql=appendDbColumnsToSql($dbColumns, $sql);
-					$sql=$sql." WHERE $pressedButtonCommandTargetTableKey = '$pressedButtonCommandTargetTableValue'";
-				}
-				elseif ($pressedButtonCommand == 'operation')
-				{
-					if (isset($toMapId) || isset($toGroupId))
+					if (!empty($post['toMapId']) || !empty($post['toGroupId']))
 					{
 						$operation='add';
-						if (isset($toMapId))
-						{
-							$target='map';
-							$targetId=$toMapId;
-						}
-						elseif (isset($toGroupId))
-						{
-							$target='group';
-							$targetId=$toGroupId;
-						}
+						$parentPkColumnValue=$post['to'.ucfirst($parentKey).'Id'];
 					}
-					elseif (isset($fromMapId) || isset($fromGroupId))
+					elseif (!empty($post['fromMapId']) || !empty($post['fromGroupId']))
 					{
 						$operation='remove';
-						if (isset($fromMapId))
-						{
-							$target='map';
-							$targetId=$fromMapId;
-						}
-						elseif (isset($fromGroupId))
-						{
-							$target='group';
-							$targetId=$fromGroupId;
-						}
+						$parentPkColumnValue=$post['from'.ucfirst($parentKey).'Id'];
 					}
-					$targetIdColumn=$target.'_id';
-					$targetTable=$target.'s';
-					$targetTableArr=$$targetTable;
-					$targetArr=array_column_search($targetId, $targetIdColumn, $targetTableArr);
-					$targetColumn=$pressedButtonCommandTarget.'s';
-					$targetColumnArr=pgArrayToPhp($targetArr[$targetColumn]);
-					if (empty($targetColumnArr[0]))
+					if (isset($operation))
 					{
-						$targetColumnArr=array();
+						$parentPkColumnKey=pkColumnOfTable($parentKey.'s');
+						$parentOperationColumnKey=key($target).'s';
+						$parentOperationColumnValue=array_column_search($parentPkColumnValue, $parentPkColumnKey, $configTables[$parentKey.'s'])[$parentOperationColumnKey];
+						$operationParent=array($parentKey.'s'=>array($parentPkColumnKey=>$parentPkColumnValue, $parentOperationColumnKey=>$parentOperationColumnValue));
+						$sql=sqlForOperation($operation, $target, $operationParent, $configSchema);
+						unset($operation, $parentPkColumnValue, $parentPkColumnKey, $parentOperationColumnKey, $parentOperationColumnValue, $operationParent);
 					}
-					if ($operation == 'add')
-					{
-						if (!in_array($pressedButtonCommandTargetTableValue, $targetColumnArr))
-						{
-							$targetColumnArr[]=$pressedButtonCommandTargetTableValue;
-						}
-					}
-					elseif ($operation == 'remove')
-					{
-						if (($targetKey = array_search($pressedButtonCommandTargetTableValue, $targetColumnArr)) !== false)
-						{
-
-							unset($targetColumnArr[$targetKey]);
-						}
-					}
-					$sql="UPDATE $configSchema.$targetTable SET $targetColumn = '{".implode(',', $targetColumnArr)."}' WHERE $targetIdColumn = '$targetId'";
-				}
-			}
-			if (!empty($sql))
-			{
-				$result=pg_query($dbh, $sql);
-				if (!$result)
-				{
-					die("Error in SQL query: " . pg_last_error());
-				}
-				unset($sql);
-				if ($pressedButtonCommandTargetTable == 'layers')
-				{
-					setLayers();
-				}
-				else
-				{
-					$tableWithSchema=$configSchema.'.'.$pressedButtonCommandTargetTable;
-					eval("\$$pressedButtonCommandTargetTable=all_from_table('$tableWithSchema');");
+					unset($parentKey);
 				}
 			}
 		}
+		if (!empty($sql))
+		{
+			$result=pg_query($dbh, $sql);
+			if (!$result)
+			{
+				die("Error in SQL query: " . pg_last_error());
+			}
+			unset($result);
+			$configTables=configTables($dbh, $configSchema);
+			if ($command != 'operation' && key($target) == 'layer')
+			{
+				$layerCategories=layerCategories($configTables['layers']);
+			}
+		}
+		unset($target, $command, $sql);
 	}
-/*
- *********************************
- *  DATABAS-OPERATIONER </end>  *
- *********************************
-*/
+	$inheritPosts=$idPosts;
+	if (isset($post['groupIds']))
+	{
+		$inheritPosts['groupIds']=$post['groupIds'];
+	}
+	if (isset($post['layerCategory']))
+	{
+		$inheritPosts['layerCategory']=$post['layerCategory'];
+	}
 ?>
-
 <html style="width:100%;height:100%;font-size:0.9vw;line-height:2">
 <head>
 	<meta charset="utf-8"/>
 	<script>
 		var topFrame="";
-
-		function toggleTopFrame(type)
-		{
-			var x = document.getElementById("topFrame");
-			if (x.style.display === "none")
-			{
-				x.style.display = "block";
-			}
-			else if (topFrame === type)
-			{
-				x.style.display = "none";
-			}
-			topFrame = type;
-		}
-
-		function updateSelect(id, array)
-		{
-			var select = document.getElementById(id);
-			if (select.options != null)
-			{
-				var length = select.options.length;
-				for (i = length-1; i >= 0; i--)
-				{
-					select.options[i] = null;
-				}
-			}
-			array.forEach(function(item)
-			{
-				var newOption = document.createElement("option");
-				newOption.text = item.toString();
-				select.add(newOption);
-			});
-		}
-		<?php 
+		<?php
+			includeDirectory("./js-functions/manage");
 			echo "var categories = ".json_encode(array_keys($layerCategories)).";\n";
 			foreach ($layerCategories as $category => $catLayers)
 			{
+				$catLayers=array_merge(array(""), $catLayers);
 				echo "var $category = ".json_encode($catLayers).";\n";
+				unset($category, $catLayers);
 			}
 		?>
 	</script>
@@ -367,189 +178,232 @@
 
 <!--  REDIGERA KARTA  -->
 				<th class="thLeft">
-					<h3 class="<?php echo $maph3class; ?>">
+					<h3 class="<?php if ($focusTable == 'maps') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera karta
 					</h3>
-					<?php headForm2('maps'); ?>
+					<?php headForm(array('maps'=>$configTables['maps']), $inheritPosts); ?>
 				</th>
-
 <!--  REDIGERA KONTROLLER  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $controlh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'controls') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera kontroll
 					</h3>
-					<?php headForm2('controls'); ?>
-					<?php multiselectButton('controls'); ?>
+					<?php headForm(array('controls'=>$configTables['controls']), $inheritPosts); ?>
+					<?php printMultiselectButton('controls'); ?>
 				</th>
 
 <!--  REDIGERA GRUPP  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $grouph3class; ?>">
+					<h3 class="<?php if ($focusTable == 'groups') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera grupp
 					</h3>
-					<?php headForm2('groups'); ?>
-					<?php multiselectButton('groups'); ?>
+					<?php headForm(array('groups'=>$configTables['groups']), $inheritPosts); ?>
+					<?php printMultiselectButton('groups'); ?>
 				</th>
 
 <!--  REDIGERA LAGER  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $layerh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'layers') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera lager
 					</h3>
-					<?php headForm2('layers'); ?>
-					<?php multiselectButton('layers'); ?>
+					<?php headForm(array('layers'=>$configTables['layers']), $inheritPosts); ?>
+					<?php printMultiselectButton('layers'); ?>
 				</th>
 
 <!--  REDIGERA KÄLLOR  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $sourceh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'sources') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera källa
 					</h3>
-					<?php headForm2('sources'); ?>
+					<?php headForm(array('sources'=>$configTables['sources']), $inheritPosts); ?>
 				</th>
 
 <!--  REDIGERA SIDFÖTTER  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $footerh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'footers') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera sidfot
 					</h3>
-					<?php headForm2('footers'); ?>
+					<?php headForm(array('footers'=>$configTables['footers']), $inheritPosts); ?>
 				</th>
 
 <!--  REDIGERA TJÄNSTER  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $serviceh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'services') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera tjänst
 					</h3>
-					<?php headForm2('services'); ?>
+					<?php headForm(array('services'=>$configTables['services']), $inheritPosts); ?>
 				</th>
 
 <!--  REDIGERA TILEGRIDS  -->
 				<th class="thMiddle">
-					<h3 class="<?php echo $tilegridh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'tilegrids') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera tilegrid
 					</h3>
-					<?php headForm2('tilegrids'); ?>
+					<?php headForm(array('tilegrids'=>$configTables['tilegrids']), $inheritPosts); ?>
 				</th>
 
 <!--  REDIGERA PROJ4DEFS  -->
 				<th class="thRight">
-					<h3 class="<?php echo $proj4defh3class; ?>">
+					<h3 class="<?php if ($focusTable == 'proj4defs') {echo 'h3Focus';} else {echo 'h3NoFocus';} ?>">
 						Redigera proj4defs
 					</h3>
-					<?php headForm2('proj4defs'); ?>
-					<?php multiselectButton('proj4defs'); ?>
+					<?php headForm(array('proj4defs'=>$configTables['proj4defs']), $inheritPosts); ?>
+					<?php printMultiselectButton('proj4defs'); ?>
 				</th>
+
 			</tr>
 		</table>
 	</div>
-<?php
-/*
- ********************************
- *  DYNAMISKT INNEHÅLL <start>  *
- ********************************
-*/
-	// Om karta vald
-	$target='map';
-	if (isChosen($mapId))
-	{
-		printMapForm($mapId);
-		echo '<table><tr>';
-		$thClass='thFirst';
-		printChildSelect2($mapId, 'groups', 'Redigera grupp', $groupId);
-		printChildSelect($mapId, 'layers', 'Redigera lager');
-		printChildSelect($mapId, 'controls', 'Redigera kontroll', $controlId);
-		echo '</tr></table><hr>';
-	}
-
-	//  Om kontroll vald
-	$target='control';
-	if (isChosen($controlId))
-	{
-		printControlForm($controlId);
-	}
-
-	//  Om grupp vald
-	$target='group';
-	$tmpGroupIds=$groupIds;
-	$tmpGroupIds2=$groupIds;
-	$parent=array_shift($tmpGroupIds2);
-	$level=1;
-	foreach ($tmpGroupIds as $key => $group_Id)
-	{
-		$selectedValue=array_shift($tmpGroupIds2);
-		$parent="$parent,$selectedValue";
-		$selectedValue=$parent;
-		unset($style);
-		if (isChosen($group_Id))
-		{
-			printGroupForm($group_Id);
-			echo '<table><tr>';
-			$thClass='thFirst';
-			printChildSelect($group_Id, 'groups', 'Redigera grupp', $selectedValue);
-			printChildSelect($group_Id, 'layers', 'Redigera lager', $layerId);
-			echo '</tr></table><hr>';
-			$level++;
-		}
-	}
-
-	//  Om sidfot vald
-	$target='footer';
-	if (isChosen($footerId))
-	{
-		printFooterForm($footerId);
-	}
-
-	//  Om lager vald
-	$target='layer';
-	if (isChosen($layerId))
-	{
-		printLayerForm($layerId);
-	}
-
-	//  Om källa vald
-	$target='source';
-	if (isChosen($sourceId))
-	{
-		printSourceForm($sourceId);
-	}
-
-	//  Om tjänst vald
-	$target='service';
-	if (isChosen($serviceId))
-	{
-		printServiceForm($serviceId);
-	}
-
-	//  Om tilegrid vald
-	$target='tilegrid';
-	if (isChosen($tilegridId))
-	{
-		printTilegridForm($tilegridId);
-	}
-
-	//  Om proj4def vald
-	$target='proj4def';
-	if (isChosen($proj4defId))
-	{
-		printProj4defForm($proj4defId);
-	}
-/*
- *******************************
- *  DYNAMISKT INNEHÅLL </end>  *
- *******************************
-*/
-?>
 	<script>
 		updateSelect("layerCategories", categories);
 		<?php
-			if (isset($_POST['layerCategories']))
+			if (isset($post['layerCategory']))
 			{
-				echo 'document.getElementById("layerCategories").value="'.$_POST['layerCategories'].'";';
-				echo 'updateSelect("layerSelect", '.$_POST['layerCategories'].');';
-				echo 'document.getElementById("layerSelect").value="'.$layerId.'";';
+				echo <<<HERE
+					document.getElementById("layerCategories").value="{$post['layerCategory']}";
+					updateSelect("layerSelect", {$post['layerCategory']});
+					document.getElementById("layerSelect").value="{$post['layerId']}";
+				HERE;
 			}
 		?>
 	</script>
+<?php
+/*
+ ************************
+ *  DYNAMISKT INNEHÅLL  *
+ ************************
+*/
+	// Om karta vald
+	if (isset($post['mapId']))
+	{
+		$map=array('map'=>array_column_search($post['mapId'], 'map_id', $configTables['maps']));
+		if (!empty(current($map)))
+		{
+			$selectables=array('footers'=>array_column($configTables['footers'], 'footer_id'), 'tilegrids'=>array_column($configTables['tilegrids'], 'tilegrid_id'));
+			printMapForm($map, $selectables, $inheritPosts);
+			echo '<table><tr>';
+			$thClass='thFirst';
+			printChildSelect($map, 'groups', $thClass, 'Redigera grupp', $inheritPosts);
+			printChildSelect($map, 'layers', $thClass, 'Redigera lager', $inheritPosts);
+			printChildSelect($map, 'controls', $thClass, 'Redigera kontroll', $inheritPosts);
+			echo '</tr></table><hr>';
+			unset($selectables, $thClass);
+		}
+		unset($map);
+	}
+
+	//  Om kontroll vald
+	if (isset($post['controlId']))
+	{
+		$control=array('control'=>array_column_search($post['controlId'], 'control_id', $configTables['controls']));
+		if (!empty(current($control)))
+		{
+			printControlForm($control, array('maps'=>$configTables['maps']), $inheritPosts);
+		}
+		unset($control);
+	}
+
+	//  Om grupp vald
+	$tmpGroupIds=$groupIdsArray;
+	$parent=array_shift($tmpGroupIds);
+	$groupLevel=1;
+	foreach ($groupIdsArray as $groupId)
+	{
+		$group=array('group'=>array_column_search($groupId, 'group_id', $configTables['groups']));
+		if (!empty(current($group)))
+		{
+			if (count($tmpGroupIds) > 0)
+			{
+				$parent="$parent,".array_shift($tmpGroupIds);
+			}
+			printGroupForm($group, array('maps'=>$configTables['maps'], 'groups'=>$configTables['groups']), $inheritPosts);
+			echo '<table><tr>';
+			$thClass='thFirst';
+			printChildSelect($group, 'groups', $thClass, 'Redigera grupp', $inheritPosts, $groupLevel, $parent);
+			printChildSelect($group, 'layers', $thClass, 'Redigera lager', $inheritPosts, $groupLevel);
+			echo '</tr></table><hr>';
+			$groupLevel++;
+		}
+		unset($group);
+	}
+	unset($tmpGroupIds, $parent, $groupLevel, $groupId, $thClass);
+
+	//  Om sidfot vald
+	if (isset($post['footerId']))
+	{
+		$footer=array('footer'=>array_column_search($post['footerId'], 'footer_id', $configTables['footers']));
+		if (!empty(current($footer)))
+		{
+			printFooterForm($footer, $inheritPosts);
+		}
+		unset($footer);
+	}
+
+	//  Om lager vald
+	if (isset($post['layerId']))
+	{
+		$layer=array('layer'=>array_column_search($post['layerId'], 'layer_id', $configTables['layers']));
+		if (!empty(current($layer)))
+		{
+			if (isset($layer['layer']['source']))
+			{
+				$layerSource=array_column_search($layer['layer']['source'], 'source_id', $configTables['sources']);
+				if (!empty($layerSource) && isset($layerSource['service']))
+				{
+					$layer['layer']['service']=$layerSource['service'];
+				}
+				unset($layerSource);
+			}
+			printLayerForm($layer, array('maps'=>$configTables['maps'], 'groups'=>$configTables['groups']), array_column($configTables['sources'], 'source_id'), $inheritPosts);
+		}
+		unset($layer);
+	}
+
+	//  Om källa vald
+	if (isset($post['sourceId']))
+	{
+		$source=array('source'=>array_column_search($post['sourceId'], 'source_id', $configTables['sources']));
+		if (!empty(current($source)))
+		{
+			$selectables=array('services'=>array_column($configTables['services'], 'service_id'), 'tilegrids'=>array_column($configTables['tilegrids'], 'tilegrid_id'));
+			printSourceForm($source, $selectables, $inheritPosts);
+			unset($selectables);
+		}
+		unset($source);
+	}
+
+	//  Om tjänst vald
+	if (isset($post['serviceId']))
+	{
+		$service=array('service'=>array_column_search($post['serviceId'], 'service_id', $configTables['services']));
+		if (!empty(current($service)))
+		{
+			printServiceForm($service, $inheritPosts);
+		}
+		unset($service);
+	}
+
+	//  Om tilegrid vald
+	if (isset($post['tilegridId']))
+	{
+		$tilegrid=array('tilegrid'=>array_column_search($post['tilegridId'], 'tilegrid_id', $configTables['tilegrids']));
+		if (!empty(current($tilegrid)))
+		{
+			printTilegridForm($tilegrid, $inheritPosts);
+		}
+		unset($tilegrid);
+	}
+
+	//  Om proj4def vald
+	if (isset($post['proj4defId']))
+	{
+		$proj4def=array('proj4def'=>array_column_search($post['proj4defId'], 'code', $configTables['proj4defs']));
+		if (!empty(current($proj4def)))
+		{
+			printProj4defForm($proj4def, $inheritPosts);
+		}
+		unset($proj4def);
+	}
+?>
 </body>
 </html>
