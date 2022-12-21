@@ -1,24 +1,15 @@
 <?php
-	function printUpdateSelect($targetId, $column, $class, $label=null, $options=null)
+	function printUpdateSelect($target, $column, $class, $label, $options=null)
 	{
-		$target=$GLOBALS['target'];
-		$targetTable=rtrim($target, 's').'s';
-		$targetTableArr=$GLOBALS[$targetTable];
-		$targetArr=array_column_search($targetId, idColumnOfTarget($target), $targetTableArr);
-		$ucColumn=ucfirst($column);
-		$selectName='update'.$ucColumn;
-		$selected=$targetArr[rtrim($column, 's')];
-		if (!isset($label))
-		{
-			$label=$ucColumn.':';
-		}
+		$targetId=current($target)[pkColumnOfTable(key($target).'s')];
+		$ucColumn=ucfirst(key($column));
+		$sName='update'.$ucColumn;
+		$selected=current($target)[rtrim(key($column), 's')];
 		echo "<label for='{$targetId}{$ucColumn}'>{$label}</label>";
-		echo "<select class='{$class}' id='{$targetId}{$ucColumn}' name='{$selectName}'>";
+		echo "<select class='{$class}' id='{$targetId}{$ucColumn}' name='{$sName}'>";
 		if (!isset($options))
 		{
-				$columnArr=$GLOBALS[rtrim($column, 's').'s'];
-				$columnArr=array_column($columnArr, idColumnOfTarget($column));
-				$options=array_merge(array(""), $columnArr);
+				$options=array_merge(array(""), current($column));
 		}
 		printSelectOptions($options, $selected);
 		echo "</select>&nbsp;";
