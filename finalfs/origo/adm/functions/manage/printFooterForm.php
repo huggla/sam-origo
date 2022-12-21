@@ -1,27 +1,21 @@
 <?php
-	function printFooterForm($footerId)
+	function printFooterForm($footer, $inheritPosts)
 	{
-		GLOBAL $hiddenInputs, $target;
-		echo <<<HERE
-		<div>
-			<div style="float:left;">
-				<form method="post" style="line-height:2">
-		HERE;
-		printTextarea($footerId, 'id', 'textareaMedium');
-		printTextarea($footerId, 'img', 'textareaLarge', 'Logotyp:');
-		printTextarea($footerId, 'url', 'textareaLarge');
-		echo 			'<br>';
-		printTextarea($footerId, 'text', 'textareaMedium');
-		printTextarea($footerId, 'info', 'textareaLarge');
-		echo $hiddenInputs;
-		echo 			'<div class="buttonDiv">';
-		printUpdateButton();
-                printInfoButton($footerId);
-		echo 			'</div>';
-		echo 		'</form>';
-		echo 	'</div>';
-		$deleteConfirmStr="Är du säker att du vill radera sidfoten $footerId? Referenser till sidfoten hanteras separat.";
-		printDeleteButton($footerId, $deleteConfirmStr, 'deleteButton2');
+		echo '<div><div style="float:left;"><form method="post" style="line-height:2">';
+		printTextarea($footer, 'footer_id', 'textareaMedium', 'Id:');
+		printTextarea($footer, 'img', 'textareaLarge', 'Logotyp:');
+		printTextarea($footer, 'url', 'textareaLarge', 'Url:');
+		echo '<br>';
+		printTextarea($footer, 'text', 'textareaMedium', 'Text:');
+		printTextarea($footer, 'info', 'textareaLarge', 'Info:');
+		printHiddenInputs($inheritPosts);
+		echo '<div class="buttonDiv">';
+		printUpdateButton('footer');
+		$footer['footer']=$footer['footer']['footer_id'];
+		printInfoButton($footer);
+		echo '</div></form></div>';
+		$deleteConfirmStr="Är du säker att du vill radera sidfoten ".$footer['footer']."? Referenser till sidfoten hanteras separat.";
+		printDeleteButton($footer, $deleteConfirmStr, 'deleteButton2');
 		echo '</div>';
 	}
 ?>
