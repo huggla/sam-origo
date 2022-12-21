@@ -1,27 +1,24 @@
 <?php
-
-	function findParents($parentType, $childType, $child)
+	function findParents($potentialParents, $child)
 	{
 		$parents=array();
-		$allPotentialParents=all_from_table('map_configs.'.$parentType.'s');
-		foreach ($allPotentialParents as $potentialParent)
+		foreach (current($potentialParents) as $potentialParent)
 		{
-			if (($childType == 'control' || $childType == 'group' || $childType == 'layer' || $childType == 'proj4def') && ($parentType == 'map' || $parentType == 'group'))
+			if ((key($child) == 'control' || key($child) == 'group' || key($child) == 'layer' || key($child) == 'proj4def') && (key($potentialParents) == 'maps' || key($potentialParents) == 'groups'))
 			{
-				if (in_array($child, pgArrayToPhp($potentialParent[$childType.'s'])))
+				if (in_array(current($child), pgArrayToPhp($potentialParent[key($child).'s'])))
 				{
-					$parents[]=$potentialParent[$parentType.'_id'];
+					$parents[]=$potentialParent[pkColumnOfTable(key($potentialParents))];
 				}
 			}
-			elseif ($childType == 'footer' || $childType == 'source' || $childType == 'service' || $childType == 'tilegrid')
+			elseif (key($child) == 'footer' || key($child) == 'source' || key($child) == 'service' || key($child) == 'tilegrid')
 			{
-				if ($child == $potentialParent[$childType])
+				if (current($child) == $potentialParent[key($child)])
 				{
-					$parents[]=$potentialParent[$parentType.'_id'];
+					$parents[]=$potentialParent[pkColumnOfTable(key($potentialParents))];
 				}
 			}
 		}
 		return $parents;
 	}
-
 ?>
