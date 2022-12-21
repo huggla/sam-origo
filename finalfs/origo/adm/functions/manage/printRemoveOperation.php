@@ -1,19 +1,15 @@
 <?php
-	function printRemoveOperation($tablename, $targetId, $buttontext)
+	function printRemoveOperation($targetToRemove, $tableToRemoveFrom, $buttontext, $inheritPosts)
 	{
-			GLOBAL $target;
-			$tabletype=rtrim($tablename, 's');
-			$mapParents=findParents($tabletype, $target, $targetId);
-			if (!empty($mapParents))
+			$parents=findParents($tableToRemoveFrom, $targetToRemove);
+			if (!empty($parents))
 			{
-				$str=ucfirst($tabletype);
 				echo '<form class="addForm" method="post">';
-				echo '<select class="headSelect" name="from'.$str.'Id">';
-				printSelectOptions(array_merge(array(""),$mapParents));
+				echo '<select class="headSelect" name="from'.ucfirst(rtrim(key($tableToRemoveFrom), 's')).'Id">';
+				printSelectOptions(array_merge(array(""), $parents));
 				echo '</select>';
-				echo '<input type="hidden" name="'.$target.'Id" value="'.$targetId.'">';
-				echo $hiddenInputs;
-				echo '<button type="submit" name="'.$target.'Button" value="operation">'.$buttontext.'</button>';
+				printHiddenInputs($inheritPosts);
+				echo '<button type="submit" name="'.key($targetToRemove).'Button" value="operation">'.$buttontext.'</button>';
 				echo '</form>';
 			}
 	}
