@@ -1,39 +1,14 @@
 <?php
-	function printSourceList($targetId, $column, $class, $label=null)
+	function printSourceList($layer, $sources)
 	{
-		GLOBAL $sources;
-		$target=$GLOBALS['target'];
-		$targetTable=$target.'s';
-		$targetTableArr=$GLOBALS[$targetTable];
-		$targetArr=array_column_search($targetId, $target.'_id', $targetTableArr);
-		$ucColumn=ucfirst($column);
-		if ($ucColumn != 'Id')
-		{ 
-			$dbSchema=$GLOBALS['configSchema'];
-			$columnDataType=dataTypeOfTableColumn($dbSchema, $targetTable, $column);
-			if ($columnDataType == 'ARRAY')
-			{
-				$columnValue=trim($targetArr[$column], '{}');
-			}
-			else
-			{
-				$columnValue=$targetArr[$column];
-			}
-		}
-		else
-		{
-			$columnValue=$targetId;
-		}
-		if (!isset($label))
-		{
-			$label=$ucColumn.':';
-		}
+		$layerId=current($layer)['layer_id'];
+		$layerSource=current($layer)['source'];
 		echo <<<HERE
-			<label for="{$targetId}Source">Källa:</label>
-			<input type="text" list="sourcelist" class="bodySelect" id="{$targetId}Source" name="updateSource" value="{$targetArr['source']}" onfocus="this.value='';" />
+			<label for="{$layerId}Source">Källa:</label>
+			<input type="text" list="sourcelist" class="bodySelect" id="{$layerId}Source" name="updateSource" value="{$layerSource}" onfocus="this.value='';" />
 			<datalist id="sourcelist">
 		HERE;
-		printSelectOptions(array_merge(array(""), array_column($sources, 'source_id')), $targetArr['source']);
-		echo      '</datalist>&nbsp;';
+		printSelectOptions(array_merge(array(""), $sources), $layerSource);
+		echo '</datalist>&nbsp;';
 	}
 ?>
