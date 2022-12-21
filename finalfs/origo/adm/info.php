@@ -15,15 +15,14 @@
 	include_once("./functions/array_column_search.php");
 	include_once("./functions/all_from_table.php");
 	include_once("./functions/findParents.php");
-	$functionFiles = array_diff(scandir('./functions/info'), array('.', '..'));
-	foreach ($functionFiles as $functionFile)
-	{
-		include_once("./functions/info/$functionFile");
-	}
-
+	include_once("./functions/pkColumnOfTable.php");
+	include_once("./functions/includeDirectory.php");
+	includeDirectory("./functions/info");
+	
 	$dbh=dbh(CONNECTION_STRING);
+	$configSchema='map_configs';
 	$childType=$_GET['type'];
-	$child=$_GET['id'];
+	$childId=$_GET['id'];
 	if     ($childType == 'map') { $childTypeSv='karta'; }
 	elseif ($childType == 'control') { $childTypeSv='kontroll'; }
 	elseif ($childType == 'group') { $childTypeSv='grupp'; }
@@ -33,19 +32,13 @@
 	elseif ($childType == 'service') { $childTypeSv='tjänst'; }
 	else { $childTypeSv=$childType; }
 
-	if (!empty($child))
+	if (!empty($childId))
 	{
 		echo "<div style='float:left'>";
-		echo "<h2>$child</h2> ($childTypeSv)</br>";
-		$allOfChildType=all_from_table('map_configs.'.$childType.'s');
-		if ($childType == 'proj4def')
-		{
-			$info=array_column_search($child, 'code', $allOfChildType)['info'];
-		}
-		else
-		{
-			$info=array_column_search($child, $childType.'_id', $allOfChildType)['info'];
-		}
+		echo "<h2>$childId</h2> ($childTypeSv)</br>";
+		$allOfChildType=all_from_table($dbh, $configSchema, $childType.'s');
+		$child=array($childType=>$childId);
+		$info=array_column_search($childId, pkColumnOfTable($childType.'s'), $allOfChildType)['info'];
 		if (!empty($info))
 		{
 			echo "$info</br>";
@@ -56,25 +49,25 @@
 			echo "&nbsp;&nbsp;&nbsp;";
 			if ($childType == 'group' || $childType == 'layer')
 			{
-				printParents('map', $childType, $child);
+				printParents(array('maps'=>all_from_table($dbh, $configSchema, 'maps')), $child);
 				echo "&nbsp;&nbsp;&nbsp;";
-				printParents('group', $childType, $child);
+				printParents(array('groups'=>all_from_table($dbh, $configSchema, 'groups')), $child);
 			}
 			elseif ($childType == 'control' || $childType == 'footer' || $childType == 'proj4def')
 			{
-				printParents('map', $childType, $child);
+				printParents(array('maps'=>all_from_table($dbh, $configSchema, 'maps')), $child);
 			}
 			elseif ($childType == 'source')
 			{
-				printParents('layer', $childType, $child);
+				printParents(array('layers'=>all_from_table($dbh, $configSchema, 'layers')), $child);
 			}
 			elseif ($childType == 'service')
 			{
-				printParents('source', $childType, $child);
+				printParents(array('sources'=>all_from_table($dbh, $configSchema, 'sources')), $child);
 			}
 			elseif ($childType == 'tilegrid')
 			{
-				printParents('source', $childType, $child);
+				printParents(array('sources'=>all_from_table($dbh, $configSchema, 'sources')), $child);
 			}
 		}
 		echo '</div>';
