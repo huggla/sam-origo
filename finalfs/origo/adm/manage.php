@@ -9,6 +9,7 @@
 	include_once("./functions/findParents.php");
 	include_once("./functions/layerCategories.php");
 	include_once("./functions/pkColumnOfTable.php");
+	include_once("./functions/configTables.php");
 	include_once("./functions/includeDirectory.php");
 	includeDirectory("./functions/manage");
 	$post=$_POST;
