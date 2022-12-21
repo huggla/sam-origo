@@ -1,5 +1,4 @@
 <?php
-
 	function headForm($table, $inheritPosts)
 	{
 		echo '<form class="headForm" method="post">';
