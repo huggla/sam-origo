@@ -58,17 +58,17 @@
  *  DATABAS-OPERATIONER  *
  *************************
 */
-/*
-	$maps=all_from_table('map_configs.maps');
-	$groups=all_from_table('map_configs.groups');
-	$controls=all_from_table('map_configs.controls');
-	$sources=all_from_table('map_configs.sources');
-	$services=all_from_table('map_configs.services');
-	$footers=all_from_table('map_configs.footers');
-	$tilegrids=all_from_table('map_configs.tilegrids');
-	$proj4defs=all_from_table('map_configs.proj4defs');
-	setLayers();
-*/
+
+	//$maps=$configTables['maps'];
+	$groups=$configTables['groups'];
+	//$controls=$configTables['controls'];
+	//$sources=$configTables['sources'];
+	//$services=$configTables['services'];
+	//$footers=$configTables['footers'];
+	//$tilegrids=$configTables['tilegrids'];
+	$proj4defs=$configTables['proj4defs'];
+	//setLayers();
+
 $importId=$_POST['importid'];
 $json=$_POST['json'];
 
