@@ -1,11 +1,10 @@
 <?php
-
-	function printSelectOptions($optionValues, $selectedValue=false)
+	function printSelectOptions($optionValues, $selectedValue=null)
 	{
 		foreach ($optionValues as $value)
 		{
 			$selectOption="<option value='$value'";
-			if ($selectedValue !== false)
+			if (isset($selectedValue))
 			{
 				if ($value == $selectedValue)
 				{
@@ -16,5 +15,4 @@
 			echo $selectOption;
 		}
 	}
-
 ?>
