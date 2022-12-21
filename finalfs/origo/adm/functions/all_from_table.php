@@ -1,8 +1,8 @@
 <?php
-	function all_from_table($table)
+	function all_from_table($dbh, $schema, $table)
 	{
-		GLOBAL $dbh;
-		$result=pg_query($dbh, "SELECT * FROM $table ORDER BY 1");
+		$tableWithSchema=$schema.'.'.$table;
+		$result=pg_query($dbh, "SELECT * FROM $tableWithSchema ORDER BY 1");
 		if (!$result)
 		{
 			die("Error in SQL query: " . pg_last_error());
