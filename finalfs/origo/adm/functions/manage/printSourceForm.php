@@ -1,29 +1,23 @@
 <?php
-	function printSourceForm($targetId)
+	function printSourceForm($source, $selectables, $inheritPosts)
 	{
-		GLOBAL $hiddenInputs, $target;
-		echo <<<HERE
-		<div>
-			<div style="float:left;">
-				<form method="post" style="line-height:2">
-		HERE;
-		printTextarea($targetId, 'id', 'textareaMedium');
-		printUpdateSelect($targetId, 'service', 'bodySelect', 'Tjänst:');
-		printUpdateSelect($targetId, 'with_geometry', 'miniSelect', 'With_geometry:', array("", "f", "t"));
-		printTextarea($targetId, 'fi_point_tolerance', 'textareaSmall', 'Fi_point_tolerance:');
-		printTextarea($targetId, 'ttl', 'textareaSmall');
-		printUpdateSelect($targetId, 'tilegrid', 'bodySelect', 'Tilegrid:');
+		echo '<div><div style="float:left;"><form method="post" style="line-height:2">';
+		printTextarea($source, 'source_id', 'textareaMedium', 'Id:');
+		printUpdateSelect($source, array('service'=>$selectables['services']), 'bodySelect', 'Tjänst:');
+		printUpdateSelect($source, array('with_geometry'=>array("f", "t")), 'miniSelect', 'With_geometry:');
+		printTextarea($source, 'fi_point_tolerance', 'textareaSmall', 'Fi_point_tolerance:');
+		printTextarea($source, 'ttl', 'textareaSmall', 'Ttl:');
+		printUpdateSelect($source, array('tilegrid'=>$selectables['tilegrids']), 'bodySelect', 'Tilegrid:');
 		echo '</br>';
-		printTextarea($targetId, 'info', 'textareaLarge');
-		echo $hiddenInputs;
-		echo 			'<div class="buttonDiv">';
-		printUpdateButton();
-                printInfoButton($targetId);
-		echo 			'</div>';
-		echo 		'</form>';
-		echo 	'</div>';
-		$deleteConfirmStr="Är du säker att du vill radera källan $targetId? Referenser till källan hanteras separat.";
-		printDeleteButton($targetId, $deleteConfirmStr, 'deleteButton2');
+		printTextarea($source, 'info', 'textareaLarge', 'Info:');
+		printHiddenInputs($inheritPosts);
+		echo '<div class="buttonDiv">';
+		printUpdateButton('source');
+		$source['source']=$source['source']['source_id'];
+		printInfoButton($source);
+		echo '</div></form></div>';
+		$deleteConfirmStr="Är du säker att du vill radera källan ".$source['source']."? Referenser till källan hanteras separat.";
+		printDeleteButton($source, $deleteConfirmStr, 'deleteButton2');
 		echo '</div>';
 	}
 ?>
