@@ -2,66 +2,63 @@
 <?php
 	header("Cache-Control: must-revalidate, max-age=0, s-maxage=0, no-cache, no-store");
 
-if (empty($_POST['json']))
-{
-$importid=uniqid();
-			echo   "<form method=\"post\" onsubmit='confirmStr=\"Att importera en hel origokonfiguration i JSON-format till databasen är riskabelt. Det kan innebära att ett stort antal redundanta poster läggs till i databasen och att redan befintliga origokonfigurationer slutar att fungera. Är du säker på att du vill importera till databasen?\"; return confirm(confirmStr);' style=\"line-height:2\">";
-			echo      '<label for="json">Json:</label>';
-			echo      '<textarea rows="1" id="json" name="json"></textarea>&nbsp;<br>';
-			echo      '<label for="importid">Unikt import-id:</label>';
-			echo      '<textarea rows="1" id="importid" name="importid">'.$importid.'</textarea>&nbsp;<br>';
-			echo      '<label for="layers">Lager:</label>';
-			echo      '<input type="checkbox" id="layers" name="layers" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="groups">Grupper:</label>';
-			echo      '<input type="checkbox" id="groups" name="groups" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="map">Karta:</label>';
-			echo      '<input type="checkbox" id="map" name="map" value="yes" checked>&nbsp;';
-			echo      '<label for="mapid">Namn:</label>';
-			echo      '<textarea rows="1" id="mapid" name="mapid">map#'.$importid.'</textarea>&nbsp;<br>';
-			echo      '<label for="controls">Kontroller:</label>';
-			echo      '<input type="checkbox" id="controls" name="controls" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="footers">Sidfötter:</label>';
-			echo      '<input type="checkbox" id="footers" name="footers" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="proj4defs">proj4defs:</label>';
-			echo      '<input type="checkbox" id="proj4defs" name="proj4defs" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="sources">Källor:</label>';
-			echo      '<input type="checkbox" id="sources" name="sources" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="tilegrids">Tilegrids:</label>';
-			echo      '<input type="checkbox" id="tilegrids" name="tilegrids" value="yes" checked>&nbsp;<br>';
-			echo      '<label for="styles">Stilar:</label>';
-			echo      '<input type="checkbox" id="styles" name="styles" value="yes" checked>&nbsp;<br>';
-
-			echo      '<label for="services">Tjänster:</label>';
-			echo      '<input type="checkbox" id="services" name="services" value="yes" checked>&nbsp;<br>';
-
-			echo     "<button type=\"submit\" name=\"submit\" value=\"submit\">";
-			echo       'Importera';
-			echo     '</button>';
-			echo   '</form>';
-			echo   '<form action="manage.php">';
-			echo     '<input type="submit" value="Till konfigurationsverktyget" />';
-			echo   '</form>';
-			exit;
-}
+	if (empty($_POST['json']))
+	{
+		$importid=uniqid();
+		echo   "<form method=\"post\" onsubmit='confirmStr=\"Att importera en hel origokonfiguration i JSON-format till databasen är riskabelt. Det kan innebära att ett stort antal redundanta poster läggs till i databasen och att redan befintliga origokonfigurationer slutar att fungera. Är du säker på att du vill importera till databasen?\"; return confirm(confirmStr);' style=\"line-height:2\">";
+		echo      '<label for="json">Json:</label>';
+		echo      '<textarea rows="1" id="json" name="json"></textarea>&nbsp;<br>';
+		echo      '<label for="importid">Unikt import-id:</label>';
+		echo      '<textarea rows="1" id="importid" name="importid">'.$importid.'</textarea>&nbsp;<br>';
+		echo      '<label for="layers">Lager:</label>';
+		echo      '<input type="checkbox" id="layers" name="layers" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="groups">Grupper:</label>';
+		echo      '<input type="checkbox" id="groups" name="groups" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="map">Karta:</label>';
+		echo      '<input type="checkbox" id="map" name="map" value="yes" checked>&nbsp;';
+		echo      '<label for="mapid">Namn:</label>';
+		echo      '<textarea rows="1" id="mapid" name="mapid">map#'.$importid.'</textarea>&nbsp;<br>';
+		echo      '<label for="controls">Kontroller:</label>';
+		echo      '<input type="checkbox" id="controls" name="controls" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="footers">Sidfötter:</label>';
+		echo      '<input type="checkbox" id="footers" name="footers" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="proj4defs">proj4defs:</label>';
+		echo      '<input type="checkbox" id="proj4defs" name="proj4defs" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="sources">Källor:</label>';
+		echo      '<input type="checkbox" id="sources" name="sources" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="tilegrids">Tilegrids:</label>';
+		echo      '<input type="checkbox" id="tilegrids" name="tilegrids" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="styles">Stilar:</label>';
+		echo      '<input type="checkbox" id="styles" name="styles" value="yes" checked>&nbsp;<br>';
+		echo      '<label for="services">Tjänster:</label>';
+		echo      '<input type="checkbox" id="services" name="services" value="yes" checked>&nbsp;<br>';
+		echo     "<button type=\"submit\" name=\"submit\" value=\"submit\">";
+		echo       'Importera';
+		echo     '</button>';
+		echo   '</form>';
+		echo   '<form action="manage.php">';
+		echo     '<input type="submit" value="Till konfigurationsverktyget" />';
+		echo   '</form>';
+		exit;
+	}
 
 	include_once("./constants/CONNECTION_STRING.php");
 	include_once("./functions/dbh.php");
 	include_once("./functions/pgArrayToPhp.php");
 	include_once("./functions/all_from_table.php");
-	include_once("./functions/setLayers.php");
-	$functionFiles = array_diff(scandir('./functions/read_json'), array('.', '..'));
-	foreach ($functionFiles as $functionFile)
-	{
-		include_once("./functions/read_json/$functionFile");
-	}
+	include_once("./functions/configTables.php");
+	include_once("./functions/includeDirectory.php");
+	includeDirectory("./functions/read_json");
 
 	$dbh=dbh(CONNECTION_STRING);
-
+	$configSchema='map_configs';
+	$configTables=configTables($dbh, $configSchema);
 /*
  *************************
  *  DATABAS-OPERATIONER  *
  *************************
 */
+/*
 	$maps=all_from_table('map_configs.maps');
 	$groups=all_from_table('map_configs.groups');
 	$controls=all_from_table('map_configs.controls');
@@ -71,7 +68,7 @@ $importid=uniqid();
 	$tilegrids=all_from_table('map_configs.tilegrids');
 	$proj4defs=all_from_table('map_configs.proj4defs');
 	setLayers();
-
+*/
 $importId=$_POST['importid'];
 $json=$_POST['json'];
 
