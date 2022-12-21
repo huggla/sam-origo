@@ -99,16 +99,16 @@
 	include_once("./functions/all_from_table.php");
 
 	$dbh=dbh(CONNECTION_STRING);
-	$values=all_from_table('map_configs.'.$_GET['type']);
+	$values=all_from_table($dbh, 'map_configs', $_GET['table']);
 
 	echo '<select onChange="update(this);" data-sorted-values="" multiple style="float:left;height:100%;margin-right:5px">';
-	if ($_GET['type'] == 'proj4defs')
+	if ($_GET['table'] == 'proj4defs')
 	{
 		$idColumn='code';
 	}
 	else
 	{
-		$idColumn=rtrim($_GET['type'], 's').'_id';
+		$idColumn=rtrim($_GET['table'], 's').'_id';
 	}
 	foreach (array_column($values, $idColumn) as $option)
 	{
@@ -117,21 +117,21 @@
 		echo $options;
 	}
 	echo '</select>';
-	if ($_GET['type'] == 'controls')
+	if ($_GET['table'] == 'controls')
 	{
 		$header='Kontroller';
 	}
-	elseif ($_GET['type'] == 'groups')
+	elseif ($_GET['table'] == 'groups')
 	{
 		$header='Grupper';
 	}
-	elseif ($_GET['type'] == 'layers')
+	elseif ($_GET['table'] == 'layers')
 	{
 		$header='Lager';
 	}
 	else
 	{
-		$header=ucfirst($_GET['type']);
+		$header=ucfirst($_GET['table']);
 	}
 	echo '<h3>'.$header.'</h3>';
 	echo '<textarea readonly id="selection" style="display:flex;overflow:auto;width:-webkit-fill-available"></textarea>';
