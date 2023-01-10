@@ -80,10 +80,11 @@
 		echo '</div></form></div>';
 		$deleteConfirmStr="Är du säker att du vill radera lagret ".$layer['layer']."? Referenser till lagret hanteras separat.";
 		printDeleteButton($layer, $deleteConfirmStr, 'deleteButton6');
-		echo '</div>';
+		echo '</div><div style="clear:both">';
 		printAddOperation($layer, array('maps'=>array_column($operationTables['maps'], 'map_id')), 'Lägg till i karta', $inheritPosts);
 		printRemoveOperation($layer, array('maps'=>$operationTables['maps']), 'Ta bort från karta', $inheritPosts);
 		printAddOperation($layer, array('groups'=>array_column($operationTables['groups'], 'group_id')), 'Lägg till i grupp', $inheritPosts);
 		printRemoveOperation($layer, array('groups'=>$operationTables['groups']),'Ta bort från grupp', $inheritPosts);
+		echo '</div>';
 	}
 ?>
