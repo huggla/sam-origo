@@ -15,9 +15,12 @@ ARG CONTENTDESTINATION1="/"
 ARG BASEIMAGE="huggla/sam-lighttpd2:$LIGHTTPD2_VERSION"
 #ARG CLONEGITS="https://github.com/filleg/origo.git -b wfs-qgis"
 ARG DOWNLOADS="https://github.com/origo-map/origo/archive/refs/tags/v$ORIGO_VERSION.zip"
-ARG BUILDDEPS="python3"
+ARG BUILDDEPS="python3 g++"
 ARG BUILDCMDS=\
 "   cd origo-$ORIGO_VERSION "\
+"&& rm -rf node_modules package-lock.json "\
+"&& npm install -g npm@9.3.0 "\
+"&& npm cache verify "\
 "&& npm install "\
 #"&& npm --depth 8 update "\
 "&& npm run prebuild-sass "\
@@ -38,7 +41,8 @@ ARG LINUXUSEROWNED="/origo /origo/origo-cities1.json"
 ARG FINALCMDS=\
 "   cp -a /tmp/origo/* /origo/ "\
 "&& cd /usr/local "\
-"&& rm -rf share "\
+"&& ls -la lib "\
+"&& rm -rf share lib "\
 "&& ln -s ../lib ../share ./ "\
 "&& cd bin "\
 "&& find ../../libexec/postgresql14 ! -type l ! -name postgres ! -name ../../libexec/postgresql14 -maxdepth 1 -exec ln -s {} ./ + "\
