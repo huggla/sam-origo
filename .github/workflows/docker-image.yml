@@ -13,7 +13,6 @@ on: workflow_dispatch
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push-image:
@@ -26,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: with_php
+          ref: ${{ github.ref }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
@@ -39,16 +38,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: type=raw,value=with_php
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.ref }}
           labels: ${{ steps.meta.outputs.labels }}
