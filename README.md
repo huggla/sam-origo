@@ -1,4 +1,4 @@
-# NOTICE! This project has moved here: https://github.com/Kristianstad/origo
+# NOTICE! This project has moved here: https://github.com/Kristianstad/origo/pkgs/container/origo
 
 # sam-origo
 Origo from Github master, image based on huggla/sam-lighttpd2. Listens on port 8080 internally. Files and directories in the Origo config directory are added to the Origo web directory at startup.
